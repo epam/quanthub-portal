@@ -5,8 +5,10 @@
  * Install, update and uninstall functions for the Quanthub Core module.
  */
 
+use Drupal\Core\File\Exception\FileException;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Core\File\FileSystemInterface;
 
 /**
  * Change field type for field_powerbi_report.
@@ -199,6 +201,28 @@ function quanthub_core_update_8003() {
       $database->insert($table)
         ->fields((array) $row)
         ->execute();
+    }
+  }
+}
+
+/**
+ * Upload Power BI media icon to public directory.
+ */
+function quanthub_core_update_8004() {
+  $source = \Drupal::service('extension.list.module')->getPath('quanthub_core') . '/images/icons';
+  $destination = \Drupal::config('media.settings')->get('icon_base_uri');
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
+
+  $files = $file_system->scanDirectory($source, '/.*\.(svg|png|jpg|jpeg|gif)$/');
+  foreach ($files as $file) {
+    if (!file_exists($destination . DIRECTORY_SEPARATOR . $file->filename)) {
+      try {
+        $file_system->copy($file->uri, $destination, FileSystemInterface::EXISTS_ERROR);
+      }
+      catch (FileException $e) {
+        // Ignore and continue.
+      }
     }
   }
 }

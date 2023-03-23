@@ -126,6 +126,9 @@
   height: 24px;
   font-size: 0;
   line-height: 0;
+  mask-image: url($path);
+  mask-repeat: no-repeat;
+  mask-position: 0 0;
   -webkit-mask-image: url($path);
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: 0 0;

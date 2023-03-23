@@ -1,0 +1,8 @@
+codelists:
+  js:
+    /libraries/quanthub-drupal-react/quanthub_codelists/dist/index.js: { preprocess: false }
+  css:
+    base:
+      /libraries/quanthub-drupal-react/quanthub_codelists/dist/styles.css: {}
+  dependencies:
+    - core/drupal

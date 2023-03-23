@@ -14,6 +14,7 @@ use Drupal\media\MediaSourceBase;
  *   label = @Translation("Power BI"),
  *   description = @Translation("Power BI media source"),
  *   allowed_field_types = {"quanthub_powerbi_embed"},
+ *   default_thumbnail_filename = "power_bi.png"
  * )
  */
 class PowerBI extends MediaSourceBase {

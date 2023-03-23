@@ -2,3 +2,5 @@ global-styling:
   css:
     base:
       dist/styles.css: {}
+  js:
+    dist/main.js: {}

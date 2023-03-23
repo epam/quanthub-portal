@@ -1,0 +1,1 @@
+!function(t,e){e.behaviors.hideAlert={attach:function(e,n){t(".alert__button").on("click",(function(e){t(e.currentTarget).parent(".alert-status").hide()}))}}}(jQuery,Drupal);

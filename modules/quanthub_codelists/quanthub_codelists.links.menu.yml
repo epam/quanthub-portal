@@ -1,0 +1,7 @@
+quanthub_codelists.admin:
+  title: 'Code Lists'
+  description: 'Code Lists'
+  route_name: quanthub_codelists.codelists
+  parent: main
+  menu_name: main
+  weight: 100

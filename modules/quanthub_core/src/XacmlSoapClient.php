@@ -55,15 +55,23 @@ class XacmlSoapClient {
   protected $currentUser;
 
   /**
+   * The Wso Token service.
+   *
+   * @var \Drupal\quanthub_core\WsoToken
+   */
+  protected $wsoToken;
+
+  /**
    * Constructor.
    */
-  public function __construct(Client $http_client, LoggerChannelFactoryInterface $logger_factory, UserInfo $user_info, AccountProxy $current_user) {
+  public function __construct(Client $http_client, LoggerChannelFactoryInterface $logger_factory, UserInfo $user_info, AccountProxy $current_user, WsoToken $wso_token) {
     $this->httpClient = $http_client;
     $this->loggerFactory = $logger_factory;
     $this->userInfo = $user_info;
     $this->currentUser = $current_user;
+    $this->wsoToken = $wso_token;
 
-    $this->route = getenv('WSO2_HOST');
+    $this->route = getenv('XACML_HOST');
   }
 
   /**
@@ -72,9 +80,8 @@ class XacmlSoapClient {
   public function getDatasetList() {
     $xml = $this->prepareXml();
 
-    // Credentials for authentication by basic auth.
-    $auth_creds = getenv('WSO2_USER') . ':' . getenv('WSO2_PASS');
-    $auth = 'Basic ' . base64_encode($auth_creds);
+    // Credentials for authentication by wso Token.
+    $auth = "Bearer {$this->wsoToken->getToken()}";
 
     try {
       $response = $this->httpClient->post($this->route,
@@ -98,27 +105,29 @@ class XacmlSoapClient {
       // @todo need to check if xml or jsonlogic response.
       $response_xml = new \SimpleXMLElement((string) $response->getBody());
       $key = 0;
-      foreach ($response_xml->Result->Obligations->Obligation as $obligation) {
-        if ($obligation->count() == 1) {
-          $dataset_list[$key] = (string) $obligation->AttributeAssignment;
-        }
-        elseif ($obligation->count() > 1) {
-          foreach ($obligation as $obligation_value) {
-            $dataset_list[$key][(string) $obligation_value->attributes()] = (string) $obligation_value;
+      if (!empty($response_xml->Result->Obligations->Obligation)) {
+        foreach ($response_xml->Result->Obligations->Obligation as $obligation) {
+          if ($obligation->count() == 1) {
+            $dataset_list[$key] = (string) $obligation->AttributeAssignment;
           }
-        }
+          elseif ($obligation->count() > 1) {
+            foreach ($obligation as $obligation_value) {
+              $dataset_list[$key][(string) $obligation_value->attributes()] = (string) $obligation_value;
+            }
+          }
 
-        $dataset_list[$key]['value'] = $dataset_list[$key]['Quanthub:Entity:Agency'] . ':' . $dataset_list[$key]['Quanthub:Entity:Code'];
-        unset(
-          $dataset_list[$key]['Quanthub:Entity:Agency'],
-          $dataset_list[$key]['Quanthub:Entity:Code']
-        );
-        if (!empty($dataset_list[$key]['Quanthub:Entity:Version'])) {
-          $dataset_list[$key]['value'] .= '(' . $dataset_list[$key]['Quanthub:Entity:Version'] . ')';
-          unset($dataset_list[$key]['Quanthub:Entity:Version']);
+          $dataset_list[$key]['value'] = $dataset_list[$key]['Quanthub:Entity:Agency'] . ':' . $dataset_list[$key]['Quanthub:Entity:Code'];
+          unset(
+            $dataset_list[$key]['Quanthub:Entity:Agency'],
+            $dataset_list[$key]['Quanthub:Entity:Code']
+          );
+          if (!empty($dataset_list[$key]['Quanthub:Entity:Version'])) {
+            $dataset_list[$key]['value'] .= '(' . $dataset_list[$key]['Quanthub:Entity:Version'] . ')';
+            unset($dataset_list[$key]['Quanthub:Entity:Version']);
+          }
+          $dataset_list[$key] = $dataset_list[$key]['value'];
+          $key++;
         }
-        $dataset_list[$key] = $dataset_list[$key]['value'];
-        $key++;
       }
       // @todo need to write jsonLogic handler.
       // JsonLogic::apply();

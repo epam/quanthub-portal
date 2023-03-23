@@ -1,0 +1,50 @@
+@import './font-mixins';
+@import './color-palette';
+
+.ag-theme-balham {
+  @apply h-full;
+}
+
+.ag-root-wrapper {
+  @apply rounded;
+  border-color: $ntrls-600;
+  height: 100%;
+
+  .ag-header {
+    background-color: $ntrls-600;
+    .ag-header-cell::after {
+      background-color: $ntrls-300;
+    }
+    .ag-cell-label-container {
+      @apply capitalize;
+      color: $ntrls-1000;
+      @include header-6;
+    }
+  }
+  .ag-pinned-left-header {
+    .ag-header-cell {
+      @apply pl-2 pr-2;
+    }
+  }
+  .ag-cell-last-left-pinned {
+    @apply pl-2 pr-2;
+  }
+  .ag-row {
+    border: 0;
+    .ag-row-group {
+      @apply flex h-full items-center;
+    }
+    & .ag-row-odd {
+      background-color: $ntrls-200;
+    }
+    &.ag-row-selected {
+      background-color: $blue-400;
+    }
+
+    .ag-cell {
+      @include body-2;
+      @apply flex items-center;
+      color: $ntrls-1000;
+    }
+  }
+}

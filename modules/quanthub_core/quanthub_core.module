@@ -10,6 +10,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Url;
+use Drupal\quanthub_core\Form\PowerBIMediaForm;
 
 /**
  * Implements hook_ENTITY_TYPE_access().
@@ -72,10 +74,8 @@ function quanthub_core_views_data_alter(array &$data) {
  * Implements hook_preprocess_page().
  */
 function quanthub_core_preprocess_page(&$variables) {
-  // Add Microsoft PowerBI JS client library.
-  $variables['#attached']['library'][] = 'powerbi_embed/powerbi_embed-client';
   // Add module-specific JS customizations.
-  $variables['#attached']['library'][] = 'powerbi_embed/powerbi_embed-customizer';
+  $variables['#attached']['library'][] = 'quanthub_core/qh_core-power-bi-customizer';
 }
 
 /**
@@ -95,6 +95,7 @@ function quanthub_core_theme() {
         'report_page' => NULL,
         'report_visual' => NULL,
         'extra_datasets' => NULL,
+        'token_expiration' => NULL,
         'workspace_id' => NULL,
         'token' => NULL,
         'embed_url' => NULL,
@@ -178,4 +179,78 @@ function quanthub_core_form_powerbi_embed_settings_submit(array $form, FormState
   }
 
   $config->save();
+}
+
+/**
+ * Implements hook_media_source_info_alter().
+ */
+function quanthub_core_media_source_info_alter(array &$sources) {
+  if (empty($sources['power_bi']['forms']['media_library_add'])) {
+    $sources['power_bi']['forms']['media_library_add'] = PowerBIMediaForm::class;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for Power BI media template.
+ */
+function quanthub_core_preprocess_media__power_bi(array &$variables) {
+  $route = \Drupal::routeMatch()->getRouteName();
+  if ($route == 'media.filter.preview') {
+    $variables['preview'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_editor_js_settings_alter().
+ *
+ * Fix the limit HTML problem for colorbutton module, until the issue is solved.
+ *
+ * @see https://www.drupal.org/project/colorbutton/issues/2910028
+ */
+function quanthub_core_editor_js_settings_alter(array &$settings) {
+  // Settings for CKEditor Color Button plugin.
+  $extra_editor_settings = [
+    'colorButton_foreStyle' => [
+      'element' => 'span',
+      'attributes' => ['class' => '#(colorName)'],
+      'overrides' => [
+        ['element' => 'span', 'attributes' => ['class' => NULL]],
+      ],
+    ],
+    'colorButton_backStyle' => [
+      'element' => 'span',
+      'attributes' => ['class' => '#(colorName)-bg'],
+      'overrides' => [
+        ['element' => 'span', 'attributes' => ['class' => NULL]],
+      ],
+    ],
+    'colorButton_colors' => 'ck-black/000000,ck-gray/666666',
+  ];
+
+  $settings['editor']['formats']['basic_html']['editorSettings'] += $extra_editor_settings;
+}
+
+/**
+ * Implements hook_ckeditor_css_alter().
+ */
+function quanthub_core_ckeditor_css_alter(array &$css) {
+  $css[] = \Drupal::service('extension.list.module')->getPath('quanthub_core') . '/css/ckeditor-styles.css';
+}
+
+/**
+ * Implements hook_language_switch_links_alter().
+ *
+ * A temporary workaround to shrink the menu.
+ */
+function quanthub_core_language_switch_links_alter(array &$links, $type, Url $url) {
+  foreach ($links as $langcode => &$link) {
+    switch ($langcode) {
+      case 'en':
+        $link['title'] = 'Eng';
+        break;
+
+      case 'uk':
+        $link['title'] = t('Ukr', [], ['langcode' => 'uk']);
+    }
+  }
 }

@@ -119,9 +119,9 @@ class PowerBIEmbedConfigs {
     $curlPostToken = curl_init();
     $powerbiAPIURL = 'https://api.powerbi.com/v1.0/myorg/GenerateToken';
     $payload = "{
-        'targetWorkspaces': [{'id': '" . $this->getWorkspaceID() . "'}],
         'datasets': [" . $datasets . "],
-        'reports': [{'id': '" . $reportId . "'}]
+        'reports': [{'id': '" . $reportId . "'}],
+        'targetWorkspaces': [{'id': '" . $this->getWorkspaceID() . "'}]
     }";
 
     $theCurlOpts = [
@@ -198,7 +198,7 @@ class PowerBIEmbedConfigs {
     $embedUrl = $embedResponse['embedUrl'];
     $datasetId = $embedResponse['datasetId'];
 
-    if ($extraDatasets !== 'defaultValue') {
+    if (isset($extraDatasets) && !empty(trim($extraDatasets))) {
       $extraDatasets = preg_replace('/\s+/', ',', $extraDatasets);
       $datasetIds = preg_split("/[,]+/", $extraDatasets);
     }

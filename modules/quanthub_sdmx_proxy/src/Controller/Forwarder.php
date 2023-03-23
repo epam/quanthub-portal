@@ -96,11 +96,11 @@ final class Forwarder extends ControllerBase {
    *   The response object.
    */
   public function forward(Request $request): Response {
-    $config = $this->configFactory->get('quanthub_sdmx_proxy.settings');
+    $api_url = getenv('SDMX_API_URL');
 
     $headers = [];
     foreach ($request->headers->keys() as $key) {
-      if (($key == 'content-type') || ($key == 'accept') && ($key == 'accept-language') && ($key == 'accept-encoding')) {
+      if (($key == 'content-type') || ($key == 'accept') || ($key == 'accept-language') || ($key == 'accept-encoding')) {
         $headers[$key] = $request->headers->get($key);
       }
     }
@@ -115,22 +115,26 @@ final class Forwarder extends ControllerBase {
 
     try {
       $uri = $request->query->get('uri');
-      $psr7_response = $this->client->request($request->getMethod(), ($config->get('api_url')) . $uri, $options);
+      $psr7_response = $this->client->request($request->getMethod(), $api_url . $uri, $options);
       return $this->foundationFactory->createResponse($psr7_response);
     }
     catch (GuzzleException $exception) {
       // Get the original response.
       $response = $exception->getResponse();
-      if (!is_null($response->getBody())) {
+      if (!is_null($response) && !is_null($response->getBody())) {
         // Get the info returned from the remote server.
-        $response->getBody()->getContents();
+        $response_info = $response->getBody()->getContents();
         // Using FormattableMarkup allows for the use of <pre/> tags,
         // giving a more readable log item.
         $message = new FormattableMarkup('API connection error. Error details are as follows:<pre>@response</pre>', ['@response' => print_r(json_decode($response_info), TRUE)]);
         // Log the error.
         $this->loggerFactory->get('quanthub_sdmx_proxy')->warning($message);
+        return $this->foundationFactory->createResponse($exception->getResponse());
       }
-      return $this->foundationFactory->createResponse($exception->getResponse());
+      else {
+        $this->loggerFactory->get('quanthub_sdmx_proxy')->warning($exception->getMessage());
+        throw $exception;
+      }
     }
     catch (ClientException $exception) {
       return $this->foundationFactory->createResponse($exception->getResponse());

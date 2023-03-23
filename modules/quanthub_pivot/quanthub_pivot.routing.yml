@@ -1,0 +1,6 @@
+quanthub_datasetexplorer.pivot:
+  path: '/pivot'
+  defaults:
+    _controller: '\Drupal\quanthub_pivot\Controller\Pivot::pivot'
+  requirements:
+    _permission: 'access content'

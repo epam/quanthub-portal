@@ -1,0 +1,8 @@
+pivot:
+  js:
+    /libraries/quanthub-drupal-react/quanthub_pivot/dist/index.js: { preprocess: false }
+  css:
+    base:
+      /libraries/quanthub-drupal-react/quanthub_pivot/dist/styles.css: {}
+  dependencies:
+    - core/drupal

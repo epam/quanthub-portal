@@ -85,6 +85,7 @@
     <h2 {{ title_attributes }} class="flex gap-2 items-start mb-2 xs:flex-col">
       {% if node.bundle == 'news' %}
         <span class="indicator indicator--news">
+          <span class="indicator--icon"></span>
           {{
             '@news'|t({
               '@news': 'News'
@@ -94,6 +95,7 @@
       {% endif %}
       {% if node.bundle == 'publication' %}
         <span class="indicator indicator--publication">
+          <span class="indicator--icon"></span>
           {{
             '@publication'|t({
               '@publication': 'Publication'
@@ -103,6 +105,7 @@
       {% endif %}
       {% if node.bundle == 'dataset' %}
         <span class="indicator indicator--dataset">
+          <span class="indicator--icon"></span>
           {{
             '@dataset'|t({
               '@dataset': 'Dataset'
@@ -112,6 +115,7 @@
       {% endif %}
       {% if node.bundle == 'release' %}
         <span class="indicator indicator--release">
+          <span class="indicator--icon"></span>
           {{
             '@release'|t({
               '@release': 'Release'
