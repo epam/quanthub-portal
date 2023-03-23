@@ -1,0 +1,5 @@
+name: 'Quanthub Code Lists'
+type: module
+description: 'Quanthub custom component Code Lists.'
+core_version_requirement: ^8 || ^9
+package: 'Epam Quanthub'

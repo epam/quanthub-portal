@@ -3,6 +3,7 @@
 namespace Drupal\quanthub_core\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\HttpFoundation\Request;
 use Drupal\quanthub_core\PowerBIEmbedConfigs;
 use Laminas\Diactoros\Response\JsonResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -44,8 +45,9 @@ class PowerBIEmbedController extends ControllerBase {
   /**
    * Return Power BI embed configs in the json format.
    */
-  public function getData($reportId, $extraDatasets): JsonResponse {
-    return new JsonResponse($this->powerBIEmbedConfigs->getPowerEmbedConfig($reportId, $extraDatasets));
+  public function postData($reportId, Request $request): JsonResponse {
+    $content = json_decode($request->getContent(), TRUE);
+    return new JsonResponse($this->powerBIEmbedConfigs->getPowerEmbedConfig($reportId, $content["extraDatasets"]));
   }
 
 }

@@ -74,7 +74,7 @@ class UserInfo implements UserInfoInterface {
    */
   public function getQuanthubUserId() {
     if ($this->currentUser->isAnonymous() || $this->currentUser->id() == 1) {
-      $quanthub_user_id = $this->cache->get(self::ANONYMOUS_QUANHUB_USER_ID)->data;
+      $quanthub_user_id = reset($this->cache->get(self::ANONYMOUS_QUANHUB_USER_ID)->data);
     }
     else {
       $quanthub_user_id = $this->userData->get(

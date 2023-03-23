@@ -4,10 +4,22 @@ services:
     parent: logger.channel_base
     arguments: ['quanthub_core']
 
+  # Private tempstore for tokens for 15 mins.
+  quanthub_tempstore.private:
+    class: Drupal\Core\TempStore\PrivateTempStoreFactory
+    arguments: ['@keyvalue.expirable', '@lock', '@current_user', '@request_stack', 900]
+    tags:
+      - { name: backend_overridable }
+
+  # WSO Token Service. Getting and saving token to cache.
+  wso_token:
+    class: '\Drupal\quanthub_core\WsoToken'
+    arguments: ['@http_client', '@logger.channel.quanthub_core', '@current_user', '@quanthub_tempstore.private']
+
   # Soap client for getting allowed content according to XACML policies.
   xacml_soap_client:
     class: '\Drupal\quanthub_core\XacmlSoapClient'
-    arguments: ['@http_client', '@logger.factory', '@user_info', '@current_user']
+    arguments: ['@http_client', '@logger.factory', '@user_info', '@current_user', '@wso_token']
 
   # Managing allowed content in user data. Work xacml_soap_client.
   allowed_content_manager:
@@ -21,7 +33,7 @@ services:
       - { name: event_subscriber }
     arguments: ['@cache.default', '@current_user', '@logger.channel.quanthub_core', '@config.factory', '@http_client']
 
-  # Event subscriber for getting and storing user infor attributes for authenticated user.
+  # Event subscriber for getting and storing user info attributes for authenticated user.
   user_info_attributes_subscriber:
     class: '\Drupal\quanthub_core\UserInfoAttributesSubscriber'
     tags:

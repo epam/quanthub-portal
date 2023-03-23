@@ -111,7 +111,7 @@ class AnonymousUserInfoTokenSubscriber implements EventSubscriberInterface, User
             ]);
 
             $user_attributes_data = json_decode($response->getBody(), TRUE);
-            $this->cache->set(self::ANONYMOUS_QUANHUB_USER_ID, $user_attributes_data['USER_ID'], strtotime($user_info_data['expiresOn']));
+            $this->cache->set(self::ANONYMOUS_QUANHUB_USER_ID, $user_attributes_data['userAttributes']['USER_ID'], strtotime($user_info_data['expiresOn']));
           }
           catch (RequestException $e) {
             $this->logger->error('Failed to retrieve quanthub user id for anonymous user: @error.', [

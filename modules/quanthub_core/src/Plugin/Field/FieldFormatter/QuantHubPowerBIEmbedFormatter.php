@@ -2,7 +2,6 @@
 
 namespace Drupal\quanthub_core\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
@@ -98,13 +97,6 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
 
         if (isset($embed_token)) {
           // @todo Implement DI.
-          $expiration = DateTimePlus::createFromFormat('Y-m-d\TH:i:s\Z', $embed_token["expiration"]);
-          $diff = $expiration->getTimestamp() - (new DateTimePlus())->getTimestamp() - 3;
-          if ($diff < 0) {
-            $diff = 0;
-          }
-          $this->loggerFactory->get('powerbi_embed')->info("embed_token: " . $diff);
-
           $embed_type = 'report';
           $embed_id = $item->report_id;
           if (isset($item->report_page) && !empty($item->report_page)) {
@@ -127,6 +119,7 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
             '#report_page' => $item->report_page,
             '#report_visual' => $item->report_visual,
             '#workspace_id' => $workspace_id,
+            '#token_expiration' => $embed_token["expiration"],
             '#extra_datasets' => $item->report_extra_datasets,
             '#token' => $embed_token["token"],
             '#embed_url' => $embed_url,

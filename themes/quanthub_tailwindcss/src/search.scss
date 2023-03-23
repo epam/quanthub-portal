@@ -238,38 +238,47 @@ form {
   display: flex;
   gap: 4px;
   align-items: center;
-  padding: 2px 16px;
+  padding: 4px 12px;
   border-radius: 24px;
   background: $blue-800;
   color: $white;
   margin-top: 4px;
+  &--icon {
+    width: 16px !important;
+    height: 16px !important;
+  }
 }
 
 .indicator--dataset {
   background: $grn-1000;
-  &:before {
-    @include basic-icon('ico-dataflow-white.svg');
+  .indicator--icon {
+    background-color: $white;
+    @include mask-icon('ico-dataflow-white.svg');
   }
 }
 
 .indicator--news {
   background: $pink-1000;
-  &:before {
-    @include basic-icon('ico-document-white.svg');
+
+  .indicator--icon {
+    background-color: $white;
+    @include mask-icon('ico-document-white.svg');
   }
 }
 
 .indicator--publication {
   background: $blue-800;
-  &:before {
-    @include basic-icon('ico-audit-white.svg');
+  .indicator--icon {
+    background-color: $white;
+    @include mask-icon('ico-audit-white.svg');
   }
 }
 
 .indicator--release {
   background: $ylw-900;
-  &:before {
-    @include basic-icon('ico-dataflow-white.svg');
+  .indicator--icon {
+    background-color: $white;
+    @include mask-icon('ico-time.svg');
   }
 }
 
