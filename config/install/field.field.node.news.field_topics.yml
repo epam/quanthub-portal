@@ -1,0 +1,36 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topics
+    - node.type.news
+    - taxonomy.vocabulary.economy_and_finance
+    - taxonomy.vocabulary.education
+    - taxonomy.vocabulary.environment
+    - taxonomy.vocabulary.global_markets
+    - taxonomy.vocabulary.government_finance
+id: node.news.field_topics
+field_name: field_topics
+entity_type: node
+bundle: news
+label: Topics
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      economy_and_finance: economy_and_finance
+      education: education
+      environment: environment
+      global_markets: global_markets
+      government_finance: government_finance
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: global_markets
+field_type: entity_reference

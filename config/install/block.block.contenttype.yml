@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.content_type
+  module:
+    - facets
+    - system
+  theme:
+    - quanthub_tailwindcss
+id: contenttype
+theme: quanthub_tailwindcss
+region: left_sidebar
+weight: -9
+provider: null
+plugin: 'facet_block:content_type'
+settings:
+  id: 'facet_block:content_type'
+  label: 'Content type'
+  label_display: '0'
+  provider: facets
+  context_mapping: {  }
+  block_id: contenttype
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /search

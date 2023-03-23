@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - elasticsearch_connector.cluster.elasticsearch
+    - key.key.elastic_url
+id: elastic_url
+label: 'Elastic Url'
+config_type: elasticsearch_cluster
+config_prefix: elasticsearch_connector.cluster
+config_name: elasticsearch
+config_item: url
+key_id: elastic_url

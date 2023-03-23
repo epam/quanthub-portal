@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - quanthub_core
+title: 'Default cron handler'
+id: quanthub_core_cron
+weight: 0
+module: quanthub_core
+callback: quanthub_core_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

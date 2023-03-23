@@ -1,0 +1,284 @@
+@import 'variables';
+@import 'font-mixins';
+
+.input-title {
+  @apply mb-1;
+  @include caption-1;
+  color: $ntrls-900;
+}
+
+@mixin input {
+  @apply rounded;
+  @apply flex items-center;
+  @apply border border-solid;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 6px;
+  padding-right: 6px;
+  min-width: 240px;
+  height: $input-height;
+  background-color: $white;
+  color: $ntrls-800;
+  border-color: $ntrls-600;
+
+  &:hover {
+    &:not([disabled]) {
+      border-color: $ntrls-1000;
+    }
+  }
+
+  &:focus {
+    color: $ntrls-1000;
+    border-color: $primary;
+  }
+}
+
+@mixin input-disable {
+  background-color: $ntrls-200;
+  color: $ntrls-800 !important;
+  @apply pointer-events-none;
+}
+
+@mixin input-filled {
+  color: $ntrls-1000;
+}
+
+@mixin input-invalid {
+  border-color: $red-900;
+}
+
+@mixin input-sm {
+  @include caption-2;
+  @apply pb-1 pr-1 pt-1 pl-1;
+  height: $input-height-sm;
+}
+
+@mixin input-with-icon {
+  @apply pl-7;
+  background-repeat: no-repeat;
+  background-position: 5px 5px;
+  background-attachment: scroll;
+}
+
+@mixin input-with-icon-sm {
+  @apply pl-6;
+  background-position: 2px 1px;
+}
+
+// app-version-input.ng-invalid {
+//   input:not(.ng-untouched) {
+//     @include input-invalid;
+//   }
+// }
+
+.app-input {
+  @include body-1;
+  @include input;
+  height: $input-height;
+
+  &_disable,
+  &:disabled {
+    @include input-disable;
+  }
+
+  &:not(:placeholder-shown) {
+    @include input-filled;
+    &:hover {
+      &:not([disabled]) {
+        border-color: $ntrls-1000;
+      }
+    }
+    &:disabled {
+      @include input-disable;
+    }
+  }
+
+  //   &_invalid:not(.ng-untouched),
+  //   &.ng-invalid:not(.ng-untouched) {
+  //     @include input-invalid;
+  //   }
+
+  &_sm {
+    @include input-sm;
+  }
+
+  &_with-icon {
+    @include input-with-icon;
+
+    &.app-input_sm {
+      @include input-with-icon-sm;
+    }
+  }
+}
+
+.app-textarea {
+  @include body-1;
+  @include input;
+  height: 78px;
+  @apply p-2;
+
+  &:focus {
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+
+  &:not(:placeholder-shown) {
+    @include input-filled;
+    &:hover {
+      &:not([disabled]) {
+        border-color: $ntrls-1000;
+      }
+    }
+  }
+
+  &_disable,
+  &:disabled {
+    @include input-disable;
+  }
+
+  &_invalid {
+    @include input-invalid;
+  }
+
+  &_filled {
+    @include input-filled;
+    &:hover {
+      border-color: $ntrls-1000;
+    }
+  }
+}
+
+.app-radio-button {
+  @apply flex items-center;
+
+  input[type='radio'] {
+    @apply relative;
+    @apply cursor-pointer;
+    @apply border;
+    @apply rounded-full;
+    width: 18px;
+    height: 18px;
+    border-color: $primary;
+    background-color: $white;
+
+    &:hover,
+    &:focus {
+      @apply border;
+      background-color: $white;
+      border-color: $primary;
+    }
+
+    &:checked:after {
+      @apply relative;
+      @apply inline-block;
+      @apply absolute;
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 18px;
+      top: calc(50% - 5px);
+      left: calc(50% - 5px);
+      background-color: $primary;
+    }
+
+    &:disabled {
+      @apply pointer-events-none;
+      border-color: $ntrls-400;
+
+      &:checked:after {
+        background-color: $ntrls-400;
+      }
+
+      & + label {
+        @apply pointer-events-none;
+      }
+    }
+  }
+
+  label {
+    @include body-1;
+    @apply pl-2;
+    @apply cursor-pointer;
+  }
+}
+
+.app-checkbox {
+  position: relative;
+
+  input[type='checkbox'] {
+    @apply absolute opacity-0;
+    z-index: -1;
+
+    &:not(:disabled):not(:checked) + label:hover::before {
+      border-color: $primary;
+    }
+
+    &:checked + label::before {
+      border-color: $primary;
+      background-color: $primary;
+      background-image: url('/assets/images/checkmark.svg');
+    }
+
+    &:checked + label:hover::before {
+      border-color: $prpl-600;
+      background-color: $prpl-600;
+    }
+
+    &:disabled,
+    &:disabled + label {
+      @apply pointer-events-none;
+    }
+
+    &:disabled + label::before {
+      border-color: $ntrls-400;
+    }
+
+    &:disabled:checked + label::before {
+      background-color: $ntrls-400;
+    }
+  }
+
+  &_intermediate {
+    input[type='checkbox']:checked + label::before {
+      background-image: url('/assets/images/checkbox-rectangle.svg');
+    }
+  }
+
+  label {
+    @apply inline-flex gap-2 select-none;
+    color: $ntrls-1000;
+
+    &:before {
+      content: '';
+      @apply inline-block border border-solid;
+      box-sizing: border-box;
+      width: 16px;
+      height: 16px;
+      border-color: $ntrls-700;
+      border-radius: 2px;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: 65%;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+  }
+}
+
+input {
+  &:focus {
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+}
+
+.app-input_icon {
+  input,
+  .app-input {
+    padding-left: 30px !important;
+  }
+  app-icon {
+    top: 8px;
+    left: 9px;
+  }
+}

@@ -1,0 +1,8 @@
+dataset-explorer:
+  js:
+    /libraries/quanthub-drupal-react/quanthub_datasetexplorer/dist/index.js: { preprocess: false }
+  css:
+    base:
+      /libraries/quanthub-drupal-react/quanthub_datasetexplorer/dist/styles.css: {}
+  dependencies:
+    - core/drupal

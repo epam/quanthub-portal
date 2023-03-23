@@ -1,0 +1,47 @@
+{#
+/**
+ * @file
+ * Theme override to display a region.
+ *
+ * Available variables:
+ * - content: The content for this region, typically blocks.
+ * - attributes: HTML attributes for the region <div>.
+ * - region: The name of the region variable as defined in the theme's
+ *   .info.yml file.
+ *
+ * @see template_preprocess_region()
+ */
+#}
+{% set classes = ['region', 'region-' ~ (region|clean_class)] %}
+<div class="footer-wrapper">
+  <div class="basis-3/12 footer--logo">
+    {{ drupal_entity('block', 'quanthub_tailwindcss_branding') }}
+  </div>
+
+  <div {{ attributes.addClass(classes, 'basis-7/12') }}>
+    {{ content }}
+  </div>
+  <div class="basis-2/12">
+    <h4 class="header-4 mb-4 md:mb-2">
+      {{
+        '@follow-social'|t({
+          '@follow-social': 'Follow us on social media'
+        })
+      }}
+    </h4>
+    <ul class="social">
+      <li><a class="ico-fb" href="#">facebook</a></li>
+      <li><a class="ico-ig" href="#">instagram</a></li>
+      <li><a class="ico-tw" href="#">twitter</a></li>
+      <li><a class="ico-yt" href="#">youtube</a></li>
+      <li><a class="ico-li" href="#">linkedIn</a></li>
+    </ul>
+  </div>
+</div>
+<div class="text-center pt-12 sm:pt-20">
+  &copy;EPAM, 2022. {{
+    '@copyright'|t({
+      '@copyright': ' All right reserved'
+    })
+  }}
+</div>

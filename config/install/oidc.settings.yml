@@ -1,0 +1,6 @@
+generic_realms:
+  - f8cb678a_a84e_4383_ad6c_75d31b6db120
+login_path: /oidc/login/quanthub_b2c_realm%3Af8cb678a_a84e_4383_ad6c_75d31b6db120
+redirect_403: false
+disable_user_routes: true
+show_session_expired_message: true

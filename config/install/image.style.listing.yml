@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: {  }
+name: listing
+label: 'Listing (1063x520)'
+effects:
+  935fefdd-ea2b-4f78-86ec-6fdd3fe756d5:
+    uuid: 935fefdd-ea2b-4f78-86ec-6fdd3fe756d5
+    id: image_scale
+    weight: 1
+    data:
+      width: 1063
+      height: 520
+      upscale: true

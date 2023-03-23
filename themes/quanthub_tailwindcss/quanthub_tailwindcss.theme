@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Tailwind CSS theme.
+ */
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function quanthub_tailwindcss_preprocess_block(&$variables) {
+  if (quanthub_tailwindcss_get_active_theme() == 'quanthub_tailwindcss' && $variables['base_plugin_id'] == 'system_branding_block') {
+    $variables['site_logo'] = '';
+    if ($variables['content']['site_logo']['#access'] && $variables['content']['site_logo']['#uri']) {
+      $variables['site_logo'] = str_replace('.svg', '.png', $variables['content']['site_logo']['#uri']);
+    }
+  }
+  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $variables['language'] = $language;
+}
+
+/**
+ * Get the active theme.
+ *
+ * @return string
+ *   The name of the active theme.
+ */
+function quanthub_tailwindcss_get_active_theme() {
+  return \Drupal::service('theme.manager')->getActiveTheme()->getName();
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function quanthub_tailwindcss_preprocess_page(array &$variables) {
+  $workspaceId = getenv('SDMX_WORKSPACE_ID');
+  $variables['#attached']['drupalSettings']['workspaceId'] = $workspaceId;
+}

@@ -1,0 +1,8 @@
+powerbi_embed_config:
+  path: '/powerbi/embedconfig/{reportId}/{extraDatasets}'
+  defaults:
+    _title: 'EmbedConfig'
+    _controller: '\Drupal\quanthub_core\Controller\PowerBIEmbedController::getData'
+    extraDatasets: 'defaultValue'
+  requirements:
+    _permission: 'access content'

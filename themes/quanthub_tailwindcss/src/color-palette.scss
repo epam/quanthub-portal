@@ -1,0 +1,106 @@
+// Primary colors
+$primary: var(--primary, #424a9c);
+$white: var(--white, #ffffff);
+
+// Purple
+$prpl-1000: var(--prpl-1000, #272b5c);
+$prpl-900: var(--prpl-900, #373d82);
+$prpl-800: var(--prpl-800, #454b93);
+$prpl-700: var(--prpl-700, #555ca6);
+$prpl-600: var(--prpl-600, #6b6fa3);
+// $prpl-500
+$prpl-400: var(--prpl-400, #a7ace8);
+// $prpl-300
+$prpl-200: var(--prpl-200, #ccd6f6);
+$prpl-100: var(--prpl-100, #eff0fc);
+
+// Neutral
+$ntrls-1000: var(--ntrls-1000, #3f404a);
+$ntrls-900: var(--ntrls-900, #585a66);
+$ntrls-800: var(--ntrls-800, #787c8c);
+$ntrls-700: var(--ntrls-700, #acafbd);
+$ntrls-600: var(--ntrls-600, #d8dae4);
+$ntrls-500: var(--ntrls-700, #dbdae1);
+$ntrls-400: var(--ntrls-400, #dbdde9);
+$ntrls-300: var(--ntrls-300, #ecedf2);
+$ntrls-200: var(--ntrls-200, #f7f8fa);
+$ntrls-100: var(--ntrls-100, #fafaf9);
+
+// Brown
+$brwn-1000: var(--brwn-1000, #ab6700);
+// $brwn-900
+$brwn-800: var(--brwn-800, #9c8532);
+
+// Yellow
+// $ylw-1000
+$ylw-900: var(--ylw-900, #ff9800);
+// $ylw-800
+$ylw-700: var(--ylw-700, #ffc35d);
+$ylw-600: var(--ylw-600, #ffcb54);
+// $ylw-500
+$ylw-400: var(--ylw-400, #ffdd8f);
+// $ylw-300
+$ylw-200: var(--ylw-200, #fcedcf);
+$ylw-100: var(--ylw-100, #fff9ea);
+
+// Red
+$red-900: var(--red-900, #9c5151);
+
+// Pink
+$pink-1000: var(--pink-1000, #d70878);
+// $pink-900
+// $pink-800
+$pink-700: var(--pink-700, #e85b58);
+$pink-600: var(--pink-600, #ff856e);
+// $pink-500
+$pink-400: var(--pink-400, #ffa573);
+$pink-300: var(--pink-300, #f8acac);
+$pink-200: var(--pink-200, #ffd9d9);
+$pink-100: var(--pink-100, #f5eeee);
+
+// Green
+$grn-1000: var(--grn-1000, #3a9c56);
+// $grn-900
+// $grn-800
+// $grn-700
+$grn-600: var(--grn-600, #6bb580);
+// $grn-500
+$grn-400: var(--grn-400, #9dceab);
+// $grn-300
+$grn-200: var(--grn-200, #c4e1cc);
+// $grn-100
+
+// Aquaramine
+// aqmrn-1000
+$aqmrn-900: var(--aqmrn-900, #2aab95);
+// aqmrn-800
+// aqmrn-700
+// aqmrn-600
+$aqmrn-500: var(--aqmrn-500, #8cdddd);
+$aqmrn-400: var(--aqmrn-400, #a1ebef);
+
+// Blue
+// blue-1000
+// blue-900
+$blue-800: var(--blue-800, #006dab);
+// blue-700
+$blue-600: var(--blue-600, #8aceef);
+$blue-400: var(--blue-400, #a1ddff);
+
+//Electric Blue
+$electric-blue-1000: var(--electric-blue-1000, #548cff);
+
+// shadows
+// $ntrls-1000
+$shadow90: transparentize(#3f404a, 0.9);
+$shadow85: transparentize(#3f404a, 0.85);
+$shadow75: transparentize(#3f404a, 0.75);
+$shadow15: transparentize(#3f404a, 0.15);
+$shadow10: transparentize(#d8dae4, 0.1);
+
+// primary
+$primary90: transparentize(#424a9c, 0.9);
+$primary80: transparentize(#424a9c, 0.8);
+$primary60: transparentize(#424a9c, 0.6);
+$primary65: transparentize(#424a9c, 0.65);
+$primary50: transparentize(#424a9c, 0.5);

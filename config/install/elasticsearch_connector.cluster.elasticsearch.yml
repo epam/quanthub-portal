@@ -1,0 +1,18 @@
+langcode: en
+status: '1'
+dependencies: {  }
+cluster_id: elasticsearch
+name: elasticsearch
+url: 'http://elasticsearch:9200'
+options:
+  multiple_nodes_connection: false
+  use_authentication: true
+  authentication_type: Basic
+  username: null
+  password: null
+  timeout: 3
+  rewrite:
+    rewrite_index: true
+    index:
+      prefix: null
+      suffix: ''

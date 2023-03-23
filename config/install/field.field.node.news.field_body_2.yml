@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_body_2
+    - node.type.news
+  module:
+    - text
+id: node.news.field_body_2
+field_name: field_body_2
+entity_type: node
+bundle: news
+label: 'Body 2'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+field_type: text_with_summary

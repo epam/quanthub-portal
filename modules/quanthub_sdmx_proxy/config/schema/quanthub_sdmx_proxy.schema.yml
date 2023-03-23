@@ -1,0 +1,19 @@
+quanthub_sdmx_proxy.settings:
+  type: config_object
+  label: 'SDMX API Proxy settings'
+  mapping:
+    api_url:
+      type: string
+      label: 'SDMX API URL'
+    auth_token_endpoint:
+      type: string
+      label: 'SDMX API Auth token endpoint'
+    auth_client_id:
+      type: string
+      label: 'SDMX API Auth Client Id'
+    auth_client_secret:
+      type: string
+      label: 'SDMX API Auth Client Secret'
+    auth_scope:
+      type: string
+      label: 'SDMX API Auth Scope'

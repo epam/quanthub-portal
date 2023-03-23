@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_powerbi_report_3
+    - node.type.publication
+  module:
+    - quanthub_core
+id: node.publication.field_powerbi_report_3
+field_name: field_powerbi_report_3
+entity_type: node
+bundle: publication
+label: 'PowerBI Report 3'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: quanthub_powerbi_embed

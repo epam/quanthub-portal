@@ -1,0 +1,208 @@
+@import 'variables';
+@import 'font-mixins';
+
+@mixin base-button {
+  @apply flex flex-row;
+  @apply font-semibold;
+  @apply cursor-pointer;
+  @include lead-3;
+  padding: 7px 8px;
+  height: 32px;
+  user-select: none;
+  &:hover {
+    text-decoration: none;
+  }
+  svg,
+  .svg-icon {
+    @apply mr-1;
+  }
+}
+
+@mixin base-button-disable {
+  color: $ntrls-800 !important;
+  @apply pointer-events-none;
+}
+
+@mixin primary-filled-button {
+  color: $white;
+  background-color: $primary !important;
+
+  &:hover {
+    color: $white;
+    border-color: $prpl-600;
+    background-color: $prpl-600 !important;
+  }
+}
+
+@mixin rounded-button {
+  @apply rounded;
+  @apply border border-solid;
+  border-color: $primary;
+}
+
+@mixin non-primary-filled-button {
+  color: $primary;
+  background-color: $white;
+
+  &:hover {
+    background-color: $prpl-100;
+  }
+}
+
+@mixin non-red-filled-button {
+  color: $red-900 !important;
+}
+
+@mixin red-filled-button {
+  background-color: $red-900 !important;
+  border-color: $red-900 !important;
+}
+
+.primary-button {
+  @include base-button;
+  @include rounded-button;
+  @include primary-filled-button;
+
+  &_disable,
+  &:disabled {
+    @include base-button-disable;
+    border-color: $ntrls-300;
+    background-color: $ntrls-300;
+  }
+
+  &_focused {
+    background-color: $prpl-600;
+  }
+
+  &_red {
+    @include red-filled-button;
+  }
+}
+
+.secondary-button {
+  @include base-button;
+  @include rounded-button;
+  @include non-primary-filled-button;
+
+  &_red {
+    @include non-red-filled-button;
+  }
+
+  &_disable {
+    @include base-button-disable;
+    border-color: $ntrls-800;
+  }
+
+  &_focused {
+    background-color: $ntrls-300;
+  }
+
+  &:hover {
+    color: $primary;
+  }
+}
+
+.tertiary-button {
+  @include base-button;
+  @include rounded-button;
+  @include non-primary-filled-button;
+  svg path {
+    fill: $primary;
+  }
+  @apply rounded;
+  @apply px-1 py-2;
+
+  border-color: transparent;
+  background: transparent;
+
+  &_red {
+    @include non-red-filled-button;
+  }
+
+  &_disable,
+  &:disabled {
+    @include base-button-disable;
+  }
+
+  &:hover {
+    color: $primary;
+  }
+
+  &_active {
+    color: $primary;
+    background-color: $prpl-100;
+  }
+}
+
+.floating-button {
+  @include base-button;
+  @include primary-filled-button;
+  @apply border border-solid;
+  border-color: $primary;
+  border-radius: 40px;
+  box-shadow: 0px 2px 4px 0px var(--shadow85, $shadow85);
+
+  &_disable {
+    @include base-button-disable;
+    border-color: $ntrls-300;
+    background-color: $ntrls-300;
+  }
+}
+
+.icon-button {
+  @include base-button;
+  @include rounded-button;
+  @include non-primary-filled-button;
+  border-color: transparent;
+
+  &_disable {
+    @include base-button-disable;
+  }
+
+  &_active {
+    background-color: $prpl-100;
+  }
+
+  .svg-icon {
+    margin: 0;
+    &:first-child {
+      @apply mr-0;
+    }
+    &:last-child {
+      @apply ml-0;
+    }
+  }
+}
+// -------------------------DELETE -OLD VERSION
+// ld resources tabs
+.app-button {
+  @apply flex;
+  @apply flex-row;
+  @apply items-center;
+  @apply border;
+  @apply border-solid;
+  @apply border-transparent;
+  @apply cursor-pointer;
+  @apply rounded;
+
+  color: $white;
+  height: 28px;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 5px 8px;
+
+  fa-icon {
+    margin-right: 7px;
+  }
+
+  &_disabled {
+    @apply pointer-events-none;
+    @apply opacity-50;
+  }
+}
+
+.link-btn {
+  @apply tertiary-button;
+  @include header-5;
+  line-height: 14px;
+}

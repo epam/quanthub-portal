@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_data_slices
+    - node.type.dataset
+  module:
+    - text
+id: node.dataset.field_data_slices
+field_name: field_data_slices
+entity_type: node
+bundle: dataset
+label: 'Data Slices'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+field_type: text_with_summary

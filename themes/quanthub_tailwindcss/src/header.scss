@@ -1,0 +1,279 @@
+$header-height: 72px;
+
+.header {
+  background: $white;
+}
+
+.region-header {
+  @apply wrapper;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: $header-height;
+  position: relative;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .site-logo {
+    height: 42px;
+    width: 42px;
+  }
+  .site-title {
+    @include header-1;
+    white-space: nowrap;
+
+    &:hover {
+      text-decoration: none;
+    }
+    @screen md {
+      @include header-2;
+    }
+  }
+}
+
+/* top navigation */
+
+.menu-holder,
+.top-navs {
+  display: flex;
+  flex-direction: row;
+}
+.menu--main {
+  margin-left: auto;
+}
+.menu--wrapper {
+  flex: 1;
+  .navbar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @include header-4;
+    gap: 2rem;
+
+    @screen lg {
+      gap: 1rem;
+    }
+    @screen md {
+      gap: 0;
+    }
+
+    li {
+      padding: 0.5rem 1rem;
+      white-space: nowrap;
+    }
+
+    a {
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    .dropdown {
+      position: relative;
+      color: $primary;
+
+      &:hover {
+        .dropdown-menu {
+          left: -20px;
+        }
+      }
+    }
+
+    .dropdown-menu {
+      min-width: 182px;
+      position: absolute;
+      top: 40px;
+      left: -20000px;
+      z-index: 5;
+      background: $white;
+      box-shadow: 0 4px 15px $shadow75;
+      border-radius: 8px;
+      padding: 0 24px;
+      overflow: hidden;
+
+      li {
+        border-top: 1px solid $ntrls-400;
+        padding: 0;
+        &:first-child {
+          border: 0;
+        }
+      }
+      a {
+        display: block;
+        padding: 1rem 24px;
+        margin: 0 -24px;
+        white-space: nowrap;
+        &:hover {
+          text-decoration: none;
+          background: $prpl-100;
+        }
+      }
+    }
+  }
+}
+
+.mobile-drop-link {
+  @include mask-icon('ico-menu-dark.svg');
+  -webkit-mask-position: 50% 50%;
+  width: 52px;
+  height: 52px;
+  cursor: pointer;
+  text-indent: -99999px;
+  margin-left: auto;
+  display: none;
+}
+
+.menu-holder {
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@screen sm {
+  .menu--wrapper {
+    &:hover {
+      .menu-holder {
+        display: block;
+      }
+    }
+  }
+  .mobile-drop-link {
+    display: block;
+  }
+
+  .menu-holder {
+    position: absolute;
+    background: $white;
+    top: 58px;
+    right: 0;
+    left: 0;
+    flex-direction: column;
+    padding: 16px;
+    display: none;
+  }
+
+  .top-navs {
+    width: 100%;
+    display: flex;
+  }
+
+  .navbar-nav {
+    margin: 0;
+  }
+
+  .form--inline .form-item {
+    flex-grow: 1;
+    input[type='text'] {
+      width: 100%;
+    }
+  }
+}
+
+@screen sm {
+  .menu--wrapper {
+    #block-search-in-header {
+      margin: 0 0 24px;
+    }
+    .top-navs {
+      justify-content: space-between;
+      @include header-2;
+    }
+    .navbar-nav {
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 24px;
+
+      li {
+        padding: 0;
+      }
+
+      .dropdown-menu {
+        position: initial;
+        left: 0;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+        @include paragraph-4;
+        li {
+          border: none;
+        }
+        a {
+          margin: 0;
+          padding: 8px 0;
+        }
+      }
+    }
+  }
+}
+
+.path-frontpage {
+  &.user-logged-in {
+    .header {
+      top: 79px;
+    }
+  }
+  .header {
+    width: 100%;
+    height: $header-height;
+    background-color: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    -webkit-backface-visibility: hidden;
+
+    .menu--wrapper {
+      flex: 0;
+    }
+
+    .menu--account {
+      border-left: 1px solid $primary;
+    }
+
+    .nav-link.is-active {
+      border-bottom: 4px solid;
+      padding-bottom: inherit;
+    }
+
+    &:not(.is-sticky) {
+      .nav-item,
+      .nav-link,
+      .site-title {
+        color: $white;
+      }
+      .nav-item,
+      .nav-link {
+        @screen sm {
+          color: $primary;
+        }
+      }
+      .menu--account {
+        border-color: $white;
+      }
+      .menu-holder {
+        background: transparent;
+        @screen sm {
+          background: $white;
+        }
+      }
+    }
+
+    .mobile-drop-link {
+      background-image: url('/assets/images/ico-menu-white.svg');
+    }
+
+    &.is-sticky {
+      background: $white;
+
+      .mobile-drop-link {
+        background-image: url('/assets/images/ico-menu-dark.svg');
+      }
+    }
+  }
+}

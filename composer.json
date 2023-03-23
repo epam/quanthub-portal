@@ -1,0 +1,16 @@
+{
+  "name": "epam/quanthub-portal",
+  "description": "Quanthub Portal Drupal Profile",
+  "type": "drupal-profile",
+  "require": {
+    "php": ">=8.0"
+  },
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Artem Boyko",
+      "email": "artemboyko43@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev"
+}

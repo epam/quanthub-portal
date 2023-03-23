@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - quanthub_tailwindcss
+id: quanthub_tailwindcss_messages
+theme: quanthub_tailwindcss
+region: content
+weight: -11
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: Messages
+  label_display: '0'
+  provider: system
+visibility: {  }

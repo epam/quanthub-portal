@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.topics
+  module:
+    - system
+    - views
+  theme:
+    - quanthub_tailwindcss
+id: views_block__topics_block_2
+theme: quanthub_tailwindcss
+region: content
+weight: -4
+provider: null
+plugin: 'views_block:topics-block_2'
+settings:
+  id: 'views_block:topics-block_2'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/publications\r\n/datasets\r\n/news"

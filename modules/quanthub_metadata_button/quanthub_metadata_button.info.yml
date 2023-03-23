@@ -1,0 +1,5 @@
+name: 'Quanthub Metadata Button'
+type: module
+description: 'Quanthub custom component Metadata Button.'
+core_version_requirement: ^8 || ^9
+package: 'Epam Quanthub'

@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: datasets
+label: Datasets
+type: 'canonical_entities:node'
+pattern: '/datasets/[node:nid]'
+selection_criteria:
+  b9577a21-40c7-4bb2-bfa2-44845a72e7be:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: b9577a21-40c7-4bb2-bfa2-44845a72e7be
+    context_mapping:
+      node: node
+    bundles:
+      dataset: dataset
+selection_logic: and
+weight: -5
+relationships: {  }

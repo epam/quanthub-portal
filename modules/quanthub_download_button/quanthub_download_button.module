@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Quanthub Download button module.
+ */
+
+use Drupal\node\NodeInterface;
+
+/**
+ * Preprocess field.
+ */
+function quanthub_download_button_preprocess_field(&$variables, $hook) {
+  if ($variables['field_name'] == 'field_metadata') {
+    $entity = $variables['element']['#object'];
+    if (
+      $entity instanceof NodeInterface &&
+      $entity->getType() == 'dataset'
+    ) {
+      $variables['quanthub_urn'] = $entity->field_quanthub_urn->getString();
+    }
+  }
+}
+
+/**
+ * Preprocess node.
+ */
+function quanthub_download_button_preprocess_node(&$variables) {
+  $node = $variables['node'];
+  if (
+    $node instanceof NodeInterface &&
+    $node->getType() == 'dataset'
+  ) {
+    $variables['quanthub_urn'] = $node->field_quanthub_urn->getString();
+  }
+}

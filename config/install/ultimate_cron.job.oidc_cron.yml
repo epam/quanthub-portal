@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - oidc
+title: 'Default cron handler'
+id: oidc_cron
+weight: 0
+module: oidc
+callback: oidc_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

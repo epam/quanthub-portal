@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: details
+label: Details
+type: 'canonical_entities:node'
+pattern: /%/details
+view_mode: details
+selection_criteria:
+  623a13c1-533f-4461-bc75-9f17707998ee:
+    id: node_type
+    bundles:
+      dataset: dataset
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 623a13c1-533f-4461-bc75-9f17707998ee
+selection_logic: and
+weight: -5
+relationships: {  }

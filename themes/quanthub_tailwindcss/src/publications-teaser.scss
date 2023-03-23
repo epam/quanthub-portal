@@ -1,0 +1,55 @@
+.block-views-blockpublications-block-1 {
+  @apply wrapper;
+
+  .view-content {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+
+    @screen md {
+      flex-direction: column;
+    }
+
+    a {
+      color: $ntrls-1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px;
+      height: 100%;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .node--view-mode-teaser {
+    height: 100%;
+  }
+
+  .views-row {
+    flex-basis: 33%;
+    background: $white;
+    border: 1px solid $ntrls-400;
+    border-radius: 8px;
+    overflow: hidden;
+
+    .field--name-display-name,
+    .field--name-field-dataset-id,
+    .field--name-body,
+    .node__meta,
+    .node__links {
+      display: none;
+    }
+
+    &:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  img {
+    margin: 0 auto;
+    object-fit: cover;
+  }
+}

@@ -1,0 +1,9 @@
+name: 'Quanthub Core'
+description: 'Quanthub Core functionality'
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Epam Quanthub'
+
+dependencies:
+  - oidc

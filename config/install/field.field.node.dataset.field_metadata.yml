@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_metadata
+    - node.type.dataset
+  module:
+    - key_value_field
+id: node.dataset.field_metadata
+field_name: field_metadata
+entity_type: node
+bundle: dataset
+label: Metadata
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  default_format: basic_html
+field_type: key_value_long

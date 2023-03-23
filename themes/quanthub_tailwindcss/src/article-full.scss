@@ -1,0 +1,179 @@
+.article--full {
+  .field--name-field-topics {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    font-weight: normal;
+
+    .field__item {
+      &:before {
+        display: none;
+      }
+      a {
+        display: inline-block;
+        vertical-align: top;
+        padding: 2px 16px;
+        height: 24px;
+        color: $ntrls-1000;
+        background: $prpl-100;
+        border-radius: 40px;
+        white-space: nowrap;
+
+        &:hover {
+          color: $white;
+          background: $primary;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  .field--name-field-main-image {
+    margin-bottom: 1rem;
+    .field__label {
+      display: none;
+    }
+  }
+
+  .field--name-body {
+    display: block;
+    margin: 1rem 0;
+    @include paragraph-4;
+  }
+}
+
+.field--name-display-name {
+  display: none;
+}
+
+.metadata {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 16px;
+  row-gap: 8px;
+
+  .field__item {
+    display: flex;
+    gap: 4px;
+  }
+  p {
+    @apply font-bold;
+  }
+}
+
+.field--type-text-with-summary {
+  h2 {
+    @apply header-2 mb-2;
+  }
+}
+
+.text-formatted {
+  ol,
+  ul {
+    margin: 0 0 8px 16px;
+    list-style: decimal;
+    > li {
+      margin-top: 8px;
+    }
+  }
+  ul {
+    list-style: disc;
+  }
+}
+
+.field--name-field-data-slices,
+.field--name-field-references {
+  ol,
+  ul {
+    margin-left: 0;
+    list-style: none;
+    > li {
+      padding-left: 20px;
+      background: url('../assets/images/ico-explorer-dark.svg') 0 2px no-repeat;
+    }
+  }
+
+  ul > li {
+    background: url('../assets/images/ico-open-dark.svg') 0 2px no-repeat;
+  }
+}
+
+.field--dataset-related-publications--reference {
+  display: block;
+  margin-top: 8px;
+  a {
+    padding-left: 20px;
+    background: url('../assets/images/ico-open-dark.svg') 0 2px no-repeat;
+  }
+}
+
+.block {
+  .file--application-pdf {
+    background-image: url('../assets/images/ico-pdf-dark.svg');
+    background-position: 0 2px;
+  }
+}
+
+.block-field-blocknodedatasetfield-data-slices,
+.field--name-field-legislation,
+.block-views-blockrelated-publications-block-1,
+.block-field-blocknodepublicationfield-references {
+  @apply border-top mt-6 pt-6;
+}
+
+.page-node-type-dataset {
+  main[role='main'] {
+    @include col-10;
+  }
+  .node--view-mode-full {
+    .layout__region {
+      @include block-cloud;
+    }
+  }
+}
+
+.field--name-field-legislation,
+.field--name-field-methodology {
+  table {
+    width: 100%;
+    thead {
+      display: none;
+    }
+    td {
+      @apply pb-3;
+
+      &:last-child {
+        text-align: right;
+        white-space: nowrap;
+        font-size: 12px;
+        vertical-align: top;
+      }
+    }
+  }
+}
+
+.block-field-blocknodenewsfield-topics {
+  margin-bottom: 16px;
+}
+
+.page-node-type-news .page,
+.page-node-type-publication .page {
+  main {
+    @apply wrapper py-0;
+    > .flex {
+      @include block-cloud;
+      box-shadow: none;
+      @apply pt-0 mb-20;
+    }
+    .region-content {
+      padding-top: 0;
+      padding-bottom: 32px;
+      @include col-6-4;
+    }
+  }
+}
+
+.dataset--details {
+  @include block-cloud;
+}

@@ -1,0 +1,181 @@
+<?php
+
+/**
+ * @file
+ * Quanthub Core module.
+ */
+
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Access\AccessResult;
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function quanthub_core_node_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  if ($operation == 'view') {
+    if ($entity->bundle() == 'dataset') {
+      if (getenv('WSO_IGNORE') !== 'TRUE') {
+        $allowed_datasets = \Drupal::service('allowed_content_manager')
+          ->getAllowedDatasetList();
+      }
+      if (!empty($allowed_datasets)) {
+        $node_dataset = $entity->field_quanthub_urn->getString();
+        // @todo We are not checking quanthub dataset version here.
+        foreach ($allowed_datasets as $allowed_dataset) {
+          if (strpos($node_dataset, $allowed_dataset) !== FALSE) {
+            return AccessResult::allowed();
+          }
+        }
+        return AccessResult::forbidden();
+      }
+    }
+    if ($entity->bundle() == 'publication') {
+      // @todo rewrite in db_select.
+      $node_dataset = $entity?->get('field_dataset')?->first()?->get('entity')?->getTarget()?->getValue()?->get('field_quanthub_urn')?->getString();
+      if (getenv('WSO_IGNORE') !== 'TRUE') {
+        $allowed_datasets = \Drupal::service('allowed_content_manager')
+          ->getAllowedDatasetList();
+      }
+      if (!empty($allowed_datasets)) {
+        // @todo We are not checking quanthub dataset version here.
+        foreach ($allowed_datasets as $allowed_dataset) {
+          if (strpos($node_dataset, $allowed_dataset) !== FALSE) {
+            return AccessResult::allowed();
+          }
+        }
+        return AccessResult::forbidden();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function quanthub_core_views_data_alter(array &$data) {
+  $data['node__field_quanthub_urn']['allowed_content_filter'] = [
+    'title' => t('Allowed Content Filter'),
+    'filter' => [
+      'title' => t('Allowed Content Filter'),
+      'help' => t('Content Filter By Dataset Urn'),
+      'group' => t('Quanthub'),
+      'field' => 'field_quanthub_urn',
+      'id' => 'allowed_content_filter',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function quanthub_core_preprocess_page(&$variables) {
+  // Add Microsoft PowerBI JS client library.
+  $variables['#attached']['library'][] = 'powerbi_embed/powerbi_embed-client';
+  // Add module-specific JS customizations.
+  $variables['#attached']['library'][] = 'powerbi_embed/powerbi_embed-customizer';
+}
+
+/**
+ * Implements hook_theme().
+ */
+function quanthub_core_theme() {
+  return [
+    'powerbi_embed_formatter' => [
+      'variables' => [
+        'embed_id' => NULL,
+        'embed_type' => NULL,
+        'field_name' => NULL,
+        'report_id' => NULL,
+        'report_width' => NULL,
+        'report_height' => NULL,
+        'report_title' => NULL,
+        'report_page' => NULL,
+        'report_visual' => NULL,
+        'extra_datasets' => NULL,
+        'workspace_id' => NULL,
+        'token' => NULL,
+        'embed_url' => NULL,
+      ],
+      'template' => 'powerbi-embed-formatter',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_cron().
+ */
+function quanthub_core_cron() {
+  Drupal::logger('powerbi_embed')->info("cron: invalidate tags");
+  $tags = ['powerbi_embed:token'];
+  Cache::invalidateTags($tags);
+}
+
+/**
+ * Alter the form powerbi_embed_settings.
+ *
+ * @param array $form
+ *   An associative array containing the structure of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ * @param string $form_id
+ *   The form ID.
+ */
+function quanthub_core_form_powerbi_embed_settings_alter(array &$form, FormStateInterface $form_state, string $form_id) {
+  $config = Drupal::configFactory()->get('powerbi_embed.settings');
+  $module_handler = Drupal::moduleHandler();
+
+  // @todo Need to find better way to alter contrib form.
+  $form['auth_method']['#disabled'] = TRUE;
+  $form['adal']['#disabled'] = TRUE;
+  $form['msal']['#disabled'] = TRUE;
+
+  $form['client_id'] = [
+    '#type' => 'textfield',
+    '#title' => t('Azure Client ID'),
+    '#description' => t('Azure Client ID'),
+    '#default_value' => empty($config->get('client_id')) ? '' : $config->get('client_id'),
+  ];
+
+  $form['username'] = [
+    '#type' => 'textfield',
+    '#title' => t('Service Principal Username'),
+    '#description' => t('Service Principal Username'),
+    '#default_value' => empty($config->get('username')) ? '' : $config->get('username'),
+  ];
+
+  $form['password'] = [
+    '#type' => 'password',
+    '#title' => t('Service Principal Password'),
+    '#description' => t('Service Principal Password'),
+    '#default_value' => empty($config->get('password')) ? '' : $config->get('password'),
+  ];
+  if ($module_handler->moduleExists('key')) {
+    $form['password']['#type'] = 'key_select';
+  }
+
+  $form['actions']['submit']['#submit'][] = 'quanthub_core_form_powerbi_embed_settings_submit';
+}
+
+/**
+ * Alter Submit for quanthub_core_form_powerbi_embed_settings_alter form .
+ *
+ * @param array $form
+ *   An associative array containing the structure of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ */
+function quanthub_core_form_powerbi_embed_settings_submit(array $form, FormStateInterface $form_state) {
+  $config = Drupal::configFactory()->getEditable('powerbi_embed.settings');
+
+  $config->set('workspace_id', $form_state->getValue('workspace_id'));
+  $config->set('client_id', $form_state->getValue('client_id'));
+  $config->set('username', $form_state->getValue('username'));
+  if (!empty($form_state->getValue('password'))) {
+    $config->set('password', $form_state->getValue('password'));
+  }
+
+  $config->save();
+}

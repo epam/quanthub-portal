@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Contains quanthub_sdmx_proxy.module.
+ */
+
+use Drupal\Core\Cache\Cache;
+
+/**
+ * Implements hook_cron().
+ */
+function quanthub_sdmx_proxy_cron() {
+  \Drupal::logger('quanthub_sdmx_proxy')->info("cron: invalidate tags");
+  $tags = ['quanthub_sdmx:token'];
+  Cache::invalidateTags($tags);
+}

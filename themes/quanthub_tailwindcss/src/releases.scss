@@ -1,0 +1,9 @@
+.page-node-type-release{
+    .node--type-release {
+        @include block-cloud;
+        .field--name-field-rrule {
+          @apply hidden;
+        }
+      }
+      
+}

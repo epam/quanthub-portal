@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+name: Education
+vid: education
+description: ''
+weight: 0

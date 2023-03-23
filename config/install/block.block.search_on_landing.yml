@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+    - views_exposed_filter_blocks
+  theme:
+    - quanthub_tailwindcss
+id: search_on_landing
+theme: quanthub_tailwindcss
+region: search
+weight: 0
+provider: null
+plugin: views_exposed_filter_blocks_block
+settings:
+  id: views_exposed_filter_blocks_block
+  label: 'Views exposed filter block'
+  label_display: '0'
+  provider: views_exposed_filter_blocks
+  view_display: 'search:block_1'
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

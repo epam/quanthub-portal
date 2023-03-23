@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.google_maps
+    - field.field.block_content.google_maps.field_google_maps
+  module:
+    - google_map_field
+id: block_content.google_maps.default
+targetEntityType: block_content
+bundle: google_maps
+mode: default
+content:
+  field_google_maps:
+    type: google_map_field_embed
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

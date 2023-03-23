@@ -1,0 +1,45 @@
+services:
+  # Logger channel service.
+  logger.channel.quanthub_core:
+    parent: logger.channel_base
+    arguments: ['quanthub_core']
+
+  # Soap client for getting allowed content according to XACML policies.
+  xacml_soap_client:
+    class: '\Drupal\quanthub_core\XacmlSoapClient'
+    arguments: ['@http_client', '@logger.factory', '@user_info', '@current_user']
+
+  # Managing allowed content in user data. Work xacml_soap_client.
+  allowed_content_manager:
+    class: '\Drupal\quanthub_core\AllowedContentManager'
+    arguments: ['@xacml_soap_client', '@current_user', '@cache.default', '@language_manager', '@datetime.time']
+
+  # Event subscriber for getting and string user info token and attributes for anonymous user.
+  anonymous_user_info_token_subscriber:
+    class: '\Drupal\quanthub_core\AnonymousUserInfoTokenSubscriber'
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@cache.default', '@current_user', '@logger.channel.quanthub_core', '@config.factory', '@http_client']
+
+  # Event subscriber for getting and storing user infor attributes for authenticated user.
+  user_info_attributes_subscriber:
+    class: '\Drupal\quanthub_core\UserInfoAttributesSubscriber'
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@logger.channel.quanthub_core', '@config.factory', '@http_client', '@oidc.openid_connect_session', '@user.data']
+
+  # Get user info token for any user.
+  user_info:
+    class: '\Drupal\quanthub_core\UserInfo'
+    arguments: ['@current_user', '@cache.default', '@oidc.openid_connect_session', '@user.data', '@http_client']
+
+  powerbi_embed_configs:
+    class: Drupal\quanthub_core\PowerBIEmbedConfigs
+    arguments: ['@config.factory', '@key.repository', '@logger.factory']
+
+  # User Info Cache Context based on User Info Role for anonymous and User Id for others.
+  cache_context.user_info_attributes:
+    class: Drupal\quanthub_core\Cache\Context\UserInfoAttributesCacheContext
+    arguments: ['@current_user', '@user.data']
+    tags:
+      - { name: cache.context}

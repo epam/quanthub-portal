@@ -1,0 +1,398 @@
+form {
+  .form--inline {
+    display: flex;
+    align-items: center;
+
+    .form-item {
+      display: block;
+      margin: 0;
+    }
+
+    input[type='text'] {
+      height: 32px;
+      @include input;
+      padding: 5px 11px 5px 6px;
+
+      @screen md {
+        min-width: 60px;
+      }
+    }
+
+    .button {
+      @apply primary-button;
+      margin-left: -5px;
+    }
+
+    @screen md {
+      .form-actions {
+        margin: 0;
+      }
+    }
+  }
+}
+
+.region-search {
+  color: $white;
+  height: 520px;
+  // TODO: delete custom color
+  background: linear-gradient(83.02deg, #062759 0%, #3d419b 100%);
+
+  @screen lg {
+    height: 480px;
+  }
+  @screen md {
+    height: 594px;
+  }
+
+  .banner {
+    background: url('/assets/images/bg-earth.svg') 100% 40px no-repeat;
+    padding: 140px 195px 0;
+    height: 100%;
+
+    @screen 2xl {
+      padding-left: 163px;
+    }
+    @screen xl {
+      @apply wrapper;
+      padding-top: 123px;
+    }
+    @screen lg {
+      padding-top: 70px;
+      background-position: 100% 100%;
+    }
+    @screen md {
+      padding-top: 276px;
+      background-position: 0 0;
+      background-size: contain;
+    }
+    @screen sm {
+      padding-top: 212px;
+    }
+
+    .search--block {
+      width: 65%;
+      @screen sm {
+        width: 100%;
+        p {
+          max-width: 100%;
+        }
+      }
+    }
+  }
+
+  .heading {
+    @include display-1;
+    margin-bottom: 26px;
+
+    @screen xl {
+      @include display-2;
+    }
+    @screen md {
+      @include display-3;
+      margin-bottom: 8px;
+    }
+  }
+
+  form {
+    input[type='text'] {
+      min-width: 450px;
+      flex-basis: 450px;
+      @screen md {
+        height: 40px;
+      }
+      @screen sm {
+        min-width: 360px;
+      }
+      @screen xs {
+        min-width: 0;
+      }
+    }
+
+    @screen xs {
+      .form--inline {
+        .form-item {
+          flex-grow: 1;
+          input[type='text'] {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .form-actions {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .form-submit {
+      padding-left: 28px;
+      position: relative;
+
+      &::after {
+        position: absolute;
+        top: 7px;
+        left: 8px;
+        @include basic-icon('ico-search-white.svg');
+
+        @screen md {
+          width: 24px;
+          height: 24px;
+          top: 6px;
+          background-size: cover;
+        }
+      }
+
+      @screen md {
+        height: 40px;
+        line-height: 24px;
+        padding-left: 36px;
+      }
+
+      @screen sm {
+        font-size: 0;
+        width: 40px;
+        padding-left: 8px;
+      }
+    }
+  }
+}
+
+.search--popular {
+  @include caption-1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 24px;
+
+  @screen xl {
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+  }
+
+  a {
+    color: $white;
+    display: block;
+    padding: 4px 8px;
+    border: 1px solid $white;
+    border-radius: 16px;
+
+    &:hover {
+      text-decoration: none;
+      background: $white;
+      color: $primary;
+    }
+  }
+}
+
+#block-search-in-header {
+  margin: 0 16px;
+
+  input[type='text'] {
+    height: 32px;
+    padding-left: 30px;
+    background-image: url('/assets/images/ico-search-grey.svg');
+    background-position: 8px 7px;
+    background-repeat: no-repeat;
+    @screen lg {
+      width: 150px;
+    }
+    @screen md {
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (min-width: 719px) and (max-width: 1023px) {
+  #block-search-in-header {
+    @include basic-icon('ico-search-dark-big.svg');
+    width: 32px;
+    height: 32px;
+    margin: 0 26px;
+    position: relative;
+    form {
+      display: none;
+    }
+    input[type='text'] {
+      width: 300px;
+    }
+    &:hover {
+      form {
+        @include block-cloud;
+        padding: 18px 24px;
+        position: absolute;
+        top: 32px;
+        left: -20px;
+        display: block;
+      }
+    }
+  }
+}
+
+#views-exposed-form-search-page-1 {
+  display: none;
+}
+
+.indicator {
+  @include body-1;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 2px 16px;
+  border-radius: 24px;
+  background: $blue-800;
+  color: $white;
+  margin-top: 4px;
+}
+
+.indicator--dataset {
+  background: $grn-1000;
+  &:before {
+    @include basic-icon('ico-dataflow-white.svg');
+  }
+}
+
+.indicator--news {
+  background: $pink-1000;
+  &:before {
+    @include basic-icon('ico-document-white.svg');
+  }
+}
+
+.indicator--publication {
+  background: $blue-800;
+  &:before {
+    @include basic-icon('ico-audit-white.svg');
+  }
+}
+
+.indicator--release {
+  background: $ylw-900;
+  &:before {
+    @include basic-icon('ico-dataflow-white.svg');
+  }
+}
+
+.search--meta-icon {
+  display: flex;
+  height: 2rem;
+}
+
+.search--listing {
+  @include block-cloud;
+  @screen xs {
+    @include undo-block-cloud;
+  }
+
+  .view-header {
+    @include paragraph-3;
+  }
+
+  .view-content {
+    display: flex;
+    flex-direction: column;
+
+    .views-row {
+      padding: 24px 0;
+
+      &:not(:first-child) {
+        @apply border-top;
+      }
+    }
+  }
+}
+
+.pagination,
+.pager__items {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-item {
+  @include paragraph-4;
+  line-height: 32px;
+
+  a {
+    color: $ntrls-800;
+  }
+}
+
+.page-item.is-active {
+  font-weight: bold;
+  color: $ntrls-1000;
+  a {
+    color: $ntrls-1000;
+  }
+}
+
+.pager__item--previous,
+.pager__item--next {
+  @include basic-icon('btn-prev.svg');
+  width: 32px;
+  height: 32px;
+
+  a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.pager__item--next {
+  background-image: url('/assets/images/btn-next.svg');
+}
+
+.pager__item--first,
+.pager__item--last {
+  display: none;
+}
+
+.block-facets {
+  &:not(:first-child) {
+    @apply border-top pt-2 mt-2;
+    &.facet-inactive.hidden {
+      border: none;
+    }
+  }
+
+  h3 {
+    @include header-5;
+    margin-bottom: 12px;
+  }
+
+  ul {
+    li {
+      @apply app-checkbox;
+
+      label {
+        width: 100%;
+      }
+    }
+  }
+
+  .facet-item__value {
+    flex-grow: 1;
+  }
+
+  .item-list__checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    ul {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      li {
+        margin-left: 16px;
+      }
+    }
+  }
+}
+.path-search .field--name-title {
+  @include two-lines(32px);
+}

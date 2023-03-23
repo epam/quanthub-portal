@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.google_maps
+    - field.storage.block_content.field_google_maps
+  module:
+    - google_map_field
+id: block_content.google_maps.field_google_maps
+field_name: field_google_maps
+entity_type: block_content
+bundle: google_maps
+label: 'Google maps'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: google_map_field

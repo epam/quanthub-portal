@@ -1,0 +1,146 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - field.storage.node.field_body_2
+    - field.storage.node.field_body_3
+    - field.storage.node.field_dataset
+    - field.storage.node.field_quanthub_urn
+    - field.storage.node.field_topics
+    - search_api.server.elasticsearch
+  module:
+    - node
+    - search_api
+    - quanthub_core
+id: content
+name: Content
+description: ''
+read_only: false
+field_settings:
+  body:
+    label: Body
+    datasource_id: 'entity:node'
+    property_path: body
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.body
+  changed:
+    label: Changed
+    datasource_id: 'entity:node'
+    property_path: changed
+    type: date
+    dependencies:
+      module:
+        - node
+  content_type:
+    label: 'Content type'
+    datasource_id: 'entity:node'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - node
+  field_body_2:
+    label: 'Body 2'
+    datasource_id: 'entity:node'
+    property_path: field_body_2
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_body_2
+  field_body_3:
+    label: 'Body 3'
+    datasource_id: 'entity:node'
+    property_path: field_body_3
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_body_3
+  field_dataset:
+    label: Dataset
+    datasource_id: 'entity:node'
+    property_path: field_dataset
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_dataset
+  field_quanthub_urn:
+    label: 'Quanthub URN'
+    datasource_id: 'entity:node'
+    property_path: field_quanthub_urn
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_quanthub_urn
+  field_quanthub_urn_relation:
+    label: 'Dataset » Content » Quanthub URN'
+    datasource_id: 'entity:node'
+    property_path: 'field_dataset:entity:field_quanthub_urn'
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_dataset
+        - field.storage.node.field_quanthub_urn
+      module:
+        - node
+  field_topics:
+    label: Topics
+    datasource_id: 'entity:node'
+    property_path: field_topics
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_topics
+  langcode:
+    label: Language
+    datasource_id: 'entity:node'
+    property_path: langcode
+    type: string
+    dependencies:
+      module:
+        - node
+  title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: string
+    dependencies:
+      module:
+        - node
+datasource_settings:
+  'entity:node':
+    bundles:
+      default: false
+      selected:
+        - dataset
+        - news
+        - publication
+        - release
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  allowed_content_filter:
+    weights:
+      preprocess_query: 0
+  entity_status: {  }
+  entity_type: {  }
+  hierarchy:
+    weights:
+      preprocess_index: -45
+    fields:
+      field_topics: taxonomy_term-parent
+  language_with_fallback: {  }
+  rendered_item: {  }
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  cron_limit: 50
+  index_directly: true
+  track_changes_in_references: true
+server: elasticsearch

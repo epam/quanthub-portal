@@ -1,0 +1,132 @@
+@mixin header-1 {
+  @apply font-bold;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+@mixin header-2 {
+  @apply font-bold;
+  font-size: 20px;
+  line-height: 32px;
+}
+
+@mixin header-3 {
+  @apply font-semibold;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+@mixin header-4 {
+  @apply font-bold;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+@mixin header-5 {
+  @apply font-bold;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+@mixin header-6 {
+  @apply font-semibold;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+@mixin lead-1 {
+  @apply font-bold;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+@mixin lead-2 {
+  @apply font-bold;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+@mixin lead-3 {
+  @apply font-semibold;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+@mixin body-1 {
+  @apply font-normal;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+@mixin body-2 {
+  @apply font-normal;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+@mixin body-3 {
+  @apply italic;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+@mixin caption-1 {
+  @apply font-normal;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+@mixin caption-2 {
+  @apply font-normal;
+  font-size: 10px;
+  line-height: 16px;
+}
+
+@mixin caption-3 {
+  @apply font-bold;
+  font-size: 10px;
+  line-height: 16px;
+}
+
+@mixin display-1 {
+  @apply font-bold;
+  font-size: 56px;
+  line-height: 72px;
+}
+
+@mixin display-2 {
+  @apply font-bold;
+  font-size: 48px;
+  line-height: 56px;
+}
+
+@mixin display-3 {
+  @apply font-bold;
+  font-size: 32px;
+  line-height: 40px;
+}
+
+@mixin paragraph-1 {
+  @apply font-normal;
+  font-size: 24px;
+  line-height: 36px;
+}
+
+@mixin paragraph-2 {
+  @apply font-normal;
+  font-size: 20px;
+  line-height: 32px;
+}
+
+@mixin paragraph-3 {
+  @apply font-normal;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+@mixin paragraph-4 {
+  @apply font-normal;
+  font-size: 16px;
+  line-height: 24px;
+}

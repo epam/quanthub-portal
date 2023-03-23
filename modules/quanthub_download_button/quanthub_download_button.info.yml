@@ -1,0 +1,5 @@
+name: 'Quanthub Download Button'
+type: module
+description: 'Quanthub custom component Download Button.'
+core_version_requirement: ^8 || ^9
+package: 'Epam Quanthub'

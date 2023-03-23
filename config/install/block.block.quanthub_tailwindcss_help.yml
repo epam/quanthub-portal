@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - quanthub_tailwindcss
+id: quanthub_tailwindcss_help
+theme: quanthub_tailwindcss
+region: content
+weight: -8
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  label_display: '0'
+  provider: help
+visibility: {  }

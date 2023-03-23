@@ -1,0 +1,141 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.dataset.body
+    - field.field.node.dataset.field_body_2
+    - field.field.node.dataset.field_body_3
+    - field.field.node.dataset.field_data_slices
+    - field.field.node.dataset.field_dataset_id
+    - field.field.node.dataset.field_legislation
+    - field.field.node.dataset.field_metadata
+    - field.field.node.dataset.field_methodology
+    - field.field.node.dataset.field_powerbi_report
+    - field.field.node.dataset.field_powerbi_report_2
+    - field.field.node.dataset.field_powerbi_report_3
+    - field.field.node.dataset.field_quanthub_urn
+    - field.field.node.dataset.field_topics
+    - field.field.node.dataset.layout_builder__layout
+    - node.type.dataset
+  module:
+    - file
+    - key_value_field
+    - layout_builder
+    - quanthub_core
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.dataset.default
+targetEntityType: node
+bundle: dataset
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_body_2:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_body_3:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_data_slices:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_dataset_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_legislation:
+    type: file_default
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_metadata:
+    type: key_value
+    label: hidden
+    settings:
+      value_only: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_methodology:
+    type: file_default
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_powerbi_report:
+    type: quanthub_powerbi_embed_formatter
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_powerbi_report_2:
+    type: quanthub_powerbi_embed_formatter
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  field_powerbi_report_3:
+    type: quanthub_powerbi_embed_formatter
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 12
+    region: content
+  field_quanthub_urn:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 13
+    region: content
+  field_topics:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  layout_builder__layout: true
+  search_api_excerpt: true

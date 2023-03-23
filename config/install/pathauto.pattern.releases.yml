@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: releases
+label: Releases
+type: 'canonical_entities:node'
+pattern: '/release/[node:nid]'
+selection_criteria:
+  cfe043bf-6bc7-4e4d-85d3-951cf1fe1008:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: cfe043bf-6bc7-4e4d-85d3-951cf1fe1008
+    context_mapping:
+      node: node
+    bundles:
+      release: release
+selection_logic: and
+weight: -10
+relationships:
+  'node:langcode:language':
+    label: Language

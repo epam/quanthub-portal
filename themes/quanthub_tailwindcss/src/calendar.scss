@@ -1,0 +1,123 @@
+.path-releases {
+  main[role='main'] {
+    @include col-10;
+  }
+}
+
+.view-releases {
+  @include block-cloud;
+}
+
+.fc-unthemed td {
+  border-color: $ntrls-300;
+  .fc-today {
+    background: $prpl-200;
+  }
+}
+
+.fc-widget-content {
+  background: $white;
+}
+
+.fc-other-month {
+  background: $ntrls-200;
+}
+
+.fc-header-toolbar {
+  justify-content: flex-start;
+  .fc-left {
+    display: flex;
+    margin-right: 24px;
+  }
+  .fc-right {
+    margin-left: auto;
+    @screen sm {
+      .fc-button-group {
+        margin-left: auto;
+      }
+    }
+  }
+  @screen sm {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    .fc-left,
+    .fc-right {
+      order: 2;
+      margin: 0;
+      width: auto;
+    }
+    .fc-center {
+      text-align: center;
+      order: 1;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+.fc-button-primary,
+.fc-button-primary:disabled {
+  @include base-button;
+  @include rounded-button;
+  @include non-primary-filled-button;
+  opacity: 1;
+  background: $ntrls-200;
+
+  &:not(.fc-today-button) {
+    border: none;
+    text-transform: uppercase;
+  }
+
+  &:hover {
+    color: $primary;
+  }
+}
+
+.fc-dayGridMonth-button {
+  margin-right: 16px;
+  border-radius: 0.25rem !important;
+  @include basic-icon('ico-calendar.svg');
+  background-position: 50% 50%;
+  background-color: transparent !important;
+  height: 32px;
+  width: 32px;
+  &.fc-button-active {
+    background-image: url('/assets/images/ico-list.svg') !important;
+  }
+  &:hover {
+    background-color: $prpl-100 !important;
+  }
+}
+
+.fc-listMonth-button {
+  border-top-left-radius: 4px !important;
+  border-bottom-left-radius: 4px !important;
+}
+
+.fc-button-primary:not(:disabled).fc-button-active,
+.fc-button-primary:not(:disabled):active {
+  @include primary-filled-button;
+}
+
+.fc-button-primary:focus,
+.fc-button-primary:not(:disabled).fc-button-active:focus,
+.fc-button-primary:not(:disabled):active:focus {
+  box-shadow: none;
+}
+
+.fc-button.fc-today-button {
+  color: $ntrls-1000;
+  border: 1px solid $ntrls-800;
+  border-radius: 4px;
+  &:hover {
+    color: $ntrls-1000;
+  }
+}
+
+.fc-next-button,
+.fc-prev-button {
+  background-color: transparent !important;
+  &:hover {
+    background-color: $prpl-100 !important;
+  }
+}

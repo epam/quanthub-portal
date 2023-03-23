@@ -1,0 +1,289 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.dataset.body
+    - field.field.node.dataset.field_body_2
+    - field.field.node.dataset.field_body_3
+    - field.field.node.dataset.field_data_slices
+    - field.field.node.dataset.field_dataset_id
+    - field.field.node.dataset.field_legislation
+    - field.field.node.dataset.field_metadata
+    - field.field.node.dataset.field_methodology
+    - field.field.node.dataset.field_powerbi_report
+    - field.field.node.dataset.field_powerbi_report_2
+    - field.field.node.dataset.field_powerbi_report_3
+    - field.field.node.dataset.field_quanthub_urn
+    - field.field.node.dataset.field_topics
+    - field.field.node.dataset.layout_builder__layout
+    - node.type.dataset
+  module:
+    - file
+    - key_value_field
+    - layout_builder
+    - layout_discovery
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: 'Dataset Header'
+          context_mapping: {  }
+        components:
+          fabda52a-b3f7-4b84-bc4a-0c099c99903b:
+            uuid: fabda52a-b3f7-4b84-bc4a-0c099c99903b
+            region: content
+            configuration:
+              id: 'extra_field_block:node:dataset:links'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 0
+            additional: {  }
+          5935d237-72a7-45f8-9dc7-d112b2d9163b:
+            uuid: 5935d237-72a7-45f8-9dc7-d112b2d9163b
+            region: content
+            configuration:
+              id: 'field_block:node:dataset:field_metadata'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: key_value
+                label: above
+                settings:
+                  value_only: false
+                third_party_settings: {  }
+            weight: 1
+            additional: {  }
+          1a8a3172-ffc3-4410-b7d8-4d9fa5a6b3ad:
+            uuid: 1a8a3172-ffc3-4410-b7d8-4d9fa5a6b3ad
+            region: content
+            configuration:
+              id: 'field_block:node:dataset:field_dataset_id'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: string
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+            weight: 2
+            additional: {  }
+          7de46b8b-76d3-4def-85e8-841fc3afcc3c:
+            uuid: 7de46b8b-76d3-4def-85e8-841fc3afcc3c
+            region: content
+            configuration:
+              id: 'field_block:node:dataset:body'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            weight: 4
+            additional: {  }
+          cae2d853-3204-4f5d-bf91-58c6344c79a3:
+            uuid: cae2d853-3204-4f5d-bf91-58c6344c79a3
+            region: content
+            configuration:
+              id: 'field_block:node:dataset:field_topics'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_label
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+            weight: 5
+            additional: {  }
+        third_party_settings: {  }
+      -
+        layout_id: layout_twocol_section
+        layout_settings:
+          label: 'Dataset Body'
+          context_mapping: {  }
+          column_widths: 67-33
+        components:
+          e2908cf7-34cf-4bc9-949a-ed93012cfaea:
+            uuid: e2908cf7-34cf-4bc9-949a-ed93012cfaea
+            region: first
+            configuration:
+              id: 'field_block:node:dataset:field_body_2'
+              label: 'Body 2'
+              label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            weight: 2
+            additional: {  }
+          bb786abd-1f32-4eb9-a5f2-a0d7fac7e075:
+            uuid: bb786abd-1f32-4eb9-a5f2-a0d7fac7e075
+            region: second
+            configuration:
+              id: 'field_block:node:dataset:field_methodology'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: file_table
+                label: above
+                settings:
+                  use_description_as_link_text: true
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+          356095d6-a55a-4f61-842f-98cd69e1fcb7:
+            uuid: 356095d6-a55a-4f61-842f-98cd69e1fcb7
+            region: second
+            configuration:
+              id: 'field_block:node:dataset:field_legislation'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: file_table
+                label: above
+                settings:
+                  use_description_as_link_text: true
+                third_party_settings: {  }
+            weight: 1
+            additional: {  }
+          85263b31-f9da-4041-a3d7-f8a4172c5d46:
+            uuid: 85263b31-f9da-4041-a3d7-f8a4172c5d46
+            region: first
+            configuration:
+              id: 'field_block:node:dataset:field_data_slices'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+            weight: 3
+            additional: {  }
+          190eb5cb-bc10-4cc7-81f4-19a70b9f0c49:
+            uuid: 190eb5cb-bc10-4cc7-81f4-19a70b9f0c49
+            region: first
+            configuration:
+              id: 'field_block:node:dataset:field_powerbi_report'
+              label: 'PowerBI Report'
+              label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: quanthub_powerbi_embed_formatter
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+            weight: 1
+            additional: {  }
+        third_party_settings: {  }
+id: node.dataset.full
+targetEntityType: node
+bundle: dataset
+mode: full
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_body_2:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_body_3:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  field_data_slices:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_dataset_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_legislation:
+    type: file_table
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_metadata:
+    type: key_value
+    label: above
+    settings:
+      value_only: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_methodology:
+    type: file_table
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_topics:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_powerbi_report: true
+  field_powerbi_report_2: true
+  field_powerbi_report_3: true
+  field_quanthub_urn: true
+  langcode: true
+  layout_builder__layout: true
+  search_api_excerpt: true

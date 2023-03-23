@@ -1,0 +1,287 @@
+@layer base {
+  html,
+  body {
+    @apply h-full;
+  }
+  body {
+    @include body-1;
+    font-family: 'Open Sans', sans-serif;
+    color: $ntrls-1000;
+    background: $ntrls-200;
+    min-width: 360px;
+  }
+  a {
+    color: $primary;
+    text-decoration: none;
+
+    &:hover {
+      color: $primary;
+      text-decoration: underline;
+    }
+  }
+  .dropdown-item {
+    color: $primary !important;
+  }
+  h1,
+  .header-1 {
+    @include header-1;
+  }
+  h2,
+  .header-2 {
+    @include header-2;
+  }
+  h3,
+  .header-3 {
+    @include header-3;
+  }
+  h4,
+  .header-4 {
+    @include header-4;
+  }
+  h5,
+  .header-5 {
+    @include header-5;
+  }
+  .display-1 {
+    @include display-1;
+  }
+  .display-2 {
+    @include display-2;
+  }
+  .display-3 {
+    @include display-3;
+  }
+}
+
+@mixin block-cloud {
+  padding: 24px;
+  background: $white;
+  box-shadow: 0 0 5px $shadow15;
+  border-radius: 8px;
+}
+
+@mixin undo-block-cloud {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+@mixin header-with-line {
+  white-space: nowrap;
+  line-height: 32px;
+  color: $ntrls-1000;
+  @include header-1;
+  @apply flex  items-center;
+
+  &:after {
+    content: '';
+    position: inherit;
+    border-top: 1px solid $ntrls-600;
+    @apply ml-6 w-full  h-0;
+  }
+}
+
+@mixin px($p: 40px) {
+  padding-left: $p;
+  padding-right: $p;
+}
+
+@mixin col-10 {
+  @media (min-width: 1280px) {
+    @include px(calc(100% / 12 + 35px));
+  }
+}
+
+@mixin col-6-4 {
+  @media (min-width: 1280px) {
+    @include px(calc(100% / 6 + 30px));
+  }
+  @media (min-width: 1920px) {
+    @include px(calc(100% / 4 + 30px));
+  }
+}
+
+@mixin basic-icon($image) {
+  $path: '/assets/images/' + $image;
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  font-size: 0;
+  line-height: 0;
+  background: {
+    image: url($path) !important;
+    repeat: no-repeat;
+    position: 0 0;
+  }
+}
+
+//use if need to change color of image
+@mixin mask-icon($image){
+  $path: '/assets/images/' + $image;
+  content: '';
+  display: block;
+  width: 24px;
+  height: 24px;
+  font-size: 0;
+  line-height: 0;
+  -webkit-mask-image: url($path);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: 0 0;
+}
+
+@mixin ellipsis-lines($lines: 5, $lh: 20px) {
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: $lh;
+  max-height: calc($lines * $lh);
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+}
+
+@mixin two-lines($lh: 28px) {
+  @include ellipsis-lines(2, $lh);
+}
+
+.ico-time {
+  display: flex;
+  color: $ntrls-900;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  padding-left: 6px;
+
+  &::before {
+    @include basic-icon('ico-time.svg');
+  }
+}
+
+@layer components {
+  .separator {
+    color: $ntrls-400;
+  }
+
+  .link--download {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    @apply link-btn;
+
+    &::before {
+      @include basic-icon('ico-download-dark.svg');
+      margin-top: 2px;
+    }
+  }
+  .aside {
+    @apply w-1/4 pl-10;
+    @screen xl {
+      @apply w-1/3;
+    }
+    @screen sm {
+      @apply w-full;
+      padding: 0;
+    }
+  }
+  .wrapper {
+    padding: 80px 40px;
+
+    @screen md {
+      padding: 40px 24px;
+    }
+    @screen sm {
+      padding: 40px 16px;
+    }
+  }
+
+  .border-top {
+    border-top: 1px solid $ntrls-700;
+  }
+
+  .border-bottom {
+    border-bottom: 1px solid $ntrls-700;
+  }
+}
+
+.landing--header {
+  @include display-3;
+  margin-bottom: 40px;
+
+  @screen xl {
+    @include header-1;
+    margin-bottom: 32px;
+  }
+
+  @screen md {
+    @include header-2;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  a {
+    @include paragraph-1;
+
+    @screen xl {
+      @include paragraph-2;
+    }
+
+    @screen md {
+      @include body-1;
+    }
+  }
+
+  .separator {
+    border-left: 1px solid $ntrls-700;
+    width: 1px;
+    height: 40px;
+    display: inline-block;
+    vertical-align: text-bottom;
+    margin: 0 8px;
+    text-indent: -99999px;
+
+    @screen xl {
+      height: 32px;
+    }
+
+    @screen md {
+      display: none;
+    }
+  }
+}
+
+.title {
+  @include two-lines();
+}
+
+body:not(.path-frontpage):not(.path-explorer) .region-content {
+  @apply wrapper;
+  padding-top: 0;
+}
+
+.path-slices .region-content,
+.path-explorer .region-content,
+aside + .flex-1 .region-content {
+  @apply wrapper;
+  padding-top: 0;
+}
+
+.region-left-sidebar {
+  @include block-cloud;
+  margin-bottom: 40px;
+  @screen xs {
+    padding: 16px;
+    box-shadow: none;
+    border-radius: 0;
+  }
+}
+
+.path-datasets {
+  h2 {
+    @include header-with-line;
+    @apply mb-4 mt-10;
+  }
+}

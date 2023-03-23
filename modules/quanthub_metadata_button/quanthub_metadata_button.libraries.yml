@@ -1,0 +1,8 @@
+metadata-button:
+  js:
+    /libraries/quanthub-drupal-react/quanthub_metadata_button/dist/index.js: {}
+  css:
+    base:
+      /libraries/quanthub-drupal-react/quanthub_metadata_button/dist/styles.css: {}
+  dependencies:
+    - core/drupal

@@ -1,0 +1,99 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_display.node.page.default
+    - filter.format.basic_html
+    - media.type.audio
+    - media.type.document
+    - media.type.image
+    - node.type.dataset
+    - node.type.news
+    - node.type.page
+    - node.type.publication
+    - node.type.release
+  module:
+    - comment
+    - contextual
+    - file
+    - filter
+    - layout_builder
+    - media
+    - node
+    - path
+    - system
+    - toolbar
+id: content_editor
+label: 'Content editor'
+weight: 2
+is_admin: false
+permissions:
+  - 'access administration pages'
+  - 'access content'
+  - 'access content overview'
+  - 'access contextual links'
+  - 'access files overview'
+  - 'access media overview'
+  - 'access toolbar'
+  - 'administer url aliases'
+  - 'configure editable page node layout overrides'
+  - 'create and edit custom blocks'
+  - 'create dataset content'
+  - 'create document media'
+  - 'create image media'
+  - 'create media'
+  - 'create news content'
+  - 'create page content'
+  - 'create publication content'
+  - 'create release content'
+  - 'create url aliases'
+  - 'delete any dataset content'
+  - 'delete any document media'
+  - 'delete any image media'
+  - 'delete any news content'
+  - 'delete any page content'
+  - 'delete any publication content'
+  - 'delete any release content'
+  - 'delete dataset revisions'
+  - 'delete media'
+  - 'delete news revisions'
+  - 'delete own dataset content'
+  - 'delete own document media'
+  - 'delete own image media'
+  - 'delete own news content'
+  - 'delete own publication content'
+  - 'delete own release content'
+  - 'delete page revisions'
+  - 'delete publication revisions'
+  - 'delete release revisions'
+  - 'edit any dataset content'
+  - 'edit any document media'
+  - 'edit any image media'
+  - 'edit any news content'
+  - 'edit any page content'
+  - 'edit any publication content'
+  - 'edit any release content'
+  - 'edit own audio media'
+  - 'edit own comments'
+  - 'edit own dataset content'
+  - 'edit own document media'
+  - 'edit own news content'
+  - 'edit own publication content'
+  - 'edit own release content'
+  - 'revert all revisions'
+  - 'revert dataset revisions'
+  - 'revert news revisions'
+  - 'revert publication revisions'
+  - 'revert release revisions'
+  - 'update media'
+  - 'use text format basic_html'
+  - 'view all media revisions'
+  - 'view all revisions'
+  - 'view dataset revisions'
+  - 'view media'
+  - 'view news revisions'
+  - 'view own unpublished content'
+  - 'view own unpublished media'
+  - 'view publication revisions'
+  - 'view release revisions'
+  - 'view the administration theme'

@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - key.key.sdmx_api_url
+    - quanthub_sdmx_proxy.settings
+id: sdmx_api_url
+label: 'SDMX API URL'
+config_type: system.simple
+config_prefix: ''
+config_name: quanthub_sdmx_proxy.settings
+config_item: api_url
+key_id: sdmx_api_url

@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.dataset
+  module:
+    - path
+id: node.dataset.path
+field_name: path
+entity_type: node
+bundle: dataset
+label: 'URL alias'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

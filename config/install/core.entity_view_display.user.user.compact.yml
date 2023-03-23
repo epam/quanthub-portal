@@ -1,0 +1,85 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.user.compact
+    - field.field.user.user.user_picture
+    - image.style.thumbnail
+  module:
+    - image
+    - layout_builder
+    - layout_discovery
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          deb840af-d8f0-4f59-bb2b-34ca2cb2939b:
+            uuid: deb840af-d8f0-4f59-bb2b-34ca2cb2939b
+            region: content
+            configuration:
+              id: 'field_block:user:user:user_picture'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: image
+                label: hidden
+                settings:
+                  image_link: content
+                  image_style: thumbnail
+                  image_loading:
+                    attribute: lazy
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+          60ed475a-2e4d-49f3-afce-0009190235cc:
+            uuid: 60ed475a-2e4d-49f3-afce-0009190235cc
+            region: content
+            configuration:
+              id: 'field_block:user:user:display_name'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: string
+                label: hidden
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+            weight: 1
+            additional: {  }
+        third_party_settings: {  }
+id: user.user.compact
+targetEntityType: user
+bundle: user
+mode: compact
+content:
+  display_name:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 20
+    region: content
+  user_picture:
+    type: image
+    label: hidden
+    settings:
+      image_link: content
+      image_style: thumbnail
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  member_for: true
+  search_api_excerpt: true

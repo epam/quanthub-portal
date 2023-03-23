@@ -1,0 +1,6 @@
+sdmx_proxy.admin.settings:
+  title: SDMX API Proxy Settings
+  description: Configure the SDMX API Proxy settings.
+  route_name: sdmx_proxy.settings
+  parent: system.admin_config_services
+  weight: 10

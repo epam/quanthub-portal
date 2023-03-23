@@ -1,0 +1,186 @@
+{#
+/**
+ * @file
+ * Theme override to display a node.
+ *
+ * Available variables:
+ * - node: The node entity with limited access to object properties and methods.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - node.getCreatedTime() will return the node creation timestamp.
+ *   - node.hasField('field_example') returns TRUE if the node bundle includes
+ *     field_example. (This does not indicate the presence of a value in this
+ *     field.)
+ *   - node.isPublished() will return whether the node is published or not.
+ *   Calling other methods, such as node.delete(), will result in an exception.
+ *   See \Drupal\node\Entity\Node for a full list of public properties and
+ *   methods for the node object.
+ * - label: (optional) The title of the node.
+ * - content: All node items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - author_picture: The node author user entity, rendered using the "compact"
+ *   view mode.
+ * - metadata: Metadata for this node.
+ * - date: (optional) Themed creation date field.
+ * - author_name: (optional) Themed author name field.
+ * - url: Direct URL of the current node.
+ * - display_submitted: Whether submission information should be displayed.
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class element may contain one or more of the following
+ *   classes:
+ *   - node: The current template type (also known as a "theming hook").
+ *   - node--type-[type]: The current node type. For example, if the node is an
+ *     "Article" it would result in "node--type-article". Note that the machine
+ *     name will often be in a short form of the human readable label.
+ *   - node--view-mode-[view_mode]: The View Mode of the node; for example, a
+ *     teaser would result in: "node--view-mode-teaser", and
+ *     full: "node--view-mode-full".
+ *   The following are controlled through the node publishing options.
+ *   - node--promoted: Appears on nodes promoted to the front page.
+ *   - node--sticky: Appears on nodes ordered above other non-sticky nodes in
+ *     teaser listings.
+ *   - node--unpublished: Appears on unpublished nodes visible only to site
+ *     admins.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - content_attributes: Same as attributes, except applied to the main
+ *   content tag that appears in the template.
+ * - author_attributes: Same as attributes, except applied to the author of
+ *   the node tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - view_mode: View mode; for example, "teaser" or "full".
+ * - teaser: Flag for the teaser state. Will be true if view_mode is 'teaser'.
+ * - page: Flag for the full page state. Will be true if view_mode is 'full'.
+ * - readmore: Flag for more state. Will be true if the teaser content of the
+ *   node cannot hold the main body content.
+ * - logged_in: Flag for authenticated user status. Will be true when the
+ *   current user is a logged-in member.
+ * - is_admin: Flag for admin user status. Will be true when the current user
+ *   is an administrator.
+ *
+ * @see template_preprocess_node()
+ *
+ */
+#}
+{% set classes = [
+  'node',
+  'node--type-' ~ (node.bundle|clean_class),
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ (view_mode|clean_class)
+] %}
+
+{{ attach_library('quanthub_download_button/download-button') }}
+{{ attach_library('quanthub_metadata_button/metadata-button') }}
+
+<article {{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if label and not page %}
+    <h2 {{ title_attributes }} class="flex gap-2 items-start mb-2 xs:flex-col">
+      {% if node.bundle == 'news' %}
+        <span class="indicator indicator--news">
+          {{
+            '@news'|t({
+              '@news': 'News'
+            })
+          }}
+        </span>
+      {% endif %}
+      {% if node.bundle == 'publication' %}
+        <span class="indicator indicator--publication">
+          {{
+            '@publication'|t({
+              '@publication': 'Publication'
+            })
+          }}
+        </span>
+      {% endif %}
+      {% if node.bundle == 'dataset' %}
+        <span class="indicator indicator--dataset">
+          {{
+            '@dataset'|t({
+              '@dataset': 'Dataset'
+            })
+          }}
+        </span>
+      {% endif %}
+      {% if node.bundle == 'release' %}
+        <span class="indicator indicator--release">
+          {{
+            '@release'|t({
+              '@release': 'Release'
+            })
+          }}
+        </span>
+      {% endif %}
+      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+      {% if node.bundle == 'dataset' %}
+        <div class="metadata_info_button_id search--meta-icon" data-urn="{{ quanthub_urn }}"></div>
+      {% endif %}
+    </h2>
+  {% endif %}
+  {{ title_suffix }}
+
+  <div {{ content_attributes.addClass('node__content') }}>
+    {{ content }}
+  </div>
+
+  {% if node.bundle == 'dataset' %}
+    <footer class="node__meta">
+      <div class="flex items-center justify-between mt-2">
+        <div class="flex items-center">
+          <div class="download_button_id mr-2" data-btn-class="secondary-button"  data-urn="{{ quanthub_urn }}"></div>
+          <span class="separator pr-2 pl-1">|</span>
+          {% if node.langcode.langcode == 'en' %}
+            <a href="/explorer?urn={{ quanthub_urn }}" class="tertiary-button mr-2">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.00001 1.33333C4.32001 1.33333 1.33334 4.31999 1.33334 8C1.33334 11.68 4.32001 14.6667 8.00001 14.6667C11.68 14.6667 14.6667 11.68 14.6667 8C14.6667 4.31999 11.68 1.33333 8.00001 1.33333ZM8.00001 13.3333C5.06001 13.3333 2.66668 10.94 2.66668 8C2.66668 5.06 5.06001 2.66666 8.00001 2.66666C10.94 2.66666 13.3333 5.06 13.3333 8C13.3333 10.94 10.94 13.3333 8.00001 13.3333ZM4.33334 11.6667L9.34001 9.34L11.6667 4.33333L6.66001 6.66L4.33334 11.6667ZM8.00001 7.26666C8.40668 7.26666 8.73334 7.59333 8.73334 8C8.73334 8.40666 8.40668 8.73333 8.00001 8.73333C7.59334 8.73333 7.26668 8.40666 7.26668 8C7.26668 7.59333 7.59334 7.26666 8.00001 7.26666Z" fill="#424A9C"/>
+                </svg>
+                {{ '@explore'|t({'@explore': "Explore" }) }}
+              </a>
+          {% else %}
+          <a href="/uk/explorer?urn={{ quanthub_urn }}" class="tertiary-button mr-2">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.00001 1.33333C4.32001 1.33333 1.33334 4.31999 1.33334 8C1.33334 11.68 4.32001 14.6667 8.00001 14.6667C11.68 14.6667 14.6667 11.68 14.6667 8C14.6667 4.31999 11.68 1.33333 8.00001 1.33333ZM8.00001 13.3333C5.06001 13.3333 2.66668 10.94 2.66668 8C2.66668 5.06 5.06001 2.66666 8.00001 2.66666C10.94 2.66666 13.3333 5.06 13.3333 8C13.3333 10.94 10.94 13.3333 8.00001 13.3333ZM4.33334 11.6667L9.34001 9.34L11.6667 4.33333L6.66001 6.66L4.33334 11.6667ZM8.00001 7.26666C8.40668 7.26666 8.73334 7.59333 8.73334 8C8.73334 8.40666 8.40668 8.73333 8.00001 8.73333C7.59334 8.73333 7.26668 8.40666 7.26668 8C7.26668 7.59333 7.59334 7.26666 8.00001 7.26666Z" fill="#424A9C"/>
+            </svg>
+            {{ '@explore'|t({'@explore': "Explore" }) }}
+          </a>
+        {% endif %}
+        </div>
+        {% if display_submitted %}
+          <span class="ico-time ml-auto xs:gap-1">
+            <span class="text-updated xs:hidden">
+              {{
+                '@updated'|t({
+                  '@updated': 'Updated'
+                })
+              }}
+            </span>
+            <span class="separator">|</span>
+            {{ node.fields.changed.value|format_date('quanthub_medium') }}
+          </span>
+        {% endif %}
+      </div>
+    </footer>
+  {% else %}
+    {% if display_submitted %}
+      <footer class="node__meta flex flex-row items-center justify-between">
+        <span class="ico-time ml-auto xs:gap-1">
+          {{
+            '@posted'|t({
+              '@posted': 'Posted'
+            })
+          }}
+          <span class="separator">|</span>
+          {{ node.fields.changed.value|format_date('quanthub_medium') }}
+        </span>
+      </footer>
+    {% endif %}
+  {% endif %}
+</article>

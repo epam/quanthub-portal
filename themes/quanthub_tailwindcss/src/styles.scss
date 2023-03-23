@@ -1,0 +1,29 @@
+@import 'tailwind';
+@import 'fonts';
+@import 'font-mixins';
+@import 'color-palette';
+@import 'buttons';
+@import 'inputs';
+@import 'twocols';
+@import 'custom';
+@import 'header';
+@import 'language';
+@import 'search';
+@import 'breadcrumb';
+@import 'article-full';
+@import 'publications-teaser';
+@import 'datasets-teaser';
+@import 'news-teaser';
+@import 'card';
+@import 'footer';
+@import 'scroll';
+@import 'listing';
+@import 'calendar';
+@import 'topics';
+@import 'releases';
+
+.svg-current-color {
+  path {
+    fill: currentColor;
+  }
+}

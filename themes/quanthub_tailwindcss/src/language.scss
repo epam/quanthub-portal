@@ -1,0 +1,96 @@
+.language-switcher-language-url {
+  margin-left: 1rem;
+  width: 70px;
+  height: 40px;
+  position: relative;
+  @screen md {
+    margin-left: 0;
+  }
+  .links {
+    @include header-4;
+    position: absolute;
+    top: 32px;
+    left: -14px;
+    margin: 0.5rem 1rem;
+    padding: 0 24px;
+    background: $white;
+     // TODO: delete custom color
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    z-index: 5;
+
+    li {
+      border-top: 1px solid $ntrls-400;
+      padding: 1rem 0;
+      display: none;
+
+      a {
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        color: $primary;
+
+        &.is-active {
+          color: $primary;
+        }
+        &:hover,
+        &:hover.is-active {
+          color: $prpl-1000;
+          text-decoration: none;
+        }
+      }
+
+      &:first-child,
+      &:first-child.is-active + li:nth-child(2) {
+        border: 0;
+      }
+    }
+
+    li.is-active {
+      height: 24px;
+      position: absolute;
+      top: -32px;
+      left: 14px;
+      border: 0;
+      padding: 0;
+      display: flex;
+
+      &::after {
+        margin: 4px 0 0 4px;
+        @include basic-icon('arrow-down-dark.svg');
+      }
+    }
+  }
+
+  &:hover {
+    .links li:not(.is-active) {
+      display: block;
+    }
+  }
+}
+
+.path-frontpage {
+  .header {
+    &:not(.is-sticky) {
+      .language-switcher-language-url {
+        .links {
+          li.is-active {
+            &::after {
+              @include basic-icon('arrow-down-white.svg');
+              @screen sm {
+                @include basic-icon('arrow-down-dark.svg');
+              }
+            }
+
+            a.is-active {
+              color: $white;
+              @screen sm {
+                color: $primary;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

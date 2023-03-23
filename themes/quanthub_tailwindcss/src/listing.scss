@@ -1,0 +1,40 @@
+.field--name-field-topics {
+  @include header-5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 8px 0;
+  white-space: nowrap;
+
+  .field__item:first-child::before {
+    display: none;
+  }
+
+  .field__label {
+    display: none;
+  }
+
+  .field__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .field__item:before {
+    content: '|';
+    display: inline-block;
+    vertical-align: top;
+    padding: 0 5px 0 0;
+    color: $ntrls-400;
+  }
+
+  a {
+    color: $primary;
+    &:hover {
+      color: $primary;
+      text-decoration: underline;
+    }
+  }
+}

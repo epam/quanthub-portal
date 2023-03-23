@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - google_map_field
+id: block_content.field_google_maps
+field_name: field_google_maps
+entity_type: block_content
+type: google_map_field
+settings: {  }
+module: google_map_field
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,204 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Quanthub Core module.
+ */
+
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Change field type for field_powerbi_report.
+ */
+function quanthub_core_update_8001() {
+  $database = \Drupal::database();
+  $entityType = 'node';
+  $fieldName = 'field_powerbi_report';
+  $table = $entityType . '__' . $fieldName;
+  $currentRows = NULL;
+  $newFieldsList = [];
+  $fieldStorage = FieldStorageConfig::loadByName($entityType, $fieldName);
+
+  if (is_null($fieldStorage)) {
+    return;
+  }
+
+  // Get all current data from DB.
+  if ($database->schema()->tableExists($table)) {
+    // The table data to restore after the update is completed.
+    $currentRows = $database->select($table, 'n')
+      ->fields('n')
+      ->execute()
+      ->fetchAll();
+  }
+
+  // Use existing field config for new field.
+  foreach ($fieldStorage->getBundles() as $bundle => $label) {
+    $field = FieldConfig::loadByName($entityType, $bundle, $fieldName);
+    $newField = $field->toArray();
+    $newField['field_type'] = 'quanthub_powerbi_embed';
+    $newField['settings'] = [];
+    $newFieldsList[] = $newField;
+  }
+
+  // Deleting field storage which will also delete bundles(fields).
+  $newFieldStorage = $fieldStorage->toArray();
+  $newFieldStorage['type'] = 'quanthub_powerbi_embed';
+  $newFieldStorage['settings'] = [];
+
+  $fieldStorage->delete();
+
+  // Purge field data now to allow new field and field_storage with same name
+  // to be created.
+  field_purge_batch(40);
+
+  // Create new field storage.
+  $newFieldStorage = FieldStorageConfig::create($newFieldStorage);
+  $newFieldStorage->save();
+
+  // Create new fields.
+  foreach ($newFieldsList as $nfield) {
+    $nfieldConfig = FieldConfig::create($nfield);
+    $nfieldConfig->save();
+  }
+
+  // Restore existing data in new table.
+  if (!is_null($currentRows)) {
+    foreach ($currentRows as $row) {
+      $database->insert($table)
+        ->fields((array) $row)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Change field type for field_powerbi_report_2.
+ */
+function quanthub_core_update_8002() {
+  $database = \Drupal::database();
+  $entityType = 'node';
+  $fieldName = 'field_powerbi_report_2';
+  $table = $entityType . '__' . $fieldName;
+  $currentRows = NULL;
+  $newFieldsList = [];
+  $fieldStorage = FieldStorageConfig::loadByName($entityType, $fieldName);
+
+  if (is_null($fieldStorage)) {
+    return;
+  }
+
+  // Get all current data from DB.
+  if ($database->schema()->tableExists($table)) {
+    // The table data to restore after the update is completed.
+    $currentRows = $database->select($table, 'n')
+      ->fields('n')
+      ->execute()
+      ->fetchAll();
+  }
+
+  // Use existing field config for new field.
+  foreach ($fieldStorage->getBundles() as $bundle => $label) {
+    $field = FieldConfig::loadByName($entityType, $bundle, $fieldName);
+    $newField = $field->toArray();
+    $newField['field_type'] = 'quanthub_powerbi_embed';
+    $newField['settings'] = [];
+    $newFieldsList[] = $newField;
+  }
+
+  // Deleting field storage which will also delete bundles(fields).
+  $newFieldStorage = $fieldStorage->toArray();
+  $newFieldStorage['type'] = 'quanthub_powerbi_embed';
+  $newFieldStorage['settings'] = [];
+
+  $fieldStorage->delete();
+
+  // Purge field data now to allow new field and field_storage with same name
+  // to be created.
+  field_purge_batch(40);
+
+  // Create new field storage.
+  $newFieldStorage = FieldStorageConfig::create($newFieldStorage);
+  $newFieldStorage->save();
+
+  // Create new fields.
+  foreach ($newFieldsList as $nfield) {
+    $nfieldConfig = FieldConfig::create($nfield);
+    $nfieldConfig->save();
+  }
+
+  // Restore existing data in new table.
+  if (!is_null($currentRows)) {
+    foreach ($currentRows as $row) {
+      $database->insert($table)
+        ->fields((array) $row)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Change field type for field_powerbi_report_3.
+ */
+function quanthub_core_update_8003() {
+  $database = \Drupal::database();
+  $entityType = 'node';
+  $fieldName = 'field_powerbi_report_3';
+  $table = $entityType . '__' . $fieldName;
+  $currentRows = NULL;
+  $newFieldsList = [];
+  $fieldStorage = FieldStorageConfig::loadByName($entityType, $fieldName);
+
+  if (is_null($fieldStorage)) {
+    return;
+  }
+
+  // Get all current data from DB.
+  if ($database->schema()->tableExists($table)) {
+    // The table data to restore after the update is completed.
+    $currentRows = $database->select($table, 'n')
+      ->fields('n')
+      ->execute()
+      ->fetchAll();
+  }
+
+  // Use existing field config for new field.
+  foreach ($fieldStorage->getBundles() as $bundle => $label) {
+    $field = FieldConfig::loadByName($entityType, $bundle, $fieldName);
+    $newField = $field->toArray();
+    $newField['field_type'] = 'quanthub_powerbi_embed';
+    $newField['settings'] = [];
+    $newFieldsList[] = $newField;
+  }
+
+  // Deleting field storage which will also delete bundles(fields).
+  $newFieldStorage = $fieldStorage->toArray();
+  $newFieldStorage['type'] = 'quanthub_powerbi_embed';
+  $newFieldStorage['settings'] = [];
+
+  $fieldStorage->delete();
+
+  // Purge field data now to allow new field and field_storage with same name
+  // to be created.
+  field_purge_batch(40);
+
+  // Create new field storage.
+  $newFieldStorage = FieldStorageConfig::create($newFieldStorage);
+  $newFieldStorage->save();
+
+  // Create new fields.
+  foreach ($newFieldsList as $nfield) {
+    $nfieldConfig = FieldConfig::create($nfield);
+    $nfieldConfig->save();
+  }
+
+  // Restore existing data in new table.
+  if (!is_null($currentRows)) {
+    foreach ($currentRows as $row) {
+      $database->insert($table)
+        ->fields((array) $row)
+        ->execute();
+    }
+  }
+}

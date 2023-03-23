@@ -1,0 +1,65 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.base_field_override.media.audio.thumbnail
+    - core.entity_view_mode.media.media_library
+    - field.field.media.audio.field_media_audio_file
+    - image.style.thumbnail
+    - media.type.audio
+  module:
+    - image
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  layout_builder:
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          5514e1b6-dfb9-4a36-b2b6-5ef7f2b959a7:
+            uuid: 5514e1b6-dfb9-4a36-b2b6-5ef7f2b959a7
+            region: content
+            configuration:
+              id: 'field_block:media:audio:thumbnail'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: image
+                label: hidden
+                settings:
+                  image_link: ''
+                  image_style: thumbnail
+                  image_loading:
+                    attribute: lazy
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+        third_party_settings: {  }
+id: media.audio.media_library
+targetEntityType: media
+bundle: audio
+mode: media_library
+content:
+  thumbnail:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: thumbnail
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  field_media_audio_file: true
+  langcode: true
+  name: true
+  search_api_excerpt: true
+  uid: true

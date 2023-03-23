@@ -1,0 +1,16 @@
+name: Quanthub Tailwind
+description: Quanthub theme for Drupal 8/9 and Tailwind CSS.
+core: 8.x
+core_version_requirement: ^8 || ^9
+type: theme
+base theme: classy
+libraries:
+  - quanthub_tailwindcss/global-styling
+
+regions:
+  header: 'Header'
+  search: 'Search'
+  breadcrumb: 'Breadcrumb'
+  left_sidebar: 'Left sidebar'
+  content: 'Content'
+  footer: 'Footer'

@@ -1,0 +1,19 @@
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - quanthub_tailwindcss
+id: quanthub_tailwindcss_powered_by_drupal
+theme: quanthub_tailwindcss
+region: footer
+weight: 0
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  label_display: '0'
+  provider: system
+visibility: {  }

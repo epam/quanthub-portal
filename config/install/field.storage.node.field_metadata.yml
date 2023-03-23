@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - key_value_field
+    - node
+id: node.field_metadata
+field_name: field_metadata
+entity_type: node
+type: key_value_long
+settings:
+  key_max_length: 255
+  key_is_ascii: false
+module: key_value_field
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,209 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.dataset.body
+    - field.field.node.dataset.field_body_2
+    - field.field.node.dataset.field_body_3
+    - field.field.node.dataset.field_data_slices
+    - field.field.node.dataset.field_dataset_id
+    - field.field.node.dataset.field_legislation
+    - field.field.node.dataset.field_metadata
+    - field.field.node.dataset.field_methodology
+    - field.field.node.dataset.field_powerbi_report
+    - field.field.node.dataset.field_powerbi_report_2
+    - field.field.node.dataset.field_powerbi_report_3
+    - field.field.node.dataset.field_quanthub_urn
+    - field.field.node.dataset.field_topics
+    - field.field.node.dataset.layout_builder__layout
+    - node.type.dataset
+  module:
+    - file
+    - key_value_field
+    - path
+    - quanthub_core
+    - text
+id: node.dataset.default
+targetEntityType: node
+bundle: dataset
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 13
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_body_2:
+    type: text_textarea_with_summary
+    weight: 15
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  field_body_3:
+    type: text_textarea_with_summary
+    weight: 17
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  field_data_slices:
+    type: text_textarea_with_summary
+    weight: 19
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  field_dataset_id:
+    type: string_textfield
+    weight: 9
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_legislation:
+    type: file_generic
+    weight: 21
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  field_metadata:
+    type: key_value_textarea
+    weight: 12
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+      key_size: 60
+      key_label: Key
+      key_placeholder: ''
+      value_label: Value
+      description_enabled: true
+      description_label: Description
+      description_rows: 5
+      description_placeholder: ''
+    third_party_settings: {  }
+  field_methodology:
+    type: file_generic
+    weight: 20
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  field_powerbi_report:
+    type: quanthub_powerbi_embed_widget
+    weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_powerbi_report_2:
+    type: quanthub_powerbi_embed_widget
+    weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_powerbi_report_3:
+    type: quanthub_powerbi_embed_widget
+    weight: 18
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_quanthub_urn:
+    type: string_textfield
+    weight: 11
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_topics:
+    type: entity_reference_autocomplete
+    weight: 10
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 0
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 5
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 8
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    weight: 6
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  translation:
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  layout_builder__layout: true

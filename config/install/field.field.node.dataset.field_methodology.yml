@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_methodology
+    - node.type.dataset
+  module:
+    - file
+id: node.dataset.field_methodology
+field_name: field_methodology
+entity_type: node
+bundle: dataset
+label: Methodology
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'pdf doc docx'
+  max_filesize: ''
+  description_field: false
+field_type: file

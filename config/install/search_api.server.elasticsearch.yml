@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - elasticsearch_connector
+id: elasticsearch
+name: elasticsearch
+description: ''
+backend: elasticsearch
+backend_config:
+  cluster_settings:
+    cluster: elasticsearch
+  fuzziness: auto

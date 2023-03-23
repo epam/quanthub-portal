@@ -1,0 +1,22 @@
+powerbi_embed-client:
+  remote: https://cdn.jsdelivr.net/npm/powerbi-client@2.21.1/dist/powerbi.min.js
+  header: true
+  version: 2.21.1
+  license:
+    name: MIT
+    url: https://cdn.jsdelivr.net/npm/powerbi-client@2.21.1/LICENSE
+    gpl-compatible: true
+  js:
+    https://cdn.jsdelivr.net/npm/powerbi-client@2.21.1/dist/powerbi.min.js: { type: external, minified: true }
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
+    - core/jquery.once
+
+powerbi_embed-customizer:
+  js:
+    js/powerbi_embed-customizer.js: { preprocess: false, minified: false }
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
+    - core/jquery.once

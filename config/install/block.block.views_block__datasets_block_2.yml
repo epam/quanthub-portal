@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.datasets
+  module:
+    - system
+    - views
+  theme:
+    - quanthub_tailwindcss
+id: views_block__datasets_block_2
+theme: quanthub_tailwindcss
+region: content
+weight: -3
+provider: null
+plugin: 'views_block:datasets-block_2'
+settings:
+  id: 'views_block:datasets-block_2'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /datasets

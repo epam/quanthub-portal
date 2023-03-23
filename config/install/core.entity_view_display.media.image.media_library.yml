@@ -1,0 +1,65 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.base_field_override.media.image.thumbnail
+    - core.entity_view_mode.media.media_library
+    - field.field.media.image.field_media_image
+    - image.style.medium
+    - media.type.image
+  module:
+    - image
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  layout_builder:
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          9856ab75-5820-4c84-bb17-cc1734944cad:
+            uuid: 9856ab75-5820-4c84-bb17-cc1734944cad
+            region: content
+            configuration:
+              id: 'field_block:media:image:thumbnail'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: image
+                label: hidden
+                settings:
+                  image_link: ''
+                  image_style: medium
+                  image_loading:
+                    attribute: lazy
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+        third_party_settings: {  }
+id: media.image.media_library
+targetEntityType: media
+bundle: image
+mode: media_library
+content:
+  thumbnail:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: medium
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  field_media_image: true
+  langcode: true
+  name: true
+  search_api_excerpt: true
+  uid: true

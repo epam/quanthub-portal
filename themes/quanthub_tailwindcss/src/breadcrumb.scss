@@ -1,0 +1,19 @@
+.region-breadcrumb {
+  @apply wrapper py-3;
+  @include header-6;
+
+  .breadcrumb {
+    padding: 0;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    li {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      &:before {
+        @include basic-icon('arrow-right-grey.svg');
+      }
+    }
+  }
+}

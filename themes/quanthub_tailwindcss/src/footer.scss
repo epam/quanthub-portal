@@ -1,0 +1,117 @@
+.footer {
+  @apply wrapper;
+  padding-top: 40px;
+  padding-bottom: 24px;
+  @screen md {
+    padding-bottom: 20px;
+  }
+  @screen sm {
+    padding-top: 40px;
+    padding-bottom: 16px;
+  }
+
+  .footer-wrapper {
+    @apply flex justify-between flex-nowrap gap-4;
+
+    @screen md {
+      @apply flex-wrap gap-12;
+
+      > div {
+        @apply basis-full;
+      }
+    }
+  }
+
+  .footer--logo {
+    .navbar-brand {
+      .site-title {
+        @include header-4;
+      }
+    }
+    .site-logo {
+      width: 32px;
+      height: 32px;
+    }
+    img {
+      @apply mr-[1rem] inline-block align-middle;
+      @screen md {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .navbar-nav {
+    display: flex;
+    justify-content: flex-start;
+    gap: 4rem;
+
+    @screen sm {
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    li li {
+      margin-bottom: 0.5rem;
+
+      @screen md {
+        margin-bottom: 1rem;
+      }
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+
+    a {
+      color: $ntrls-1000;
+    }
+
+    > li > a {
+      display: inline-block;
+      vertical-align: top;
+      @include header-4;
+      margin-bottom: 0.5rem;
+
+      @screen md {
+        @include header-2;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}
+
+.social {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 1.5rem;
+
+  a {
+    display: inline-block;
+    vertical-align: top;
+    width: 32px;
+    height: 32px;
+    background-image: url('/assets/images/ico-social.svg');
+    text-indent: -99999px;
+    font-size: 0;
+    line-height: 0;
+    &.ico-fb {
+      background-position: 0 0;
+    }
+    &.ico-ig {
+      background-position: -57px 0;
+    }
+    &.ico-tw {
+      background-position: -113px 0;
+    }
+    &.ico-yt {
+      background-position: -168px 0;
+    }
+    &.ico-li {
+      background-position: -225px 0;
+    }
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

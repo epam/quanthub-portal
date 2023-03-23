@@ -1,0 +1,69 @@
+<div id="pbi-{{ field_name }}-{{ embed_id }}"></div>
+<script>
+(function ($) {
+  var models = window["powerbi-client"].models;
+  var intervalTime = 30 * 1000;
+  var tokenExpiration = null;
+  var extraDatasets = "{{ extra_datasets }}";
+  var pageName = "{{ report_page }}";
+  var type = "{{ embed_type }}";
+  var settings = {
+    filterPaneEnabled: false
+  };
+
+  if (pageName) {
+    settings = {
+      filterPaneEnabled: false,
+      panes: {
+        pageNavigation: {
+          visible: false
+        }
+      }
+    };
+  }
+
+  var report = powerbi.embed($("#pbi-{{ field_name }}-{{ embed_id }}").get(0), {
+    type: type,
+    id: "{{ report_id }}",
+    pageName: pageName,
+    visualName: "{{ report_visual }}",
+    embedUrl: "{{ embed_url }}",
+    tokenType: models.TokenType.Embed,
+    permissions: models.Permissions.All,
+    accessToken: "{{ token }}",
+    settings: settings
+  });
+
+  this.checkTokenIntervalId = setInterval(
+      () => {
+         checkTokenAndUpdate();
+      },
+      intervalTime,
+  );
+
+  checkTokenAndUpdate = () => {
+    if (tokenExpiration == null) {
+      updateToken();
+      return;
+    }
+
+    const currentTime = Date.now();
+    const expiration = Date.parse(tokenExpiration);
+    const timeUntilExpiration = expiration - currentTime;
+    const timeToUpdate = 10 * 60 * 1000;
+
+    if (timeUntilExpiration <= timeToUpdate) {
+      updateToken();
+    }
+  }
+
+  updateToken =  () => {
+     $.get( `/powerbi/embedconfig/${report.config.id}/${extraDatasets}`,async ( response ) => {
+          tokenExpiration=response.embed_token.expiration;
+          await report.setAccessToken(response.embed_token.token)
+      })
+  }
+
+  powerbi_embed_customizeReportEmbed('pbi-{{ field_name }}-{{ embed_id }}',{{ report_width }},{{ report_height }},'{{ report_title }}');
+})(jQuery);
+</script>

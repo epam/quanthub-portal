@@ -1,0 +1,60 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.basic_html
+  module:
+    - ckeditor
+format: basic_html
+editor: ckeditor
+settings:
+  toolbar:
+    rows:
+      -
+        -
+          name: 'Block Formatting'
+          items:
+            - Format
+        -
+          name: Formatting
+          items:
+            - Bold
+            - Italic
+            - Strike
+            - Underline
+            - Superscript
+            - Subscript
+            - RemoveFormat
+        -
+          name: Links
+          items:
+            - DrupalLink
+            - DrupalUnlink
+            - Anchor
+        -
+          name: Lists
+          items:
+            - BulletedList
+            - NumberedList
+            - Table
+            - Accordion
+        -
+          name: Media
+          items:
+            - Blockquote
+            - DrupalImage
+            - DrupalFontAwesome
+        -
+          name: Tools
+          items:
+            - Source
+            - ShowBlocks
+  plugins: {  }
+image_upload:
+  status: true
+  scheme: public
+  directory: inline-images
+  max_size: ''
+  max_dimensions:
+    width: null
+    height: null

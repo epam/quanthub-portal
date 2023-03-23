@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - elasticsearch_connector.cluster.elasticsearch
+    - key.key.elastic_index_prefix
+id: elastic_index_prefix
+label: 'Elastic Index Prefix'
+config_type: elasticsearch_cluster
+config_prefix: elasticsearch_connector.cluster
+config_name: elasticsearch
+config_item: options.rewrite.index.prefix
+key_id: elastic_index_prefix

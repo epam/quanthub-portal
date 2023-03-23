@@ -1,0 +1,133 @@
+.block-views-blockdatasets-block-1 {
+  background-color: $white;
+}
+.datasets--updated--block {
+  .link--download {
+    height: 28px;
+  }
+}
+
+.datasets--popular--block {
+  @apply wrapper;
+  display: grid;
+  grid-template-columns: 8fr 4fr;
+  grid-template-rows: min-content 1fr;
+
+  @screen md {
+    display: block;
+  }
+
+  > .view-header {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+
+  .view-empty {
+    min-width: 70%;
+  }
+
+  .dataset--title {
+    @include two-lines(32px);
+    display: inline !important;
+
+    @screen xl {
+      @include header-3;
+      @include two-lines(28px);
+    }
+  }
+
+  > .view-content {
+    grid-area: 2 / 1 / 3 / 2;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin: 0;
+    padding-right: 40px;
+
+    @screen xl {
+      padding-right: 20px;
+    }
+
+    @screen md {
+      padding: 0;
+
+      .text-updated {
+        display: none;
+      }
+    }
+
+    @screen sm {
+      padding: 0 0 16px;
+    }
+
+    .views-row {
+      width: calc(50% - 0.75rem);
+      margin-bottom: 1.25rem;
+      .dataset--text {
+        height: 120px;
+      }
+      @screen sm {
+        width: 100%;
+      }
+    }
+
+    .separator {
+      display: none;
+    }
+  }
+
+  .attachment-after {
+    grid-area: 1 / 2 / 3 / 3;
+    border-left: 1px solid $ntrls-400;
+    padding-left: 40px;
+
+    @screen xl {
+      padding-left: 20px;
+    }
+
+    @screen md {
+      width: 100%;
+      padding: 32px 0 0;
+      border-left: 0;
+      border-top: 1px solid $ntrls-400;
+    }
+
+    .view-content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      flex-grow: 1;
+
+      @screen md {
+        flex-direction: row;
+        flex-wrap: wrap;
+        flex-grow: 0;
+      }
+
+      @screen sm {
+        flex-direction: column;
+      }
+    }
+
+    .views-row {
+      @screen md {
+        width: calc(50% - 12px);
+      }
+
+      @screen sm {
+        width: 100%;
+      }
+    }
+
+    .dataset--item {
+      .dataset--text {
+        display: none;
+      }
+    }
+
+    .ico-time {
+      gap: 2px;
+    }
+  }
+}

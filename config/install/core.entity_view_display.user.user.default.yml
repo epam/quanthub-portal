@@ -1,0 +1,98 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.user.user.user_picture
+    - image.style.thumbnail
+  module:
+    - image
+    - layout_builder
+    - layout_discovery
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          c5b79ee4-2104-44fd-9bba-7125c37e80b5:
+            uuid: c5b79ee4-2104-44fd-9bba-7125c37e80b5
+            region: content
+            configuration:
+              id: 'field_block:user:user:user_picture'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: image
+                label: hidden
+                settings:
+                  image_link: content
+                  image_style: thumbnail
+                  image_loading:
+                    attribute: lazy
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+          8dfd23ab-451a-4aab-a6e2-029568151c4a:
+            uuid: 8dfd23ab-451a-4aab-a6e2-029568151c4a
+            region: content
+            configuration:
+              id: 'extra_field_block:user:user:member_for'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 1
+            additional: {  }
+          1c88aa81-b817-4a47-a6cc-b04a8912c819:
+            uuid: 1c88aa81-b817-4a47-a6cc-b04a8912c819
+            region: content
+            configuration:
+              id: 'field_block:user:user:display_name'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: string
+                label: hidden
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+            weight: 2
+            additional: {  }
+        third_party_settings: {  }
+id: user.user.default
+targetEntityType: user
+bundle: user
+mode: default
+content:
+  display_name:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 20
+    region: content
+  member_for:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  user_picture:
+    type: image
+    label: hidden
+    settings:
+      image_link: content
+      image_style: thumbnail
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

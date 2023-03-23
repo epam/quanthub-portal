@@ -1,0 +1,20 @@
+quanthub_datasetexplorer.explorer:
+  path: '/explorer'
+  defaults:
+    _controller: '\Drupal\quanthub_datasetexplorer\Controller\DatasetExplorer::explorer'
+  requirements:
+    _permission: 'access content'
+
+quanthub_datasetexplorer.slices:
+  path: '/slices'
+  defaults:
+    _controller: '\Drupal\quanthub_datasetexplorer\Controller\DatasetExplorer::slices'
+  requirements:
+    _permission: 'access content'
+
+quanthub_datasetexplorer.pivot:
+  path: '/pivot'
+  defaults:
+    _controller: '\Drupal\quanthub_datasetexplorer\Controller\DatasetExplorer::pivot'
+  requirements:
+    _permission: 'access content'

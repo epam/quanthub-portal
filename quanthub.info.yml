@@ -1,0 +1,56 @@
+name: Quanthub
+type: profile
+description: 'Qunthub Portal Profile'
+core_version_requirement: ^9.5.2
+version: 0.0.1
+install:
+  - node
+  - ultimate_cron
+  - block
+  - datetime
+  - dblog
+  - page_cache
+  - shortcut
+  - path
+  - path_alias
+  - block_content
+  - comment
+  - content_translation
+  - history
+  - toolbar
+  - view_mode_page
+  - ckeditor
+  - facets
+  - fontawesome
+  - views
+  - fullcalendar_view
+  - help
+  - contact
+  - field_layout
+  - update
+  - powerbi_embed
+  - key
+  - file
+  - search_api
+  - elasticsearch_connector
+  - layout_builder_restrictions
+  - taxonomy
+  - menu_ui
+  - media
+  - locale
+  - pathauto
+  - key_value_field
+  - twig_tweak
+  - media_library
+  - views_exposed_filter_blocks
+  - layout_builder
+  - google_map_field
+  - dynamic_page_cache
+  - quanthub_core
+  - quanthub_sdmx_proxy
+  - quanthub_datasetexplorer
+  - quanthub_download_button
+  - quanthub_metadata_button
+themes:
+  - claro
+  - quanthub_tailwindcss

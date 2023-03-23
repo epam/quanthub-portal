@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.release
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: node.release
+target_entity_type_id: node
+target_bundle: release
+default_langcode: site_default
+language_alterable: false

@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.dataset
+  module:
+    - facets
+    - system
+  theme:
+    - quanthub_tailwindcss
+id: dataset
+theme: quanthub_tailwindcss
+region: left_sidebar
+weight: 0
+provider: null
+plugin: 'facet_block:dataset'
+settings:
+  id: 'facet_block:dataset'
+  label: Dataset
+  label_display: '0'
+  provider: facets
+  context_mapping: {  }
+  block_id: dataset
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /search

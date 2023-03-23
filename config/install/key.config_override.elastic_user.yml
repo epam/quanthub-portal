@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - elasticsearch_connector.cluster.elasticsearch
+    - key.key.elastic_user
+id: elastic_user
+label: 'Elastic User'
+config_type: elasticsearch_cluster
+config_prefix: elasticsearch_connector.cluster
+config_name: elasticsearch
+config_item: options.username
+key_id: elastic_user
