@@ -4,53 +4,97 @@ description: 'Qunthub Portal Profile'
 core_version_requirement: ^9.5.2
 version: 0.0.1
 install:
-  - node
-  - ultimate_cron
+  - admin_toolbar
+  - admin_toolbar_tools
+  - anchor_link
+  - automated_cron
   - block
+  - block_content
+  - breakpoint
+  - ckeditor
+  - ckeditor_details
+  - colorbutton
+  - comment
+  - config
+  - config_translation
+  - contextual
+  - ctools
+  - current_page_crumb
   - datetime
   - dblog
+  - default_content
+  - dynamic_page_cache
+  - editor
+  - elasticsearch_connector
+  - embed
+  - entity_browser
+  - entity_embed
+  - facets
+  - facets_searchbox_widget
+  - facets_summary
+  - field
+  - field_ui
+  - file
+  - filter
+  - fontawesome
+  - fullcalendar_view
+  - google_map_field
+  - hal
+  - help
+  - history
+  - image
+  - key
+  - key_value_field
+  - language
+  - layout_builder
+  - layout_builder_modal
+  - layout_builder_restrictions
+  - layout_custom_section_classes
+  - layout_discovery
+  - link
+  - locale
+  - media
+  - media_directories
+  - media_directories_editor
+  - media_directories_ui
+  - media_library
+  - menu_link_content
+  - menu_ui
+  - node
+  - oidc
+  - options
   - page_cache
-  - shortcut
+  - panelbutton
   - path
   - path_alias
-  - block_content
-  - comment
-  - content_translation
-  - history
-  - toolbar
-  - view_mode_page
-  - ckeditor
-  - facets
-  - fontawesome
-  - views
-  - fullcalendar_view
-  - help
-  - contact
-  - field_layout
-  - update
+  - pgsql
   - powerbi_embed
-  - key
-  - file
-  - search_api
-  - elasticsearch_connector
-  - layout_builder_restrictions
-  - taxonomy
-  - menu_ui
-  - media
-  - locale
-  - pathauto
-  - key_value_field
-  - twig_tweak
-  - media_library
-  - views_exposed_filter_blocks
-  - layout_builder
-  - google_map_field
-  - dynamic_page_cache
+  - quanthub_codelists
   - quanthub_core
-  - quanthub_sdmx_proxy
   - quanthub_datasetexplorer
   - quanthub_download_button
   - quanthub_metadata_button
+  - quanthub_pivot
+  - quanthub_sdmx_proxy
+  - search_api
+  - serialization
+  - shortcut
+  - system
+  - taxonomy
+  - text
+  - token
+  - toolbar
+  - twig_tweak
+  - ultimate_cron
+  - update
+  - user
+  - view_mode_page
+  - views_exposed_filter_blocks
+  - views_ui
+  - pathauto
+  - content_translation
+  - externalauth
+  - views
 themes:
   - claro
   - quanthub_tailwindcss
