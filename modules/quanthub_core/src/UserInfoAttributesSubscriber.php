@@ -71,8 +71,14 @@ class UserInfoAttributesSubscriber implements EventSubscriberInterface, UserInfo
   public function getUserInfoAttributes(ExternalAuthLoginEvent $event) {
     // Oidc plugin id is dynamic hash, we firstly get id from oidc settings.
     $generic_realms = $this->configFactory->get('oidc.settings')->get('generic_realms');
+    if (count($generic_realms) == 0) {
+      return;
+    }
     $oidc_plugin_id = array_shift($generic_realms);
     $oidc_plugin = $this->configFactory->get('oidc.realm.quanthub_b2c_realm.' . $oidc_plugin_id);
+    if (!isset($oidc_plugin)) {
+      return;
+    }
     $user_attributes_endpoint = $oidc_plugin->get(self::USER_ATTRIBUTES_ENDPOINT);
 
     $token = $this->openidConnectSession->getJsonWebTokens()->getAccessToken()->getValue();
@@ -90,21 +96,21 @@ class UserInfoAttributesSubscriber implements EventSubscriberInterface, UserInfo
       $this->userData->set(
         self::MODULE_NAME,
         $event->getAccount()->id(),
-        self::USER_QUANTHID_ID,
+        self::USER_QUANTHUB_ID,
         array_shift($user_attributes_data['userAttributes']['USER_ID'])
       );
 
       $this->userData->set(
         self::MODULE_NAME,
         $event->getAccount()->id(),
-        self::USER_QUANTHID_ROLE,
+        self::USER_QUANTHUB_ROLE,
         $user_attributes_data['userAttributes']['USER_ROLE']
       );
 
       $this->userData->set(
         self::MODULE_NAME,
         $event->getAccount()->id(),
-        self::USER_QUANTHID_GROUPS,
+        self::USER_QUANTHUB_GROUPS,
         $user_attributes_data['userAttributes']['USER_GROUPS']
       );
 
