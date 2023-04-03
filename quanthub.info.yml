@@ -2,7 +2,7 @@ name: Quanthub
 type: profile
 description: 'Qunthub Portal Profile'
 core_version_requirement: ^9.5.2
-version: 0.0.1
+version: 1.0.0
 install:
   - admin_toolbar
   - admin_toolbar_tools
