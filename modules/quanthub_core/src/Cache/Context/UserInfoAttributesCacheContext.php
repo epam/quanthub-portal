@@ -59,7 +59,7 @@ class UserInfoAttributesCacheContext extends UserCacheContextBase implements Cac
       return $this->userData->get(
         self::MODULE_NAME,
         $this->user->id(),
-        self::USER_QUANTHID_ID
+        self::USER_QUANTHUB_ID
       );
     }
   }

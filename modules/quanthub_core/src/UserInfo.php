@@ -74,13 +74,13 @@ class UserInfo implements UserInfoInterface {
    */
   public function getQuanthubUserId() {
     if ($this->currentUser->isAnonymous() || $this->currentUser->id() == 1) {
-      $quanthub_user_id = reset($this->cache->get(self::ANONYMOUS_QUANHUB_USER_ID)->data);
+      $quanthub_user_id = reset($this->cache->get(self::ANONYMOUS_QUANTHUB_USER_ID)->data);
     }
     else {
       $quanthub_user_id = $this->userData->get(
         self::MODULE_NAME,
         $this->currentUser->id(),
-        self::USER_QUANTHID_ID
+        self::USER_QUANTHUB_ID
       );
     }
 
@@ -98,7 +98,7 @@ class UserInfo implements UserInfoInterface {
       return $this->userData->get(
         self::MODULE_NAME,
         $this->currentUser->id(),
-        self::USER_QUANTHID_ROLE
+        self::USER_QUANTHUB_ROLE
       );
     }
   }
@@ -111,7 +111,7 @@ class UserInfo implements UserInfoInterface {
       return $this->userData->get(
         self::MODULE_NAME,
         $this->currentUser->id(),
-        self::USER_QUANTHID_GROUPS
+        self::USER_QUANTHUB_GROUPS
       );
     }
   }

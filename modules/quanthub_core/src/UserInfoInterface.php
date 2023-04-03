@@ -15,22 +15,22 @@ interface UserInfoInterface extends QuanthubCoreInterface {
   /**
    * User Data key for quanthub id.
    */
-  const USER_QUANTHID_ID = 'user_quanthub_id';
+  const USER_QUANTHUB_ID = 'user_quanthub_id';
 
   /**
    * User Data key for quanthub role.
    */
-  const USER_QUANTHID_ROLE = 'user_quanthub_role';
+  const USER_QUANTHUB_ROLE = 'user_quanthub_role';
 
   /**
    * User Data key for quanthub groups.
    */
-  const USER_QUANTHID_GROUPS = 'user_quanthub_groups';
+  const USER_QUANTHUB_GROUPS = 'user_quanthub_groups';
 
   /**
-   * Cache ID for anonymous user Quanhub User Id.
+   * Cache ID for anonymous user quanthub User Id.
    */
-  const ANONYMOUS_QUANHUB_USER_ID = self::MODULE_NAME . ':ANONYMOUS_QUANHUB_USER_ID';
+  const ANONYMOUS_QUANTHUB_USER_ID = self::MODULE_NAME . ':ANONYMOUS_QUANTHUB_USER_ID';
 
   /**
    * Key for main user info token endpoint.

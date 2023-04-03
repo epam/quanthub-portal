@@ -73,8 +73,15 @@ class AnonymousUserInfoTokenSubscriber implements EventSubscriberInterface, User
       if (!$this->cache->get(self::ANONYMOUS_TOKEN_CID)) {
         // Oidc plugin id is dynamic hash, we firstly get id from oidc settings.
         $generic_realms = $this->configFactory->get('oidc.settings')->get('generic_realms');
+        if (count($generic_realms) == 0) {
+          return;
+        }
+
         $oidc_plugin_id = array_shift($generic_realms);
         $oidc_plugin = $this->configFactory->get('oidc.realm.quanthub_b2c_realm.' . $oidc_plugin_id);
+        if (!isset($oidc_plugin)) {
+          return;
+        }
         $anonymous_endpoint = $oidc_plugin->get(self::ANONYMOUS_TOKEN_ENDPOINT);
 
         if ($anonymous_endpoint) {
@@ -101,7 +108,7 @@ class AnonymousUserInfoTokenSubscriber implements EventSubscriberInterface, User
         }
 
         $user_attributes_endpoint = $oidc_plugin->get(self::USER_ATTRIBUTES_ENDPOINT);
-        if (!$this->cache->get(self::ANONYMOUS_QUANHUB_USER_ID)) {
+        if (!$this->cache->get(self::ANONYMOUS_QUANTHUB_USER_ID)) {
           try {
             $response = $this->httpClient->get($user_attributes_endpoint, [
               'headers' => [
@@ -111,7 +118,7 @@ class AnonymousUserInfoTokenSubscriber implements EventSubscriberInterface, User
             ]);
 
             $user_attributes_data = json_decode($response->getBody(), TRUE);
-            $this->cache->set(self::ANONYMOUS_QUANHUB_USER_ID, $user_attributes_data['userAttributes']['USER_ID'], strtotime($user_info_data['expiresOn']));
+            $this->cache->set(self::ANONYMOUS_QUANTHUB_USER_ID, $user_attributes_data['userAttributes']['USER_ID'], strtotime($user_info_data['expiresOn']));
           }
           catch (RequestException $e) {
             $this->logger->error('Failed to retrieve quanthub user id for anonymous user: @error.', [
