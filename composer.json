@@ -3,7 +3,8 @@
   "description": "Quanthub Portal Drupal Profile",
   "type": "drupal-profile",
   "require": {
-    "php": ">=8.0"
+    "php": ">=8.0",
+    "jumbojett/openid-connect-php": "^0.9.6"
   },
   "license": "GPL-3.0-or-later",
   "authors": [
