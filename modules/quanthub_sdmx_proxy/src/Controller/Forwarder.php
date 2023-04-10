@@ -100,7 +100,7 @@ final class Forwarder extends ControllerBase {
 
     $headers = [];
     foreach ($request->headers->keys() as $key) {
-      if (($key == 'content-type') || ($key == 'accept') || ($key == 'accept-language') || ($key == 'accept-encoding')) {
+      if (($key == 'content-type') || str_starts_with($key, 'accept') || str_starts_with($key, 'quanthub')) {
         $headers[$key] = $request->headers->get($key);
       }
     }
