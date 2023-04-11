@@ -102,11 +102,6 @@ function quanthub_core_theme() {
       ],
       'template' => 'powerbi-embed-formatter',
     ],
-    'block__browse_data_menu' => [
-      'variables' => [
-        'links' => NULL,
-        ]
-      ],
   ];
 }
 
