@@ -242,15 +242,15 @@ function quanthub_core_ckeditor_css_alter(array &$css) {
  *
  * A temporary workaround to shrink the menu.
  */
-//function quanthub_core_language_switch_links_alter(array &$links, $type, Url $url) {
-//  foreach ($links as $langcode => &$link) {
-//    switch ($langcode) {
-//      case 'en':
-//        $link['title'] = 'Eng';
-//        break;
-//
-//      case 'uk':
-//        $link['title'] = t('Ukr', [], ['langcode' => 'uk']);
-//    }
-//  }
-//}
+function quanthub_core_language_switch_links_alter(array &$links, $type, Url $url) {
+  foreach ($links as $langcode => &$link) {
+    switch ($langcode) {
+      case 'en':
+        $link['title'] = 'Eng';
+        break;
+
+      case 'uk':
+        $link['title'] = t('Ukr', [], ['langcode' => 'uk']);
+    }
+  }
+}
