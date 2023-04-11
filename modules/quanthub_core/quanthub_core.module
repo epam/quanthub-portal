@@ -227,7 +227,9 @@ function quanthub_core_editor_js_settings_alter(array &$settings) {
     'colorButton_colors' => 'ck-black/000000,ck-gray/666666',
   ];
 
-  $settings['editor']['formats']['basic_html']['editorSettings'] += $extra_editor_settings;
+  foreach ($settings['editor']['formats'] as &$format) {
+    $format['editorSettings'] += $extra_editor_settings;
+  }
 }
 
 /**
