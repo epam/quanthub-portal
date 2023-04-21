@@ -83,22 +83,12 @@
     <div class="flex flex-row items-center justify-between mt-1 flex-wrap">
       <div class="flex flex-row items-center">
         <div class="download_button_id mr-2" data-btn-class="secondary-button"  data-urn="{{ quanthub_urn }}"></div>
-
-      {% if node.langcode.langcode == 'en' %}
-          <a href="/explorer?urn={{ quanthub_urn }}" class="tertiary-button mr-2">
+          <a href="/{{ node.langcode.langcode }}/explorer?urn={{ quanthub_urn }}" class="tertiary-button mr-2">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M8.00001 1.33333C4.32001 1.33333 1.33334 4.31999 1.33334 8C1.33334 11.68 4.32001 14.6667 8.00001 14.6667C11.68 14.6667 14.6667 11.68 14.6667 8C14.6667 4.31999 11.68 1.33333 8.00001 1.33333ZM8.00001 13.3333C5.06001 13.3333 2.66668 10.94 2.66668 8C2.66668 5.06 5.06001 2.66666 8.00001 2.66666C10.94 2.66666 13.3333 5.06 13.3333 8C13.3333 10.94 10.94 13.3333 8.00001 13.3333ZM4.33334 11.6667L9.34001 9.34L11.6667 4.33333L6.66001 6.66L4.33334 11.6667ZM8.00001 7.26666C8.40668 7.26666 8.73334 7.59333 8.73334 8C8.73334 8.40666 8.40668 8.73333 8.00001 8.73333C7.59334 8.73333 7.26668 8.40666 7.26668 8C7.26668 7.59333 7.59334 7.26666 8.00001 7.26666Z" fill="#424A9C"/>
             </svg>
             {{ '@explore'|t({'@explore': "Explore" }) }}
           </a>
-      {% else %}
-          <a href="/uk/explorer?urn={{ quanthub_urn }}" class="tertiary-button mr-2">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8.00001 1.33333C4.32001 1.33333 1.33334 4.31999 1.33334 8C1.33334 11.68 4.32001 14.6667 8.00001 14.6667C11.68 14.6667 14.6667 11.68 14.6667 8C14.6667 4.31999 11.68 1.33333 8.00001 1.33333ZM8.00001 13.3333C5.06001 13.3333 2.66668 10.94 2.66668 8C2.66668 5.06 5.06001 2.66666 8.00001 2.66666C10.94 2.66666 13.3333 5.06 13.3333 8C13.3333 10.94 10.94 13.3333 8.00001 13.3333ZM4.33334 11.6667L9.34001 9.34L11.6667 4.33333L6.66001 6.66L4.33334 11.6667ZM8.00001 7.26666C8.40668 7.26666 8.73334 7.59333 8.73334 8C8.73334 8.40666 8.40668 8.73333 8.00001 8.73333C7.59334 8.73333 7.26668 8.40666 7.26668 8C7.26668 7.59333 7.59334 7.26666 8.00001 7.26666Z" fill="#424A9C"/>
-            </svg>
-            {{ '@explore'|t({'@explore': "Explore" }) }}
-          </a>
-      {% endif %}
       </div>
         {% if display_submitted %}
           <span class="separator pr-2 pl-1"> |</span>
