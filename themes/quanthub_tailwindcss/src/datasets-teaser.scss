@@ -5,6 +5,13 @@
   .link--download {
     height: 28px;
   }
+  .dataset--item{
+    .dataset--content{
+      .separator {
+        @apply hidden;
+      }
+    }
+  }
 }
 
 .datasets--popular--block {
@@ -64,9 +71,6 @@
     .views-row {
       width: calc(50% - 0.75rem);
       margin-bottom: 1.25rem;
-      .dataset--text {
-        height: 120px;
-      }
       @screen sm {
         width: 100%;
       }
@@ -96,7 +100,7 @@
     .view-content {
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 40px;
       flex-grow: 1;
 
       @screen md {
