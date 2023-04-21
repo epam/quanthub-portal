@@ -22,6 +22,10 @@
     white-space: nowrap;
   }
 
+  .field__item{
+    display: flex;
+  }
+
   .field__item:before {
     content: '|';
     display: inline-block;

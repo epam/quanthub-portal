@@ -78,6 +78,14 @@ $column-gap: 24px;
     @screen sm {
       width: 100% !important;
     }
+
+    .card{
+      .ico-time{
+        .text-updated{
+          @apply hidden;
+        }
+      }
+    }
   }
 }
 
@@ -91,6 +99,13 @@ $column-gap: 24px;
 .view-display-id-block_2 {
   .views-row {
     width: calc(32% - $column-gap / 2);
+    .card{
+      .ico-time{
+        .text-updated{
+          @apply block;
+        }
+      }
+    }
   }
   .card-description {
     padding: 16px;

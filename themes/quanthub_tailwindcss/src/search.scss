@@ -402,6 +402,13 @@ form {
     }
   }
 }
-.path-search .field--name-title {
-  @include two-lines(32px);
+.path-search {
+  .field--name-title {
+    @include two-lines(32px);
+  }
+  .facet-item{
+    .fact-checkbox{
+      margin-right: 8px;
+    }
+  }
 }

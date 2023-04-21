@@ -287,4 +287,16 @@ aside + .flex-1 .region-content {
     @include header-with-line;
     @apply mb-4 mt-10;
   }
+  .views-row {
+    .card{
+      .ico-time{
+        .separator{
+          @apply hidden;
+        }
+      }
+    }
+  }
+}
+.download_button_id button{
+  width: auto !important;
 }
