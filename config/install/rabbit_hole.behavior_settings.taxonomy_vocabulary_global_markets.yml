@@ -1,0 +1,14 @@
+uuid: 25831d38-7ce3-4474-9783-f319dd86c0a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.global_markets
+id: taxonomy_vocabulary_global_markets
+entity_type_id: taxonomy_vocabulary
+entity_id: global_markets
+action: page_not_found
+allow_override: 1
+redirect: /search
+redirect_code: 301
+redirect_fallback_action: page_not_found

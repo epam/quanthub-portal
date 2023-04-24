@@ -1,0 +1,14 @@
+uuid: 875c57b5-ee07-46eb-bcf8-34d8573c9611
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.education
+id: taxonomy_vocabulary_education
+entity_type_id: taxonomy_vocabulary
+entity_id: education
+action: page_not_found
+allow_override: 1
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied

@@ -1,0 +1,14 @@
+uuid: e9670a94-c804-4de5-ab14-faafbf930253
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.government_finance
+id: taxonomy_vocabulary_government_finance
+entity_type_id: taxonomy_vocabulary
+entity_id: government_finance
+action: page_not_found
+allow_override: 1
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied
