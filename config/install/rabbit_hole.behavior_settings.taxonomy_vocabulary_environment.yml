@@ -1,0 +1,14 @@
+uuid: ae57614e-e13c-410d-a241-9e789fb3afd3
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.environment
+id: taxonomy_vocabulary_environment
+entity_type_id: taxonomy_vocabulary
+entity_id: environment
+action: page_not_found
+allow_override: 1
+redirect: ''
+redirect_code: 301
+redirect_fallback_action: access_denied
