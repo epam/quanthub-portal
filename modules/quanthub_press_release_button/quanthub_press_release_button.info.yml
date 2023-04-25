@@ -1,0 +1,5 @@
+name: 'Quanthub Press Release Button'
+type: module
+description: 'Quanthub custom component Press Release Button.'
+core_version_requirement: ^8 || ^9
+package: 'Epam Quanthub'
