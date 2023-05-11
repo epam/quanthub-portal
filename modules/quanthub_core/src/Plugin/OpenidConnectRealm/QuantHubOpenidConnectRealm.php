@@ -2,6 +2,8 @@
 
 namespace Drupal\quanthub_core\Plugin\OpenidConnectRealm;
 
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Url;
 use Drupal\quanthub_core\UserInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\oidc\JsonWebTokens;
@@ -12,6 +14,7 @@ use Sop\JWX\JWK\JWK;
 use Sop\JWX\JWT\JWT;
 use Sop\JWX\JWT\ValidationContext;
 use GuzzleHttp\Client;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the generic OpenID Connect realm plugin.
@@ -23,6 +26,55 @@ use GuzzleHttp\Client;
  * )
  */
 class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements OpenidConnectRealmConfigurableInterface, UserInfoInterface {
+
+  /**
+   * Generating login url.
+   *
+   * Mostly the same as parent method but
+   * added ui_locales to generating login link.
+   *
+   * {@inheritdoc}
+   */
+  public function getLoginUrl($state, Url $redirect_url) {
+    return Url::fromUri($this->getAuthorizationEndpoint(), [
+      'query' => [
+        'response_type' => 'code',
+        'scope' => $this->getScopeParameter(),
+        'client_id' => $this->getClientId(),
+        'state' => $state,
+        'redirect_uri' => $redirect_url->setAbsolute()->toString(TRUE)->getGeneratedUrl(),
+        'ui_locales' => $this->languageManager->getCurrentLanguage()->getId(),
+      ],
+    ]);
+  }
+
+  /**
+   * The language manager service.
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = parent::create(
+      $container,
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+    );
+    $instance->setLanguageManager($container->get('language_manager'));
+    return $instance;
+  }
+
+  /**
+   * Sets language manager.
+   */
+  public function setLanguageManager(LanguageManager $language_manager) {
+    $this->languageManager = $language_manager;
+  }
 
   /**
    * {@inheritdoc}
