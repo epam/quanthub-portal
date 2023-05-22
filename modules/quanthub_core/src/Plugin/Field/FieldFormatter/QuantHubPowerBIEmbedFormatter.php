@@ -97,6 +97,12 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
 
         if (isset($embed_token)) {
           // @todo Implement DI.
+          $expiration = DateTimePlus::createFromFormat('Y-m-d\TH:i:s\Z', $embed_token["expiration"]);
+          $max_age = $expiration->getTimestamp() - (new DateTimePlus())->getTimestamp() - 3;
+          if ($max_age < 0) {
+            $max_age = 0;
+          }
+
           $embed_type = 'report';
           $embed_id = $item->report_id;
           if (isset($item->report_page) && !empty($item->report_page)) {
@@ -126,7 +132,7 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
             '#theme' => 'powerbi_embed_formatter',
             '#cache' => [
               'tags' => ['powerbi_embed:token'],
-              'max-age' => $diff,
+              'max-age' => $max_age,
             ],
           ];
         }
