@@ -136,7 +136,7 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
               'max-age' => $max_age,
             ],
           ];
-        } 
+        }
         else {
           $elements[$delta] = [
             '#markup' => 'Issue generating PowerBi embed token. Please retry later',
