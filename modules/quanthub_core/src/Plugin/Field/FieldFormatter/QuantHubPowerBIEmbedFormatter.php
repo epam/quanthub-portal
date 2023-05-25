@@ -99,7 +99,7 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
         if (isset($embed_token)) {
           // @todo Implement DI.
           $expiration = DateTimePlus::createFromFormat('Y-m-d\TH:i:s\Z', $embed_token["expiration"]);
-          $max_age = $expiration->getTimestamp() - (new DateTimePlus())->getTimestamp() - 3;
+          $max_age = $expiration->getTimestamp() - (new DateTimePlus())->getTimestamp() - 15;
           if ($max_age < 0) {
             $max_age = 0;
           }
@@ -134,6 +134,15 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
             '#cache' => [
               'tags' => ['powerbi_embed:token'],
               'max-age' => $max_age,
+            ],
+          ];
+        }
+        else {
+          $elements[$delta] = [
+            '#markup' => 'Issue generating PowerBi embed token. Please retry later',
+            '#cache' => [
+              'tags' => ['powerbi_embed:token'],
+              'max-age' => 0,
             ],
           ];
         }
