@@ -34,7 +34,7 @@ function quanthub_tailwindcss_get_active_theme() {
  */
 function quanthub_tailwindcss_preprocess_page(array &$variables) {
   $workspaceId = getenv('SDMX_WORKSPACE_ID');
-  $defaultCategorySchemeUrn = getenv('DEFAULT_CATEGORY_SCHEME_URN');
+  $defaultCategorySchemeUrn = getenv('SDMX_DEFAULT_CATEGORY_SCHEME_URN');
   $variables['#attached']['drupalSettings']['workspaceId'] = $workspaceId;
   $variables['#attached']['drupalSettings']['defaultCategorySchemeUrn'] = $defaultCategorySchemeUrn;
 }
