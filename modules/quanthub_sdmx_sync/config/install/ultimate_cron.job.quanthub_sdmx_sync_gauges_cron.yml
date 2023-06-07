@@ -1,0 +1,14 @@
+dependencies:
+  module:
+    - quanthub_sdmx_sync
+title: 'Quanthub SDMX Sync Cron Gauges'
+id: quanthub_sdmx_sync_gauges_cron
+weight: 0
+module: quanthub_sdmx_sync
+callback: quanthub_sdmx_sync_gauges_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

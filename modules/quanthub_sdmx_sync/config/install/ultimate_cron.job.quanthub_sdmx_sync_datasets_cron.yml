@@ -1,0 +1,14 @@
+dependencies:
+  module:
+    - quanthub_sdmx_sync
+title: 'Quanthub SDMX Sync Cron Datasets'
+id: quanthub_sdmx_sync_datasets_cron
+weight: 0
+module: quanthub_sdmx_sync
+callback: quanthub_sdmx_sync_datasets_cron
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

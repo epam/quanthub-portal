@@ -1,0 +1,16 @@
+services:
+  logger.channel.sdmx_sync_dataset:
+    parent: logger.channel_base
+    arguments: ['sdmx_sycn_dataset']
+  sdmx_client:
+    class: Drupal\quanthub_sdmx_sync\SdmxClient
+    arguments: ['@http_client_factory', '@user_info', '@logger.channel.sdmx_sync_dataset']
+  sdmx_sync_datasets:
+    class: Drupal\quanthub_sdmx_sync\SdmxSyncDatasets
+    arguments: ['@sdmx_client', '@entity_type.manager', '@database']
+
+
+#  sdmx_sync_gauges:
+#    class: Drupal\quanthub_sdmx_sync\SdmxSyncGauges
+#    arguments: []
+

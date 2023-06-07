@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Contains quanthub_sdmx_sync.module.
+ */
+
+/**
+ * Cron callback for running service sdxm sync gauges.
+ */
+function quanthub_sdmx_sync_gauges_cron() {
+
+}
+
+/**
+ * Cron callback for running service sdxm sync datasets.
+ */
+function quanthub_sdmx_sync_datasets_cron() {
+  \Drupal::service('sdmx_sync_datasets')->syncDatasetsUpdateDate();
+}
