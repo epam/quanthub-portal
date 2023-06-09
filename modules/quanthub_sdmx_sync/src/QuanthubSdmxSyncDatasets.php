@@ -59,7 +59,7 @@ class QuanthubSdmxSyncDatasets {
   /**
    * {@inheritdoc}
    */
-  public function __construct(SdmxClient $sdmx_client, EntityTypeManager $entity_type_manager, Connection $database) {
+  public function __construct(QuanthubSdmxClient $sdmx_client, EntityTypeManager $entity_type_manager, Connection $database) {
     $this->sdmxClient = $sdmx_client;
     $this->entityTypeManager = $entity_type_manager;
     $this->datasetsStorage = $this->entityTypeManager->getStorage(self::DATASET_ENTITY_TYPE);
