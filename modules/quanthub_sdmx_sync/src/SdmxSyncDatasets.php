@@ -14,6 +14,11 @@ use Drupal\Core\Database\Connection;
 class SdmxSyncDatasets {
 
   /**
+   * The last update annotation in dataset structure.
+   */
+  const LAST_UPDATE_ANNOTATION = 'lastUpdatedAt';
+
+  /**
    * The dataset entity type.
    */
   const DATASET_ENTITY_TYPE = 'node';
@@ -67,10 +72,12 @@ class SdmxSyncDatasets {
   public function syncDatasetsUpdateDate() {
     foreach ($this->getDatasetUrns() as $dataset_nid => $dataset_urn) {
       if ($last_update_date = $this->getDatasetUpdateDate($dataset_urn)) {
+        $last_update_date = strtotime($last_update_date);
         $dataset_entity = $this->datasetsStorage->load($dataset_nid);
         if ($dataset_entity instanceof EntityInterface) {
-          // @todo need save last update date $last_update_date.
-          $dataset_entity->save();
+          $dataset_entity
+            ->set('changed', strtotime($last_update_date))
+            ->save();
         }
       }
     }
@@ -84,9 +91,9 @@ class SdmxSyncDatasets {
 
     if (!empty($dataset_structure['data']['dataflows'])) {
       $dataflow_data = $dataset_structure['data']['dataflows'];
-      foreach ($dataflow_data as $key => $value) {
+      foreach ($dataflow_data as $value) {
         foreach ($value['annotations'] as $annotation) {
-          if ($annotation['id'] == 'late_update_at') {
+          if ($annotation['id'] == self::LAST_UPDATE_ANNOTATION) {
             return $annotation['value'];
           }
         }
