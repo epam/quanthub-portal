@@ -11,7 +11,7 @@ use Drupal\Core\Database\Connection;
  *
  * Currently, we are syncing only last update date.
  */
-class SdmxSyncDatasets {
+class QuanthubSdmxSyncDatasets {
 
   /**
    * The last update annotation in dataset structure.

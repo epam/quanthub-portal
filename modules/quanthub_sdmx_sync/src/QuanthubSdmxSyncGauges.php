@@ -7,6 +7,6 @@
 /**
  * Sdmx Sync Gaugegs service.
  */
-class SdmxSyncGauges {
+class QuanthubSdmxSyncGauges {
 
 }

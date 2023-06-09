@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 /**
  * SDMX client service.
  */
-class SdmxClient {
+class QuanthubSdmxClient {
 
   /**
    * The logger service.
