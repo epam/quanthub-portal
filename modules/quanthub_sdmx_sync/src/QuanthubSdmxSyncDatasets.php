@@ -76,7 +76,7 @@ class QuanthubSdmxSyncDatasets {
         $dataset_entity = $this->datasetsStorage->load($dataset_nid);
         if ($dataset_entity instanceof EntityInterface) {
           $dataset_entity
-            ->set('changed', strtotime($last_update_date))
+            ->set('changed', $last_update_date)
             ->save();
         }
       }
