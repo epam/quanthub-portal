@@ -34,7 +34,7 @@
   {{ title_prefix }}
   {% if name and not page %}
     {% if view_mode == 'search_filter' %}
-      <a href="/{{ term.langcode.langcode }}/search?f[0]=topics:{{ term.id }}">{{ name }}</a>
+      <a href="{{ url }}">{{ name }}</a>
     {% else %}
       <h2><a href="{{ url }}">{{ name }}</a></h2>
     {% endif %}
