@@ -151,7 +151,12 @@ class PowerBIEmbedConfigs {
     $tokenResponse = json_decode($tokenResponse, TRUE);
 
     if (isset($tokenResponse["error"])) {
-      $this->loggerFactory->error("error: " . $tokenResponse["error"]["message"]);
+      if (isset($tokenResponse["error"]["message"])) {
+        $this->loggerFactory->error("error: " . $tokenResponse["error"]["message"]);
+      }
+      else {
+        $this->loggerFactory->error("error: " . $tokenResponse["error"]);
+      }
       return NULL;
     }
     return $tokenResponse;
