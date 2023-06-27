@@ -3,8 +3,8 @@
 namespace Drupal\quanthub_core\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\text\Plugin\Field\FieldFormatter\TextDefaultFormatter;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\text\Plugin\Field\FieldFormatter\TextDefaultFormatter;
 
 /**
  * Plugin implementation of the 'key_value' formatter.

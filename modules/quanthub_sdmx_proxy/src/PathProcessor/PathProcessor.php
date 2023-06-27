@@ -3,8 +3,8 @@
 namespace Drupal\quanthub_sdmx_proxy\PathProcessor;
 
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines a path processor to rewrite file URLs.

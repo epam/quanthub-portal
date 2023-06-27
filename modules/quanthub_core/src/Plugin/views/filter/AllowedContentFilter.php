@@ -2,9 +2,9 @@
 
 namespace Drupal\quanthub_core\Plugin\views\filter;
 
+use Drupal\quanthub_core\AllowedContentManager;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Psr\Container\ContainerInterface;
-use Drupal\quanthub_core\AllowedContentManager;
 
 /**
  * Filter by user allowed content in user data provided by xacml policies.
