@@ -64,9 +64,7 @@ class UserInfoAttributesSubscriber implements EventSubscriberInterface, UserInfo
   }
 
   /**
-   * Get anonymous user info token and save to cache.
-   *
-   * As this token for anonymous user no sense to store this more secure.
+   * Get user info attributes and save to user data.
    */
   public function getUserInfoAttributes(ExternalAuthLoginEvent $event) {
     // Oidc plugin id is dynamic hash, we firstly get id from oidc settings.
