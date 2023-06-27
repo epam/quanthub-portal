@@ -2,11 +2,11 @@
 
 namespace Drupal\quanthub_core;
 
+use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use GuzzleHttp\Client;
-use Psr\Log\LoggerInterface;
-use Drupal\Core\Session\AccountProxy;
 use GuzzleHttp\Exception\ConnectException;
+use Psr\Log\LoggerInterface;
 
 /**
  * WSO Token Service. Getting and saving token to cache.

@@ -2,9 +2,9 @@
 
 namespace Drupal\quanthub_sdmx_sync;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\Database\Connection;
 
 /**
  * Sdmx Sync Datasets service.

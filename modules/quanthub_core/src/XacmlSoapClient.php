@@ -2,9 +2,9 @@
 
 namespace Drupal\quanthub_core;
 
-use GuzzleHttp\Client;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Session\AccountProxy;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 
 /**

@@ -3,10 +3,10 @@
 namespace Drupal\quanthub_core\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation\Request;
 use Drupal\quanthub_core\PowerBIEmbedConfigs;
 use Laminas\Diactoros\Response\JsonResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Return Power BI embed config.

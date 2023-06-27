@@ -4,9 +4,9 @@ namespace Drupal\quanthub_core\Plugin\views\cache;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\cache\Tag;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Session\AccountInterface;
 
 /**
  * Cache plugin provides cache tag for updating based on allowed datasets list.
