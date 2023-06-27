@@ -159,8 +159,8 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
 
     // Create the tokens object.
     $expires = strtotime($response['expiresOn']);
-    $id_token = new Token($response['tokenId'], $expires);
-    $access_token = new Token($response['token'], strtotime('+1 day', $expires));
+    $id_token = new Token($response['tokenId'], strtotime('+1 day', $expires));
+    $access_token = new Token($response['token'], $expires);
 
     $tokens = new JsonWebTokens('user_info_token', $id_token, $access_token);
 
@@ -243,7 +243,7 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
         ],
         'json' => [
           'scopes' => $this->configuration['scopes'],
-          'authString' => $refresh_token,
+          'authString' => $refresh_token->getValue(),
         ],
       ]);
 
