@@ -5,7 +5,7 @@ namespace Drupal\quanthub_core;
 use Drupal\Core\Session\AccountInterface;
 use Psr\Log\LoggerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use GuzzleHttp\ClientInterface;
@@ -68,7 +68,7 @@ class AnonymousUserInfoTokenSubscriber implements EventSubscriberInterface, User
    *
    * As this token for anonymous user no sense to store this more secure.
    */
-  public function onResponse(ResponseEvent $event) {
+  public function onRequest(RequestEvent $event) {
     if ($this->currentUser->isAnonymous() || $this->currentUser->id() == 1) {
       if (!$this->cache->get(self::ANONYMOUS_TOKEN_CID)) {
         // Oidc plugin id is dynamic hash, we firstly get id from oidc settings.
@@ -136,7 +136,7 @@ class AnonymousUserInfoTokenSubscriber implements EventSubscriberInterface, User
    * Subscribe to kernel response event.
    */
   public static function getSubscribedEvents() {
-    $events[KernelEvents::RESPONSE][] = ['onResponse', 30];
+    $events[KernelEvents::REQUEST][] = ['onRequest', 30];
     return $events;
   }
 
