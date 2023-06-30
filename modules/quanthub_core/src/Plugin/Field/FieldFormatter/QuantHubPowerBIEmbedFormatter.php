@@ -6,6 +6,7 @@ use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\quanthub_core\PowerBIEmbedConfigs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -38,6 +39,13 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
   protected $powerBIEmbedConfigs;
 
   /**
+   * The language manager service.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Static method create for factory.
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -51,6 +59,7 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
       $configuration['third_party_settings'],
       $container->get('logger.factory'),
       $container->get('powerbi_embed_configs'),
+      $container->get('language_manager'),
     );
   }
 
@@ -75,11 +84,14 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
    *   The logger channel factory service.
    * @param \Drupal\quanthub_core\PowerBIEmbedConfigs $powerBIEmbedConfigs
    *   The PowerBIEmbedConfigs object.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The LanguageManagerInterface object.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, PowerBIEmbedConfigs $powerBIEmbedConfigs) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, PowerBIEmbedConfigs $powerBIEmbedConfigs, LanguageManagerInterface $language_manager) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->loggerFactory = $logger_factory;
     $this->powerBIEmbedConfigs = $powerBIEmbedConfigs;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -115,11 +127,15 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
             $embed_type = 'visual';
           }
 
+          $language = $this->languageManager->getCurrentLanguage()->getId();
+          $powerBiLanguage = ($language == 'uk') ? 'uk-UA' : 'en-US';
+
           $elements[$delta] = [
             '#embed_id' => $embed_id,
             '#embed_type' => $embed_type,
             '#field_name' => $item->getParent()->getName(),
             '#report_id' => $item->report_id,
+            '#report_language' => $powerBiLanguage,
             '#report_width' => $item->report_width,
             '#report_height' => $item->report_height,
             '#report_title' => $item->report_title,
