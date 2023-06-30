@@ -84,6 +84,8 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
    *   The logger channel factory service.
    * @param \Drupal\quanthub_core\PowerBIEmbedConfigs $powerBIEmbedConfigs
    *   The PowerBIEmbedConfigs object.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The LanguageManagerInterface object.
    */
   public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, PowerBIEmbedConfigs $powerBIEmbedConfigs, LanguageManagerInterface $language_manager) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
