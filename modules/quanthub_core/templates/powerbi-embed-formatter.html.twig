@@ -11,6 +11,7 @@
   };
 
   const pageName = "{{ report_page }}";
+  const language = "{{ report_language }}";
 
   let settings = {
     filterPaneEnabled: false
@@ -18,6 +19,7 @@
   if (pageName) {
     settings = {
       filterPaneEnabled: false,
+      localeSettings: { language },
       panes: {
         pageNavigation: {
           visible: false

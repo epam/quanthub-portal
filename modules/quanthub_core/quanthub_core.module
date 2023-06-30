@@ -89,6 +89,7 @@ function quanthub_core_theme() {
         'embed_type' => NULL,
         'field_name' => NULL,
         'report_id' => NULL,
+        'report_language' => NULL,
         'report_width' => NULL,
         'report_height' => NULL,
         'report_title' => NULL,
