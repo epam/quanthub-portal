@@ -3,12 +3,11 @@
 namespace Drupal\quanthub_core;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\oidc\OpenidConnectSessionInterface;
 use Drupal\user\UserDataInterface;
 use GuzzleHttp\Exception\RequestException;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use RuntimeException;
 use GuzzleHttp\ClientInterface;
 use Psr\Log\LoggerInterface;
 
@@ -183,7 +182,7 @@ class UserInfo implements UserInfoInterface {
           '@error' => $e->getMessage(),
         ]);
 
-        throw new RuntimeException('Failed to retrieve the user info anonymous token', 0, $e);
+        throw new \RuntimeException('Failed to retrieve the user info anonymous token', 0, $e);
       }
     }
     else {
@@ -208,7 +207,7 @@ class UserInfo implements UserInfoInterface {
           '@error' => $e->getMessage(),
         ]);
 
-        throw new RuntimeException('Failed to retrieve quanthub user id for anonymous token', 0, $e);
+        throw new \RuntimeException('Failed to retrieve quanthub user id for anonymous token', 0, $e);
       }
     }
   }
