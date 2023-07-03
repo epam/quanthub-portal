@@ -31,7 +31,7 @@ services:
     class: '\Drupal\quanthub_core\AnonymousUserInfoTokenSubscriber'
     tags:
       - { name: event_subscriber }
-    arguments: ['@cache.default', '@current_user', '@logger.channel.quanthub_core', '@config.factory', '@http_client']
+    arguments: ['@user_info']
 
   # Event subscriber for getting and storing user info attributes for authenticated user.
   user_info_attributes_subscriber:
@@ -43,7 +43,7 @@ services:
   # Get user info token for any user.
   user_info:
     class: '\Drupal\quanthub_core\UserInfo'
-    arguments: ['@current_user', '@cache.default', '@oidc.openid_connect_session', '@user.data', '@http_client']
+    arguments: ['@current_user', '@cache.default', '@oidc.openid_connect_session', '@user.data', '@http_client', '@logger.channel.quanthub_core', '@config.factory']
 
   powerbi_embed_configs:
     class: Drupal\quanthub_core\PowerBIEmbedConfigs
