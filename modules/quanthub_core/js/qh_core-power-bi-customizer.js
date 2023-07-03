@@ -40,6 +40,9 @@ function updateToken($, context) {
 function powerbi_embed_customizeReport($, context, width = 0, height = 0, title = '', name = '') {
   const iframes = $(`#${context.selector} iframe`);
   for (let i = 0; i < iframes.length; i++) {
+    if ($(iframes[i]).parents().hasClass('ckeditor-accordion-container')){
+      console.log('powerBi is inside ckeditor-accordion-container!')
+    }
     iframes[i].frameBorder = 0;
     if (iframes[i].attributes.getNamedItem('style')) {
       iframes[i].attributes.removeNamedItem('style');
