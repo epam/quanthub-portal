@@ -3,9 +3,13 @@
 namespace Drupal\quanthub_core;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\oidc\OpenidConnectSessionInterface;
 use Drupal\user\UserDataInterface;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
+use Psr\Log\LoggerInterface;
 
 /**
  * The service for getting user info token and user attributes.
@@ -43,13 +47,37 @@ class UserInfo implements UserInfoInterface {
   protected $userData;
 
   /**
+   * The http client service.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $httpClient;
+
+  /**
+   * The logger service.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
+   * The logger service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * Constructs an AnonymousUserInfoTokenSubscriber object.
    */
-  public function __construct(AccountInterface $current_user, CacheBackendInterface $cache, OpenidConnectSessionInterface $openid_connect_session, UserDataInterface $user_data) {
+  public function __construct(AccountInterface $current_user, CacheBackendInterface $cache, OpenidConnectSessionInterface $openid_connect_session, UserDataInterface $user_data, ClientInterface $http_client, LoggerInterface $logger, ConfigFactoryInterface $configFactory) {
     $this->currentUser = $current_user;
     $this->cache = $cache;
     $this->openidConnectSession = $openid_connect_session;
     $this->userData = $user_data;
+    $this->httpClient = $http_client;
+    $this->logger = $logger;
+    $this->configFactory = $configFactory;
   }
 
   /**
@@ -58,6 +86,9 @@ class UserInfo implements UserInfoInterface {
   public function getToken() {
     // For anonymous and admin we will use anonymous token.
     if ($this->currentUser->isAnonymous() || $this->currentUser->id() == 1) {
+      if (!$this->cache->get(self::ANONYMOUS_TOKEN_CID)) {
+        $this->updateAnonymousToken();
+      }
       $token = $this->cache->get(self::ANONYMOUS_TOKEN_CID)->data;
     }
     else {
@@ -113,6 +144,71 @@ class UserInfo implements UserInfoInterface {
         $this->currentUser->id(),
         self::USER_QUANTHUB_GROUPS
       );
+    }
+  }
+
+  /**
+   * Update user info anonymous token and save to the cache.
+   *
+   * As this token for anonymous user no sense to store this more secure.
+   */
+  public function updateAnonymousToken() {
+    // Oidc plugin id is dynamic hash, we firstly get id from oidc settings.
+    $generic_realms = $this->configFactory->get('oidc.settings')->get('generic_realms');
+    if (count($generic_realms) == 0) {
+      return;
+    }
+
+    $oidc_plugin_id = array_shift($generic_realms);
+    $oidc_plugin = $this->configFactory->get('oidc.realm.quanthub_b2c_realm.' . $oidc_plugin_id);
+    if (!isset($oidc_plugin)) {
+      return;
+    }
+    $anonymous_endpoint = $oidc_plugin->get(self::ANONYMOUS_TOKEN_ENDPOINT);
+
+    if ($anonymous_endpoint) {
+      try {
+        $response = $this->httpClient->get($anonymous_endpoint, [
+          'headers' => [
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+
+        $user_info_data = json_decode($response->getBody(), TRUE);
+        $this->cache->set(self::ANONYMOUS_TOKEN_CID, $user_info_data['token'], strtotime($user_info_data['expiresOn']));
+      }
+      catch (RequestException $e) {
+        $this->logger->error('Failed to retrieve tokens for anonymous user: @error.', [
+          '@error' => $e->getMessage(),
+        ]);
+
+        throw new \RuntimeException('Failed to retrieve the user info anonymous token', 0, $e);
+      }
+    }
+    else {
+      $this->logger->error('Failed to retrieve tokens for anonymous user: Anonymous token is not set');
+    }
+
+    $user_attributes_endpoint = $oidc_plugin->get(self::USER_ATTRIBUTES_ENDPOINT);
+    if (!$this->cache->get(self::ANONYMOUS_QUANTHUB_USER_ID) && !empty($user_info_data['token']) && !empty($user_info_data['expiresOn'])) {
+      try {
+        $response = $this->httpClient->get($user_attributes_endpoint, [
+          'headers' => [
+            'Authorization' => 'Bearer ' . $user_info_data['token'],
+            'Content-Type' => 'application/json',
+          ],
+        ]);
+
+        $user_attributes_data = json_decode($response->getBody(), TRUE);
+        $this->cache->set(self::ANONYMOUS_QUANTHUB_USER_ID, $user_attributes_data['userAttributes']['USER_ID'], strtotime($user_info_data['expiresOn']));
+      }
+      catch (RequestException $e) {
+        $this->logger->error('Failed to retrieve quanthub user id for anonymous user: @error.', [
+          '@error' => $e->getMessage(),
+        ]);
+
+        throw new \RuntimeException('Failed to retrieve quanthub user id for anonymous token', 0, $e);
+      }
     }
   }
 
