@@ -33,6 +33,7 @@ class ReleaseTypeProcessor extends FullcalendarViewProcessorBase {
       $release_type = $current_entity->get('field_release_type')->value;
       if (!empty($entries[$key])) {
         $entries[$key]['backgroundColor'] = match($release_type) {
+          // @todo Set colors from the UI.
           'dataset' => '#A1ECC7',
           'press_release' => '#C6DCEC',
           default => '#C6DCED'
