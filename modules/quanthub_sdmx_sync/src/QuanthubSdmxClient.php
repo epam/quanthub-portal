@@ -91,4 +91,36 @@ class QuanthubSdmxClient {
     }
   }
 
+  /**
+   * Get dataset filtered data by method GET.
+   *
+   * @param string $urn_for_url
+   *   The dataset urn for url.
+   * @param string $filters
+   *   The filters string divided by dot.
+   *
+   * @return mixed|void
+   *   The decoded response from SDMX.
+   */
+  public function getDatasetFilteredData(string $urn_for_url, string $filters) {
+    $baseUri = getenv('SDMX_API_URL') . '/workspaces/' . getenv('SDMX_WORKSPACE_ID') . '/registry/sdmx/3.0/data/dataflow/';
+
+    $guzzleClient = $this->httpClientFactory->fromOptions([
+      'base_uri' => $baseUri,
+      'headers' => $this->headers,
+    ]);
+
+    try {
+      return json_decode(
+        $guzzleClient->get($urn_for_url . '/' . $filters)->getBody(),
+        TRUE
+      );
+    }
+    catch (\Exception $e) {
+      $this->logger->error('Failed to retrieve tokens for anonymous user: @error.', [
+        '@error' => $e->getMessage(),
+      ]);
+    }
+  }
+
 }

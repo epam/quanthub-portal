@@ -8,9 +8,7 @@ services:
   sdmx_sync_datasets:
     class: Drupal\quanthub_sdmx_sync\QuanthubSdmxSyncDatasets
     arguments: ['@sdmx_client', '@entity_type.manager', '@database']
-
-
-#  sdmx_sync_gauges:
-#    class: Drupal\quanthub_sdmx_sync\SdmxSyncGauges
-#    arguments: []
+  sdmx_sync_gauges:
+    class: Drupal\quanthub_sdmx_sync\QuanthubSdmxSyncGauges
+    arguments: ['@sdmx_client', '@entity_type.manager', '@database']
 
