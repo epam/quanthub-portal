@@ -63,13 +63,13 @@ class QuanthubSdmxClient {
   /**
    * The get request to SDMX api.
    *
-   * @param string $urn_for_url
-   *   The dataset urn for url.
+   * @param string $urn
+   *   The dataset urn.
    *
    * @return array
    *   The response body array decoded json.
    */
-  public function getDasetStructure(string $urn_for_url) {
+  public function getDasetStructure(string $urn) {
     $baseUri = getenv('SDMX_API_URL') . '/workspaces/' . getenv('SDMX_WORKSPACE_ID') . '/registry/sdmx-plus/structure/dataflow/';
 
     $guzzleClient = $this->httpClientFactory->fromOptions([
@@ -80,6 +80,8 @@ class QuanthubSdmxClient {
         'references' => 'none',
       ],
     ]);
+
+    $urn_for_url = $this->transformUrn($urn);
 
     try {
       return json_decode($guzzleClient->get($urn_for_url)->getBody(), TRUE);
@@ -94,21 +96,23 @@ class QuanthubSdmxClient {
   /**
    * Get dataset filtered data by method GET.
    *
-   * @param string $urn_for_url
-   *   The dataset urn for url.
+   * @param string $urn
+   *   The dataset urn.
    * @param string $filters
    *   The filters string divided by dot.
    *
    * @return mixed|void
    *   The decoded response from SDMX.
    */
-  public function getDatasetFilteredData(string $urn_for_url, string $filters) {
+  public function getDatasetFilteredData(string $urn, string $filters) {
     $baseUri = getenv('SDMX_API_URL') . '/workspaces/' . getenv('SDMX_WORKSPACE_ID') . '/registry/sdmx/3.0/data/dataflow/';
 
     $guzzleClient = $this->httpClientFactory->fromOptions([
       'base_uri' => $baseUri,
       'headers' => $this->headers,
     ]);
+
+    $urn_for_url = $this->transformUrn($urn);
 
     try {
       return json_decode(
@@ -121,6 +125,31 @@ class QuanthubSdmxClient {
         '@error' => $e->getMessage(),
       ]);
     }
+  }
+
+  /**
+   * Transform dataset urn for using in api request.
+   *
+   * @param string $dataset_urn
+   *   The dataset urn string.
+   *
+   * @return string
+   *   Transformed dataset urn string.
+   */
+  public function transformUrn(string $dataset_urn): string {
+    // Change divider between agency and dataset id.
+    $dataset_urn_url = str_replace(':', '/', $dataset_urn);
+    // Transform versioning of dataset logic.
+    if (preg_match("/\([0-9.]/", $dataset_urn_url)) {
+      $dataset_urn_url = str_replace('(', '/', $dataset_urn_url);
+      $dataset_urn_url = str_replace(')', '', $dataset_urn_url);
+    }
+    else {
+      // We need latest dataset version, if version isn't specified.
+      $dataset_urn_url = str_replace('(*)', '/latest', $dataset_urn_url);
+    }
+
+    return $dataset_urn_url;
   }
 
 }

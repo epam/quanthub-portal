@@ -81,9 +81,7 @@ class QuanthubSdmxSyncGauges {
     $gauges_data = $this->getGaugesData();
     foreach ($gauges_data as $gauge_data) {
       $dataset_data = $this->sdmxClient->getDatasetFilteredData(
-        $this->transformUrn(
-          $gauge_data->quanthub_urn
-        ),
+        $gauge_data->quanthub_urn,
         $gauge_data->filter
       );
 
@@ -106,30 +104,6 @@ class QuanthubSdmxSyncGauges {
         );
       }
     }
-  }
-
-  /**
-   * Transform dataset urn for using in api request.
-   *
-   * @param string $dataset_urn
-   *   The dataset urn string.
-   *
-   * @return string
-   *   Transformed dataset urn string.
-   */
-  public function transformUrn(string $dataset_urn): string {
-    // @todo need refactor and move to other space perhaps trait.
-    // Changed divider in string to slash for url if found version.
-    if (preg_match("/\([0-9.]/", $dataset_urn)) {
-      $dataset_urn_url = str_replace([':', '('], '/', $dataset_urn);
-      $dataset_urn_url = str_replace(')', '', $dataset_urn_url);
-    }
-    else {
-      // We need latest dataset version, if version isn't specified.
-      $dataset_urn_url = str_replace('(*)', '/latest', $dataset_urn);
-    }
-
-    return $dataset_urn_url;
   }
 
   /**

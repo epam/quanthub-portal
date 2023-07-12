@@ -87,7 +87,7 @@ class QuanthubSdmxSyncDatasets {
    * Get last update date from sdmx for dataset by dataset urn.
    */
   public function getDatasetUpdateDate($dataset_urn) {
-    $dataset_structure = $this->sdmxClient->getDasetStructure($this->transformUrn($dataset_urn));
+    $dataset_structure = $this->sdmxClient->getDasetStructure($dataset_urn);
 
     if (!empty($dataset_structure['data']['dataflows'])) {
       $dataflow_data = $dataset_structure['data']['dataflows'];
@@ -119,29 +119,6 @@ class QuanthubSdmxSyncDatasets {
     $query->addField('n', 'nid');
     $query->addField('fqu', 'field_quanthub_urn_value');
     return $query->execute()->fetchAllKeyed();
-  }
-
-  /**
-   * Transform dataset urn for using in api request.
-   *
-   * @param string $dataset_urn
-   *   The dataset urn string.
-   *
-   * @return string
-   *   Transformed dataset urn string.
-   */
-  public function transformUrn(string $dataset_urn): string {
-    // Changed divider in string to slash for url if found version.
-    if (preg_match("/\([0-9.]/", $dataset_urn)) {
-      $dataset_urn_url = str_replace([':', '('], '/', $dataset_urn);
-      $dataset_urn_url = str_replace(')', '', $dataset_urn_url);
-    }
-    else {
-      // We need latest dataset version, if version isn't specified.
-      $dataset_urn_url = str_replace('(*)', '/latest', $dataset_urn);
-    }
-
-    return $dataset_urn_url;
   }
 
 }
