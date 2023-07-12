@@ -55,3 +55,8 @@ services:
     arguments: ['@current_user', '@user.data']
     tags:
       - { name: cache.context}
+
+  quanthub_elasticsearch_event_subscriber:
+    class: '\Drupal\quanthub_core\Plugin\EventSubscriber\QuanthubElasticSearchEventSubscriber'
+    tags:
+      - { name: 'event_subscriber' }
