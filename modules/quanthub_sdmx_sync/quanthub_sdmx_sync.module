@@ -9,7 +9,7 @@
  * Cron callback for running service sdxm sync gauges.
  */
 function quanthub_sdmx_sync_gauges_cron() {
-
+  \Drupal::service('sdmx_sync_gauges')->syncGauages();
 }
 
 /**
