@@ -29,11 +29,10 @@ class QuantHubScaleNumberWidget extends NumberWidget {
 
     $element['value']['#type'] = 'select';
     $element['value']['#options'] = [
-      10 => '10',
-      100 => '100',
-      1000 => '1 000',
-      1000000 => '1 000 000',
-      1000000000 => '1 000 000 000',
+      100 => $this->t('Hundreds'),
+      1000 => $this->t('Thousands'),
+      1000000 => $this->t('Millions'),
+      1000000000 => $this->t('Billions'),
     ];
 
     return $element;
