@@ -61,7 +61,7 @@ class QuanthubSdmxSyncGauges {
   /**
    * Get published gauges.
    */
-  public function getGaugesData() {
+  public function getPublishedGaugesData() {
     $query = $this->database->select('node_field_data', 'n');
     $query->condition('n.type', self::GAUGES_ENTITY_BUNDLE);
     $query->condition('n.status', 1);
@@ -78,32 +78,54 @@ class QuanthubSdmxSyncGauges {
    * Sync gauges data.
    */
   public function syncGauages() {
-    $gauges_data = $this->getGaugesData();
+    $gauges_data = $this->getPublishedGaugesData();
     foreach ($gauges_data as $gauge_data) {
-      $dataset_data = $this->sdmxClient->getDatasetFilteredData(
+      $gauge_updates = $this->getGaugeLastValueAndObservation(
         $gauge_data->quanthub_urn,
         $gauge_data->filter
       );
 
-      if (
-        !empty($dataset_data['data']['dataSets'][0]['series']) &&
-        !empty($dataset_data['data']['structures'][0]['dimensions']['observation'][0]['values'])
-      ) {
-        $structure_observation = $dataset_data['data']['structures'][0]['dimensions']['observation'][0]['values'];
-        $last_structure_observation = end($structure_observation)['value'];
-
-        $structure_series = $dataset_data['data']['dataSets'][0]['series'];
-        $structure_observations = array_column($structure_series, 'observations');
-        $structure_observations = end($structure_observations);
-        $last_serie_value = end($structure_observations);
-        $last_serie_value = end($last_serie_value);
+      if ($gauge_updates) {
         $this->updateGauge(
           $gauge_data->nid,
-          $last_structure_observation,
-          $last_serie_value
+          $gauge_updates['last_structure_observation'],
+          $gauge_updates['last_serie_value']
         );
       }
     }
+  }
+
+  /**
+   * Get Gauge last value and last structure observation.
+   *
+   * @param string $urn
+   *   The quanthub urn string.
+   * @param string $filter
+   *   The filter string.
+   *
+   * @return array|false
+   *   The array of data or false.
+   */
+  public function getGaugeLastValueAndObservation($urn, $filter) {
+    $dataset_data = $this->sdmxClient->getDatasetFilteredData($urn, $filter);
+
+    if (
+      !empty($dataset_data['data']['dataSets'][0]['series']) &&
+      !empty($dataset_data['data']['structures'][0]['dimensions']['observation'][0]['values'])
+    ) {
+      $structure_observation = $dataset_data['data']['structures'][0]['dimensions']['observation'][0]['values'];
+      $last_structure_observation = end($structure_observation)['value'];
+
+      $structure_series = $dataset_data['data']['dataSets'][0]['series'];
+      $structure_observations = array_column($structure_series, 'observations');
+      $structure_observations = end($structure_observations);
+      $last_serie_value = end($structure_observations);
+      $last_serie_value = end($last_serie_value);
+
+      return compact('last_serie_value', 'last_structure_observation');
+    }
+
+    return FALSE;
   }
 
   /**
