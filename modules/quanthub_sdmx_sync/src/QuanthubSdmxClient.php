@@ -87,7 +87,7 @@ class QuanthubSdmxClient {
       return json_decode($guzzleClient->get($urn_for_url)->getBody(), TRUE);
     }
     catch (\Exception $e) {
-      $this->logger->error('Failed to retrieve tokens for anonymous user: @error.', [
+      $this->logger->error('Failed to retrieve dataset structure: @error.', [
         '@error' => $e->getMessage(),
       ]);
     }
@@ -121,7 +121,7 @@ class QuanthubSdmxClient {
       );
     }
     catch (\Exception $e) {
-      $this->logger->error('Failed to retrieve tokens for anonymous user: @error.', [
+      $this->logger->error('Failed to retrieve filtered dataset data: @error.', [
         '@error' => $e->getMessage(),
       ]);
     }
