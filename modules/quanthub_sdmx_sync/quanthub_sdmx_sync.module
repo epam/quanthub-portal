@@ -22,23 +22,9 @@ function quanthub_sdmx_sync_datasets_cron() {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert().
+ * Implements hook_ENTITY_TYPE_presave().
  */
-function quanthub_sdmx_sync_node_insert(EntityInterface $entity) {
-  _quanthub_sdmx_sync_guage_update_values($entity);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update().
- */
-function quanthub_sdmx_sync_node_update(EntityInterface $entity) {
-  _quanthub_sdmx_sync_guage_update_values($entity);
-}
-
-/**
- * Helper function for updating period and value from in gauge from sdmx client.
- */
-function _quanthub_sdmx_sync_guage_update_values(EntityInterface &$entity) {
+function quanthub_sdmx_sync_node_presave(EntityInterface $entity) {
   if ($entity->bundle() == 'gauge') {
     $filter = $entity->field_gauge_filter->getString();
     $urn = $entity->field_dataset->entity->field_quanthub_urn->getString();
