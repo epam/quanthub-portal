@@ -47,8 +47,8 @@ function _quanthub_sdmx_sync_guage_update_values(EntityInterface &$entity) {
       $filter
     );
     if ($gauge_updates) {
-      $entity->field_gauge_value->set($gauge_updates['last_serie_value']);
-      $entity->field_gauge_period->set($gauge_updates['last_structure_observation']);
+      $entity->set('field_gauge_value', $gauge_updates['last_serie_value']);
+      $entity->set('field_gauge_period', $gauge_updates['last_structure_observation']);
     }
   }
 }
