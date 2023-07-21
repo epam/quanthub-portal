@@ -77,14 +77,20 @@
     </div>
     <div class='gauge-main'>
       <span class='gauge-value'>
-        {% if node.field_gauge_scale is empty %}
-          {% if node.field_gauge_round_number is empty or node.field_gauge_round_number.value == 0 %}
-            {{ node.field_gauge_value.value }}
-          {% elseif node.field_gauge_round_number.value > 0 %}
-            {{ node.field_gauge_value.value|round(node.field_gauge_round_number.value) }}
+        {% if node.field_gauge_value is not empty %}
+          {% if node.field_gauge_scale is empty %}
+            {% if node.field_gauge_round_number is empty or node.field_gauge_round_number.value == 0 %}
+              {{ node.field_gauge_value.value }}
+            {% else %}
+              {{ node.field_gauge_value.value|round(node.field_gauge_round_number.value) }}
+            {% endif %}
+          {% else %}
+            {% if node.field_gauge_round_number is empty or node.field_gauge_round_number.value == 0 %}
+              {{ (node.field_gauge_value.value / node.field_gauge_scale.value) }}
+            {% else %}
+              {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|round(node.field_gauge_round_number.value) }}
+            {% endif %}
           {% endif %}
-        {% else %}
-          {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|round(2) }}
         {% endif %}
         {% if node.field_gauge_unit_of_measure is not empty %}
           <span class='gauge-unit-measure'>{{ node.field_gauge_unit_of_measure.value }}</span>
