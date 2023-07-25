@@ -34,11 +34,15 @@ function quanthub_tailwindcss_get_active_theme() {
  */
 function quanthub_tailwindcss_preprocess_page(array &$variables) {
   $workspaceId = getenv('SDMX_WORKSPACE_ID');
+  $defaultDataset = getenv('SDMX_DEFAULT_DATASET');
   $defaultCategorySchemeUrn = getenv('SDMX_DEFAULT_CATEGORY_SCHEME_URN');
   $dataAttributeId = getenv('DATASET_EXPLORER_DATA_ATTRIBUTE_ID');
+  $unitsOfMeasureId = getenv('UNITS_OF_MEASURE_ATTRIBUTE_ID');
   $variables['#attached']['drupalSettings']['workspaceId'] = $workspaceId;
+  $variables['#attached']['drupalSettings']['defaultDataset'] = $defaultDataset;
   $variables['#attached']['drupalSettings']['defaultCategorySchemeUrn'] = $defaultCategorySchemeUrn;
   $variables['#attached']['drupalSettings']['dataAttributeId'] = $dataAttributeId;
+  $variables['#attached']['drupalSettings']['unitsOfMeasureId'] = $unitsOfMeasureId;
 }
 
 /**
