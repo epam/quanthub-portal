@@ -96,7 +96,7 @@ final class Forwarder extends ControllerBase {
    *   The response object.
    */
   public function forward(Request $request): Response {
-    return forward_internal($request, getenv('SDMX_API_URL'));
+    return forwardInternal($request, getenv('SDMX_API_URL'));
   }
 
   /**
@@ -108,11 +108,11 @@ final class Forwarder extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
    */
-  public function forward_download(Request $request): Response {
-    return forward_internal($request, getenv('SDMX_DOWNLOAD_API_URL'));
+  public function forwardDownload(Request $request): Response {
+    return forwardInternal($request, getenv('SDMX_DOWNLOAD_API_URL'));
   }
 
-  private function forward_internal(Request $request, $api_url): Response {
+  private function forwardInternal(Request $request, $api_url): Response {
     $headers = [];
     foreach ($request->headers->keys() as $key) {
       if (($key == 'content-type') || str_starts_with($key, 'accept') || str_starts_with($key, 'quanthub')) {
