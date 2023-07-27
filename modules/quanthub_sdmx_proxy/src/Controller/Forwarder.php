@@ -117,7 +117,7 @@ final class Forwarder extends ControllerBase {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request.
-   * @param $api_url
+   * @param string $api_url
    *   API URL.
    *
    * @return \Symfony\Component\HttpFoundation\Response
