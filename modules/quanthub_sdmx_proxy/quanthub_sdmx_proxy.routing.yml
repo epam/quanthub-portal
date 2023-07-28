@@ -14,3 +14,12 @@ sdmx_proxy.forwarder:
     _title: 'SDMX API Proxy request forwarder'
   requirements:
     _permission: 'access content'
+
+sdmx_proxy.forwarder-download:
+  path: '/sdmx-download'
+  methods: [GET, PUT, POST, PATCH, DELETE, OPTIONS]
+  defaults:
+    _controller: Drupal\quanthub_sdmx_proxy\Controller\Forwarder::forwardDownload
+    _title: 'SDMX API Proxy request forwarder'
+  requirements:
+    _permission: 'access content'
