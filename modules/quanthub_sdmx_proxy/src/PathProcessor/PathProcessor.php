@@ -38,6 +38,12 @@ class PathProcessor implements InboundPathProcessorInterface {
       $request->query->set('uri', $uri);
       return '/sdmx';
     }
+    if (strpos($path, '/sdmx-download/') === 0) {
+      $requestUri = $this->requestStack->getCurrentRequest()->getRequestUri();
+      $uri = preg_replace('|^\/sdmx-download|', '', $requestUri);
+      $request->query->set('uri', $uri);
+      return '/sdmx-download';
+    }
 
     return $path;
   }
