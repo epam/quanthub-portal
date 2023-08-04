@@ -52,6 +52,7 @@ function powerbi_embed_customizeReport($, context, width = 0, height = 0, title 
     iframes[i].height = ih + 'px';
   }
 
+  checkTokenAndUpdate($, context);
   setInterval(() => {
       checkTokenAndUpdate($, context);
     },
