@@ -4,8 +4,56 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5218c2a9ef9c09e487fc1847cc41250f",
+    "content-hash": "1c65f0d5da8668b2035a75c3bc872b4f",
     "packages": [
+        {
+            "name": "cweagans/composer-patches",
+            "version": "1.7.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cweagans/composer-patches.git",
+                "reference": "e190d4466fe2b103a55467dfa83fc2fecfcaf2db"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cweagans/composer-patches/zipball/e190d4466fe2b103a55467dfa83fc2fecfcaf2db",
+                "reference": "e190d4466fe2b103a55467dfa83fc2fecfcaf2db",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0 || ^2.0",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "composer/composer": "~1.0 || ~2.0",
+                "phpunit/phpunit": "~4.6"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "cweagans\\Composer\\Patches"
+            },
+            "autoload": {
+                "psr-4": {
+                    "cweagans\\Composer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Cameron Eagans",
+                    "email": "me@cweagans.net"
+                }
+            ],
+            "description": "Provides a way to patch Composer packages.",
+            "support": {
+                "issues": "https://github.com/cweagans/composer-patches/issues",
+                "source": "https://github.com/cweagans/composer-patches/tree/1.7.3"
+            },
+            "time": "2022-12-20T22:53:13+00:00"
+        },
         {
             "name": "jumbojett/openid-connect-php",
             "version": "v0.9.10",
@@ -171,12 +219,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "b799abd1a0c387590c2f58ee3e12a640412b6031"
+                "reference": "c5e9d51e517da7c1b60a9198338ab1621351866f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/b799abd1a0c387590c2f58ee3e12a640412b6031",
-                "reference": "b799abd1a0c387590c2f58ee3e12a640412b6031",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/c5e9d51e517da7c1b60a9198338ab1621351866f",
+                "reference": "c5e9d51e517da7c1b60a9198338ab1621351866f",
                 "shasum": ""
             },
             "require": {
@@ -273,7 +321,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-23T18:04:07+00:00"
+            "time": "2023-08-11T03:33:35+00:00"
         }
     ],
     "packages-dev": [],

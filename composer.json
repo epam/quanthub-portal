@@ -1,17 +1,31 @@
 {
-  "name": "epam/quanthub-portal",
-  "description": "Quanthub Portal Drupal Profile",
-  "type": "drupal-profile",
-  "require": {
-    "php": ">=8.0",
-    "jumbojett/openid-connect-php": "^0.9.6"
-  },
-  "license": "GPL-3.0-or-later",
-  "authors": [
-    {
-      "name": "Artem Boyko",
-      "email": "artemboyko43@gmail.com"
+    "name": "epam/quanthub-portal",
+    "description": "Quanthub Portal Drupal Profile",
+    "type": "drupal-profile",
+    "require": {
+        "php": ">=8.0",
+        "jumbojett/openid-connect-php": "^0.9.10",
+        "cweagans/composer-patches": "1.7.3"
+    },
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+          "name": "Artem Boyko",
+          "email": "artemboyko43@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "config": {
+        "allow-plugins": {
+          "cweagans/composer-patches": true
+        }
+    },
+    "extra": {
+        "composer-exit-on-patch-failure": true,
+        "patches": {
+            "jumbojett/openid-connect-php": {
+                "Update minimum versions according to security check": "https://patch-diff.githubusercontent.com/raw/jumbojett/OpenID-Connect-PHP/pull/385.patch"
+            }
+        }
     }
-  ],
-  "minimum-stability": "dev"
 }
