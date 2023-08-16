@@ -155,7 +155,6 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
         }
         else {
           $elements[$delta] = [
-            '#markup' => 'Issue generating PowerBi embed token. Please retry later',
             '#cache' => [
               'tags' => ['powerbi_embed:token'],
               'max-age' => 0,
