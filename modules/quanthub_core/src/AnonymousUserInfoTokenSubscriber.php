@@ -29,7 +29,9 @@ class AnonymousUserInfoTokenSubscriber implements EventSubscriberInterface, User
    * Check that token is existed.
    */
   public function onRequest(RequestEvent $event) {
-    $this->userInfo->getToken();
+    if (getenv('WSO_IGNORE') !== 'TRUE') {
+      $this->userInfo->getToken();
+    }
   }
 
   /**
