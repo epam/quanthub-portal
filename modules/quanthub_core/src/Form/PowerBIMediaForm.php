@@ -3,7 +3,9 @@
 namespace Drupal\quanthub_core\Form;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\Form\AddFormBase;
 
@@ -31,6 +33,12 @@ class PowerBIMediaForm extends AddFormBase {
       '#ajax' => [
         'callback' => '::updateFormCallback',
         'wrapper' => 'media-library-wrapper',
+        'url' => Url::fromRoute('media_library.ui'),
+        'options' => [
+          'query' => $this->getMediaLibraryState($form_state)->all() + [
+            FormBuilderInterface::AJAX_FORM_REQUEST => TRUE,
+          ],
+        ],
       ],
     ];
     return $form;
