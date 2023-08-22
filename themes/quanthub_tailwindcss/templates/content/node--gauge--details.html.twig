@@ -68,7 +68,9 @@
  */
 #}
 
-<a href="{{ url('entity.node.canonical', { 'node': node.field_dataset.entity.id}) }}">
+{% set quanthub_urn = node.field_dataset[0].entity.field_quanthub_urn.value %}
+
+<a href="/{{ node.langcode.langcode }}/explorer?urn={{ quanthub_urn }}&filter={{ node.field_gauge_filter.value }}">
   <article>
     <div class='gauge-head'>
       <span class='gauge-title'>
