@@ -28,6 +28,7 @@ class QuantHubScaleNumberWidget extends NumberWidget {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $element['value']['#type'] = 'select';
+    $element['value']['#default_value'] = (integer) $element['value']['#default_value'];
     $element['value']['#options'] = [
       100 => $this->t('Hundreds'),
       1000 => $this->t('Thousands'),
