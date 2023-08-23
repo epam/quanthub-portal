@@ -5,8 +5,8 @@ namespace Drupal\quanthub_core;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\key\KeyRepositoryInterface;
-use Jumbojett\OpenIDConnectClient;
 use GuzzleHttp\ClientInterface;
+use Jumbojett\OpenIDConnectClient;
 
 /**
  * Return Power BI embed configs.
@@ -50,6 +50,8 @@ class PowerBIEmbedConfigs {
    *   The key repository object.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
    *   The logger channel factory.
+   * @param \GuzzleHttp\ClientInterface $httpClient
+   *   The http client.
    */
   public function __construct(
     ConfigFactoryInterface $configFactory,
@@ -127,7 +129,7 @@ class PowerBIEmbedConfigs {
     foreach ($datasetIds as $datasetId) {
       $datasets[] = [
         'id' => $datasetId,
-        'xmlaPermissions' => 'ReadOnly'
+        'xmlaPermissions' => 'ReadOnly',
       ];
 
     }
@@ -135,7 +137,7 @@ class PowerBIEmbedConfigs {
     $payload = [
       'datasets' => $datasets,
       'reports' => [['id' => $reportId]],
-      'targetWorkspaces' => [['id' => $this->getWorkspaceID()]]
+      'targetWorkspaces' => [['id' => $this->getWorkspaceID()]],
     ];
 
     $payload_json = json_encode($payload);
@@ -152,9 +154,9 @@ class PowerBIEmbedConfigs {
           ],
           'connect_timeout' => 30,
           'allow_redirects' => [
-            'max' => 10
+            'max' => 10,
           ],
-          'body' => $payload_json
+          'body' => $payload_json,
         ]
       );
     }
@@ -195,7 +197,7 @@ class PowerBIEmbedConfigs {
           ],
           'connect_timeout' => 30,
           'allow_redirects' => [
-            'max' => 10
+            'max' => 10,
           ],
         ]
       );
