@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\key\KeyRepositoryInterface;
 use Jumbojett\OpenIDConnectClient;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Return Power BI embed configs.
@@ -34,6 +35,13 @@ class PowerBIEmbedConfigs {
   protected $loggerFactory;
 
   /**
+   * The http client service.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $httpClient;
+
+  /**
    * Constructor of PowerBIEmbedConfigs.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
@@ -43,12 +51,16 @@ class PowerBIEmbedConfigs {
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
    *   The logger channel factory.
    */
-  public function __construct(ConfigFactoryInterface $configFactory,
-                              KeyRepositoryInterface $repository,
-                              LoggerChannelFactoryInterface $loggerFactory) {
+  public function __construct(
+    ConfigFactoryInterface $configFactory,
+    KeyRepositoryInterface $repository,
+    LoggerChannelFactoryInterface $loggerFactory,
+    ClientInterface $httpClient
+  ) {
     $this->configFactory = $configFactory;
     $this->repository = $repository;
     $this->loggerFactory = $loggerFactory->get('powerbi_embed');
+    $this->httpClient = $httpClient;
   }
 
   /**
@@ -109,46 +121,49 @@ class PowerBIEmbedConfigs {
    * Get PowerBI Embed Token.
    */
   public function getPowerBiEmbedToken($token, $reportId, $datasetIds) {
-    $bearerToken = "Authorization: Bearer " . $token;
+    $powerbiAPIURL = 'https://api.powerbi.com/v1.0/myorg/GenerateToken';
 
-    $datasets = '';
+    $datasets = [];
     foreach ($datasetIds as $datasetId) {
-      $datasets = $datasets . "{'id': '" . $datasetId . "', 'xmlaPermissions': 'ReadOnly'},";
+      $datasets[] = [
+        'id' => $datasetId,
+        'xmlaPermissions' => 'ReadOnly'
+      ];
+
     }
 
-    $curlPostToken = curl_init();
-    $powerbiAPIURL = 'https://api.powerbi.com/v1.0/myorg/GenerateToken';
-    $payload = "{
-        'datasets': [" . $datasets . "],
-        'reports': [{'id': '" . $reportId . "'}],
-        'targetWorkspaces': [{'id': '" . $this->getWorkspaceID() . "'}]
-    }";
-
-    $theCurlOpts = [
-      CURLOPT_URL => $powerbiAPIURL,
-      CURLOPT_RETURNTRANSFER => TRUE,
-      CURLOPT_ENCODING => '',
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 30,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => 'POST',
-      CURLOPT_POSTFIELDS => $payload,
-      CURLOPT_HTTPHEADER => [
-        $bearerToken,
-        "Cache-Control: no-cache",
-        "Content-Type:application/json",
-      ],
+    $payload = [
+      'datasets' => $datasets,
+      'reports' => [['id' => $reportId]],
+      'targetWorkspaces' => [['id' => $this->getWorkspaceID()]]
     ];
-    curl_setopt_array($curlPostToken, $theCurlOpts);
-    $tokenResponse = curl_exec($curlPostToken);
-    $tokenError = curl_error($curlPostToken);
-    curl_close($curlPostToken);
 
-    if ($tokenError) {
-      $this->loggerFactory->error("getPowerBIEmbedToken: " . $tokenError);
+    $payload_json = json_encode($payload);
+
+    try {
+      $request = $this->httpClient->request(
+        'POST',
+        $powerbiAPIURL,
+        [
+          'headers' => [
+            'Authorization' => 'Bearer ' . $token,
+            'Cache-Control' => 'no-cache',
+            'Content-Type' => 'application/json',
+          ],
+          'connect_timeout' => 30,
+          'allow_redirects' => [
+            'max' => 10
+          ],
+          'body' => $payload_json
+        ]
+      );
+    }
+    catch (\Exception $e) {
+      $this->loggerFactory->error('getPowerBIEmbedToken: ' . $e->getMessage());
       return NULL;
     }
-    $tokenResponse = json_decode($tokenResponse, TRUE);
+
+    $tokenResponse = json_decode($request->getBody(), TRUE);
 
     if (isset($tokenResponse['error'])) {
       if (isset($tokenResponse['error']['message'])) {
@@ -167,36 +182,33 @@ class PowerBIEmbedConfigs {
    */
   public function getPowerEmbedConfig($reportId, $extraDatasets) {
     $token = $this->getPowerBIAccessToken();
-    $bearerToken = "Authorization: Bearer " . $token;
-
-    $curlGetUrl = curl_init();
     $powerbiAPIURL = 'https://api.powerbi.com/v1.0/myorg/groups/' . $this->getWorkspaceID() . '/reports/' . $reportId;
-    $theCurlOpts = [
-      CURLOPT_URL => $powerbiAPIURL,
-      CURLOPT_RETURNTRANSFER => TRUE,
-      CURLOPT_ENCODING => '',
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 30,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => 'GET',
-      CURLOPT_HTTPHEADER => [
-        $bearerToken,
-        "Cache-Control: no-cache",
-      ],
-    ];
-    curl_setopt_array($curlGetUrl, $theCurlOpts);
-    $embedResponse = curl_exec($curlGetUrl);
-    $embedError = curl_error($curlGetUrl);
-    curl_close($curlGetUrl);
 
-    if ($embedError) {
-      $this->loggerFactory->error("getPowerEmbedConfig: " . $embedError);
+    try {
+      $request = $this->httpClient->request(
+        'GET',
+        $powerbiAPIURL,
+        [
+          'headers' => [
+            'Authorization' => 'Bearer ' . $token,
+            'Cache-Control' => 'no-cache',
+          ],
+          'connect_timeout' => 30,
+          'allow_redirects' => [
+            'max' => 10
+          ],
+        ]
+      );
+    }
+    catch (\Exception $e) {
+      $this->loggerFactory->error('getPowerEmbedConfig: ' . $e->getMessage());
       return NULL;
     }
-    $embedResponse = json_decode($embedResponse, TRUE);
 
-    if (isset($embedResponse["error"])) {
-      $this->loggerFactory->error("error: " . $embedResponse["error"]["message"]);
+    $embedResponse = json_decode($request->getBody(), TRUE);
+
+    if (isset($embedResponse['error'])) {
+      $this->loggerFactory->error('error: ' . $embedResponse['error']['message']);
       return NULL;
     }
 
@@ -205,15 +217,15 @@ class PowerBIEmbedConfigs {
 
     if (isset($extraDatasets) && !empty(trim($extraDatasets))) {
       $extraDatasets = preg_replace('/\s+/', ',', $extraDatasets);
-      $datasetIds = preg_split("/[,]+/", $extraDatasets);
+      $datasetIds = preg_split('/[,]+/', $extraDatasets);
     }
     $datasetIds[] = $datasetId;
 
     $embedToken = $this->getPowerBIEmbedToken($token, $reportId, $datasetIds);
 
     return [
-      "embed_url" => $embedUrl,
-      "embed_token" => $embedToken,
+      'embed_url' => $embedUrl,
+      'embed_token' => $embedToken,
     ];
   }
 

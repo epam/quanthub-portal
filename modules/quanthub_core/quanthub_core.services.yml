@@ -47,7 +47,7 @@ services:
 
   powerbi_embed_configs:
     class: Drupal\quanthub_core\PowerBIEmbedConfigs
-    arguments: ['@config.factory', '@key.repository', '@logger.factory']
+    arguments: ['@config.factory', '@key.repository', '@logger.factory', '@http_client']
 
   # User Info Cache Context based on User Info Role for anonymous and User Id for others.
   cache_context.user_info_attributes:
