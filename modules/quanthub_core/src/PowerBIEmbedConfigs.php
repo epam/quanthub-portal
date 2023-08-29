@@ -182,7 +182,7 @@ class PowerBIEmbedConfigs {
   /**
    * Get PowerBI Embed Config Embed url and Embed token.
    */
-  public function getPowerEmbedConfig($reportId, $extraDatasets) {
+  public function getPowerEmbedConfig($reportId, $extraDatasets = '') {
     $token = $this->getPowerBIAccessToken();
     $powerbiAPIURL = 'https://api.powerbi.com/v1.0/myorg/groups/' . $this->getWorkspaceID() . '/reports/' . $reportId;
 
