@@ -70,20 +70,17 @@ class PowerBIEmbedController extends ControllerBase {
       ->condition('bundle', 'power_bi')
       ->condition('field_media_power_bi.report_id', $reportId)
       ->execute();
+    if (empty($media_ids)) {
+      return new Response(400);
+    }
 
     try {
       $content = json_decode($request->getContent(), TRUE, 3, JSON_THROW_ON_ERROR);
-      if (!empty($content['extraDatasets']) && !empty($media_ids)) {
-        return new JsonResponse($this->powerBIEmbedConfigs->getPowerEmbedConfig($reportId, $content['extraDatasets']));
-      }
-      else {
-        throw new Exception('Not enough data');
-      }
+      return new JsonResponse($this->powerBIEmbedConfigs->getPowerEmbedConfig($reportId, $content['extraDatasets']));
     }
     catch (\Exception) {
       return new Response(400);
     }
-
   }
 
 }
