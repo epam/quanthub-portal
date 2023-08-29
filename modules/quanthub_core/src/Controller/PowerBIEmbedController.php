@@ -5,7 +5,6 @@ namespace Drupal\quanthub_core\Controller;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\facets\Exception\Exception;
 use Drupal\quanthub_core\PowerBIEmbedConfigs;
 use GuzzleHttp\Psr7\Response;
 use Laminas\Diactoros\Response\JsonResponse;
