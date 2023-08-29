@@ -2,7 +2,6 @@
 
 namespace Drupal\quanthub_core\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
