@@ -77,7 +77,7 @@ class PowerBIEmbedController extends ControllerBase {
       $content = json_decode($request->getContent(), TRUE, 3, JSON_THROW_ON_ERROR);
       return new JsonResponse($this->powerBIEmbedConfigs->getPowerEmbedConfig(
         $reportId,
-        !empty($content['extraDatasets']) ?: ''
+        !empty($content['extraDatasets']) ? $content['extraDatasets'] : ''
       ));
     }
     catch (\Exception) {
