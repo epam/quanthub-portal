@@ -2,7 +2,6 @@
 
 namespace Drupal\quanthub_core\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
@@ -102,27 +101,20 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
     $workspace_id = $this->powerBIEmbedConfigs->getWorkspaceID();
 
     foreach ($items as $delta => $item) {
-      if (isset($item->report_id) && !empty($item->report_id)) {
+      if (!empty($item->report_id)) {
         $embed_config = $this->powerBIEmbedConfigs->getPowerEmbedConfig($item->report_id, $item->report_extra_datasets);
 
-        $embed_token = $embed_config["embed_token"];
-        $embed_url = $embed_config["embed_url"];
+        $embed_token = $embed_config['embed_token'];
+        $embed_url = $embed_config['embed_url'];
 
         if (isset($embed_token)) {
-          // @todo Implement DI.
-          $expiration = DateTimePlus::createFromFormat('Y-m-d\TH:i:s\Z', $embed_token["expiration"]);
-          $max_age = $expiration->getTimestamp() - (new DateTimePlus())->getTimestamp() - 15;
-          if ($max_age < 0) {
-            $max_age = 0;
-          }
-
           $embed_type = 'report';
           $embed_id = $item->report_id;
-          if (isset($item->report_page) && !empty($item->report_page)) {
+          if (!empty($item->report_page)) {
             $embed_id = $embed_id . '_' . preg_replace('/\s+/', '_', $item->report_page);
           }
 
-          if (isset($item->report_visual) && !empty($item->report_visual)) {
+          if (!empty($item->report_visual)) {
             $embed_id = $embed_id . '_' . preg_replace('/\s+/', '_', $item->report_visual);
             $embed_type = 'visual';
           }
@@ -142,14 +134,13 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
             '#report_page' => $item->report_page,
             '#report_visual' => $item->report_visual,
             '#workspace_id' => $workspace_id,
-            '#token_expiration' => $embed_token["expiration"],
+            '#token_expiration' => $embed_token['expiration'],
             '#extra_datasets' => $item->report_extra_datasets,
-            '#token' => $embed_token["token"],
+            '#token' => $embed_token['token'],
             '#embed_url' => $embed_url,
             '#theme' => 'powerbi_embed_formatter',
             '#cache' => [
               'tags' => ['powerbi_embed:token'],
-              'max-age' => $max_age,
             ],
           ];
         }
@@ -157,7 +148,6 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
           $elements[$delta] = [
             '#cache' => [
               'tags' => ['powerbi_embed:token'],
-              'max-age' => 0,
             ],
           ];
         }

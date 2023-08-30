@@ -217,7 +217,7 @@ class PowerBIEmbedConfigs {
     $embedUrl = $embedResponse['embedUrl'];
     $datasetId = $embedResponse['datasetId'];
 
-    if (isset($extraDatasets) && !empty(trim($extraDatasets))) {
+    if (!empty(trim($extraDatasets))) {
       $extraDatasets = preg_replace('/\s+/', ',', $extraDatasets);
       $datasetIds = preg_split('/[,]+/', $extraDatasets);
     }
