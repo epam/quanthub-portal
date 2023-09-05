@@ -65,7 +65,7 @@ class QuanthubSdmxSyncGauges {
     $query = $this->database->select('node_field_data', 'n');
     $query->condition('n.type', self::GAUGES_ENTITY_BUNDLE);
     $query->condition('n.status', 1);
-    $query->join('node__field_dataset', 'nfd', 'nfd.entity_id = n.nid');
+    $query->join('node__field_dataset', 'nfd', 'nfd.entity_id = n.nid AND n.langcode = nfd.langcode');
     $query->join('node__field_quanthub_urn', 'nfqu', 'nfqu.entity_id = nfd.field_dataset_target_id');
     $query->join('node__field_gauge_filter', 'nfqf', 'nfqf.entity_id = n.nid');
     $query->addField('n', 'nid');
