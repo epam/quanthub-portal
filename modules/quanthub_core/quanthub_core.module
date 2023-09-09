@@ -68,6 +68,15 @@ function quanthub_core_views_data_alter(array &$data) {
       'id' => 'allowed_content_filter',
     ],
   ];
+
+  $data['views']['quanthub_views_bulk_operations_bulk_form'] = [
+    'title' => t('Quanthub Views bulk operations'),
+    'help' => t("Process entities returned by the view with Views Bulk Operations' actions."),
+    'field' => [
+      'id' => 'quanthub_views_bulk_operations_bulk_form',
+    ],
+  ];
+
 }
 
 /**
