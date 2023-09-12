@@ -1,0 +1,8 @@
+quanthub_artifact_browser.example:
+  path: '/artifact-browser'
+  defaults:
+    _title_callback: '\Drupal\quanthub_artifact_browser\Controller\ArtifactBrowserController::getTitle'
+    _controller: '\Drupal\quanthub_artifact_browser\Controller\ArtifactBrowserController::build'
+  requirements:
+    _permission: 'access content'
+

@@ -1,0 +1,8 @@
+artifact_browser:
+  js:
+    /libraries/quanthub-drupal-react/quanthub_artifact_browser/dist/index.js: { preprocess: false }
+  css:
+    base:
+      /libraries/quanthub-drupal-react/quanthub_artifact_browser/dist/styles.css: {}
+  dependencies:
+    - core/drupal
