@@ -1,28 +1,28 @@
 <?php
 
-namespace Drupal\quanthub_artifact_browser\Plugin\Block;
+namespace Drupal\quanthub_watchlist\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 
 /**
- * Provides a 'Quanthub Artifact Browser' block.
+ * Provides a 'Quanthub Watchlist' block.
  *
  * @Block(
- *   id = "quanthub_artifact_browser_block",
- *   admin_label = @Translation("Quanthub Artifact Browser"),
+ *   id = "quanthub_watchlist_block",
+ *   admin_label = @Translation("Quanthub Watchlist"),
  * )
  */
-class ArtifactBrowserBlock extends BlockBase {
+class WatchlistBlock extends BlockBase {
 
   /**
    * {@inheritdoc}
    */
   public function build() {
     $build = [];
-    $build['quanthub_artifact_browser_block'] = [
-      '#markup' => '<div id="artifact_browser"></div>',
+    $build['quanthub_watchlist_block'] = [
+      '#markup' => '<div id="watchlist"></div>',
       '#attached' => [
-        'library' => 'quanthub_artifact_browser/artifact_browser',
+        'library' => 'quanthub_watchlist/watchlist',
         'drupalSettings' => [],
       ],
     ];

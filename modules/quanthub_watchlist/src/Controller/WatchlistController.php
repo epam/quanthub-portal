@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quanthub_artifact_browser\Controller;
+namespace Drupal\quanthub_watchlist\Controller;
 
 use Drupal\Core\Block\BlockManager;
 use Drupal\Core\Controller\ControllerBase;
@@ -9,9 +9,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Returns responses for Quanthub Artifact Browser routes.
+ * Returns responses for Quanthub Watchlist route.
  */
-class ArtifactBrowserController extends ControllerBase {
+class WatchlistController extends ControllerBase {
 
   /**
    * The block manager service definition.
@@ -53,7 +53,7 @@ class ArtifactBrowserController extends ControllerBase {
 
     // You can hard code configuration or you load from settings.
     $config = [];
-    $plugin_block = $block_manager->createInstance('quanthub_artifact_browser_block', $config);
+    $plugin_block = $block_manager->createInstance('quanthub_watchlist_block', $config);
 
     // Some blocks might implement access check.
     $access_result = $plugin_block->access($this->currentUser);
@@ -68,7 +68,7 @@ class ArtifactBrowserController extends ControllerBase {
     $build = [
       '#type' => 'container',
       '#attributes' => [
-        'class' => ['artifact_browser'],
+        'class' => ['watchlist'],
       ],
       'element-content' => $plugin_block->build(),
       '#weight' => 0,
@@ -77,7 +77,7 @@ class ArtifactBrowserController extends ControllerBase {
       ],
     ];
 
-    $build['element-content']['#attached']['drupalSettings']['mode'] = 'artifact_browser';
+    $build['element-content']['#attached']['drupalSettings']['mode'] = 'watchlist';
     $build['element-content']['#attached']['drupalSettings']['query'] = $request->query->all();
 
     return $build;
@@ -87,7 +87,7 @@ class ArtifactBrowserController extends ControllerBase {
    * Returns translatable page title.
    */
   public function getTitle(): string {
-    return $this->t('Artifact Browser');
+    return $this->t('Watchlist');
   }
 
 }

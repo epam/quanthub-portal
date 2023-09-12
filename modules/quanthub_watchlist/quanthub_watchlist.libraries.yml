@@ -1,8 +1,8 @@
-artifact_browser:
+watchlist:
   js:
-    /libraries/quanthub-drupal-react/quanthub_artifact_browser/dist/index.js: { preprocess: false }
+    /libraries/quanthub-drupal-react/quanthub-watch-list/dist/index.js: { preprocess: false }
   css:
     base:
-      /libraries/quanthub-drupal-react/quanthub_artifact_browser/dist/styles.css: {}
+      /libraries/quanthub-drupal-react/quanthub-watch-list/dist/styles.css: {}
   dependencies:
     - core/drupal

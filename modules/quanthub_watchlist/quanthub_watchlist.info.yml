@@ -1,5 +1,5 @@
-name: 'Quanthub Artifact Browser'
+name: 'Quanthub Watchlist'
 type: module
-description: 'Quanthub custom component Artifact Browser'
+description: 'Quanthub custom component Watchlist'
 package: 'Epam Quanthub'
 core_version_requirement: ^9 || ^10

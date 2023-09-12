@@ -1,8 +1,8 @@
-quanthub_artifact_browser.example:
-  path: '/artifact-browser'
+quanthub_watchlist:
+  path: '/watchlist'
   defaults:
-    _title_callback: '\Drupal\quanthub_artifact_browser\Controller\ArtifactBrowserController::getTitle'
-    _controller: '\Drupal\quanthub_artifact_browser\Controller\ArtifactBrowserController::build'
+    _title_callback: '\Drupal\quanthub_watchlist\Controller\WatchlistController::getTitle'
+    _controller: '\Drupal\quanthub_watchlist\Controller\WatchlistController::build'
   requirements:
     _permission: 'access content'
 
