@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quanthub_watchlist\Controller;
+namespace Drupal\quanthub_statgpt\Controller;
 
 use Drupal\Core\Block\BlockManager;
 use Drupal\Core\Controller\ControllerBase;
@@ -9,9 +9,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Returns responses for Quanthub Watchlist route.
+ * Returns responses for Quanthub StatGPT route.
  */
-class WatchlistController extends ControllerBase {
+class StatGPTController extends ControllerBase {
 
   /**
    * The block manager service definition.
@@ -46,14 +46,14 @@ class WatchlistController extends ControllerBase {
   }
 
   /**
-   * Build Artifact Browser block.
+   * Build StatGPT block.
    */
   public function build(Request $request) {
     $block_manager = $this->pluginManagerBlock;
 
     // You can hard code configuration or you load from settings.
     $config = [];
-    $plugin_block = $block_manager->createInstance('quanthub_watchlist_block', $config);
+    $plugin_block = $block_manager->createInstance('quanthub_statgpt_block', $config);
 
     // Some blocks might implement access check.
     $access_result = $plugin_block->access($this->currentUser);
@@ -68,7 +68,7 @@ class WatchlistController extends ControllerBase {
     $build = [
       '#type' => 'container',
       '#attributes' => [
-        'class' => ['watchlist'],
+        'class' => ['statgpt'],
       ],
       'element-content' => $plugin_block->build(),
       '#weight' => 0,
@@ -77,7 +77,7 @@ class WatchlistController extends ControllerBase {
       ],
     ];
 
-    $build['element-content']['#attached']['drupalSettings']['mode'] = 'watchlist';
+    $build['element-content']['#attached']['drupalSettings']['mode'] = 'statgpt';
     $build['element-content']['#attached']['drupalSettings']['query'] = $request->query->all();
 
     return $build;
@@ -87,7 +87,7 @@ class WatchlistController extends ControllerBase {
    * Returns translatable page title.
    */
   public function getTitle(): string {
-    return $this->t('Watchlist');
+    return $this->t('StatGPT');
   }
 
 }

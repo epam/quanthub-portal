@@ -1,0 +1,8 @@
+quanthub_statgpt:
+  path: '/statgpt'
+  defaults:
+    _title_callback: '\Drupal\quanthub_statgpt\Controller\StatGPTController::getTitle'
+    _controller: '\Drupal\quanthub_statgpt\Controller\StatGPTController::build'
+  requirements:
+    _permission: 'access content'
+

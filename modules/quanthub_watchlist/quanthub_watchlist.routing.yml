@@ -1,8 +1,0 @@
-quanthub_watchlist:
-  path: '/watchlist'
-  defaults:
-    _title_callback: '\Drupal\quanthub_watchlist\Controller\WatchlistController::getTitle'
-    _controller: '\Drupal\quanthub_watchlist\Controller\WatchlistController::build'
-  requirements:
-    _permission: 'access content'
-

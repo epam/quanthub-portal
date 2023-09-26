@@ -1,0 +1,5 @@
+name: 'Quanthub StatGPT'
+type: module
+description: 'Quanthub custom component StatGPT'
+package: 'Epam Quanthub'
+core_version_requirement: ^9 || ^10
