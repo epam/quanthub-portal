@@ -1,0 +1,8 @@
+statgpt:
+  js:
+    /libraries/quanthub-drupal-react/quanthub-statgpt/dist/index.js: { preprocess: false }
+  css:
+    base:
+      /libraries/quanthub-drupal-react/quanthub-statgpt/dist/styles.css: {}
+  dependencies:
+    - core/drupal
