@@ -76,6 +76,7 @@ install:
   - quanthub_metadata_button
   - quanthub_pivot
   - quanthub_sdmx_proxy
+  - quanthub_statgpt
   - rabbit_hole
   - rh_taxonomy
   - search_api
