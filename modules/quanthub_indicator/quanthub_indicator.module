@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Quanthub Indicator module.
+ */
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function quanthub_indicator_entity_type_alter(array &$entity_types) {
+  // Check if the entity type you want to alter exists.
+  if (isset($entity_types['search_api_index'])) {
+    // Alter the class for the configuration entity.
+    $entity_types['search_api_index']->setClass('Drupal\quanthub_indicator\Entity\QuanthubIndex');
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function quanthub_indicator_theme($existing, $type, $theme, $path) {
+  return [
+    'quanthub_indicator' => [
+      'variables' => [
+        'indicator_title' => NULL,
+        'indicator_description' => NULL,
+        'indicator_uri' => NULL,
+        'indicator_langcode' => NULL,
+        'indicator_dataset' => NULL,
+        'indicator_dataset_uri' => NULL,
+      ],
+    ],
+  ];
+}

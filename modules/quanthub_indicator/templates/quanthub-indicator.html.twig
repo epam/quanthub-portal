@@ -1,0 +1,7 @@
+<p>{{ link(indicator_title, indicator_uri, create_attribute({'class': ['indicator-title', 'indicator-link']})) }}</p>
+
+{% if indicator_description is not null %}
+  <p>{{ indicator_description }}</p>
+{% endif %}
+
+<p>{{ link(indicator_dataset.label, indicator_dataset_uri, create_attribute({'class': ['indicator-dataset', 'indicator-dataset-link']})) }}</p>

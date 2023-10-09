@@ -4,6 +4,7 @@ namespace Drupal\quanthub_sdmx_sync;
 
 use Drupal\Core\Http\ClientFactory;
 use Drupal\quanthub_core\UserInfo;
+use GuzzleHttp\RequestOptions;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -38,7 +39,7 @@ class QuanthubSdmxClient {
    * @var array
    */
   private array $headers = [
-    'Accept' => 'application/xml',
+    'Accept' => 'application/json',
     'Accept-Encoding' => 'gzip',
   ];
 
@@ -65,19 +66,21 @@ class QuanthubSdmxClient {
    *
    * @param string $urn
    *   The dataset urn.
+   * @param bool $full_structure
+   *   The option of getting structure.
    *
    * @return array
    *   The response body array decoded json.
    */
-  public function getDasetStructure(string $urn) {
+  public function getDasetStructure(string $urn, $full_structure = FALSE) {
     $baseUri = getenv('SDMX_API_URL') . '/workspaces/' . getenv('SDMX_WORKSPACE_ID') . '/registry/sdmx-plus/structure/dataflow/';
 
     $guzzleClient = $this->httpClientFactory->fromOptions([
       'base_uri' => $baseUri,
       'headers' => $this->headers,
       'query' => [
-        'detail' => 'allcompletestubs',
-        'references' => 'none',
+        'detail' => $full_structure ? 'full' : 'allcompletestubs',
+        'references' => $full_structure ? 'all' : 'none',
       ],
     ]);
 
@@ -150,6 +153,115 @@ class QuanthubSdmxClient {
     }
 
     return $dataset_urn_url;
+  }
+
+  /**
+   * Get dimensions list.
+   *
+   * @param string $urn
+   *   The dataset urn string.
+   */
+  public function getDimensions(string $urn) {
+    $dataset_structure = $this->getDasetStructure($urn, TRUE);
+
+    $dimensions = [];
+    if (!empty($dataset_structure['data']['dataStructures'][0]['dataStructureComponents']['dimensionList']['dimensions'])) {
+      $dimensions = array_column($dataset_structure['data']['dataStructures'][0]['dataStructureComponents']['dimensionList']['dimensions'], 'id');
+    }
+
+    return $dimensions;
+  }
+
+  /**
+   * Get availability for dataset.
+   *
+   * @param string $urn
+   *   The dataset urn string.
+   */
+  public function datasetAvaiability(string $urn) {
+    $baseUri = getenv('SDMX_API_URL') . '/workspaces/' . getenv('SDMX_WORKSPACE_ID') . '/registry/sdmx-plus/availability/dataflow/';
+
+    $guzzleClient = $this->httpClientFactory->fromOptions([
+      'base_uri' => $baseUri,
+      'headers' => $this->headers,
+    ]);
+
+    $urn_for_url = $this->transformUrn($urn);
+
+    $empty_body = [
+      'endPeriod' => '9999A',
+      'filters' => [],
+      'mode' => 'available',
+      'references' => 'none',
+      'startPeriod' => '0001A',
+    ];
+
+    try {
+      return json_decode($guzzleClient->post(
+        $urn_for_url,
+        [RequestOptions::JSON => $empty_body]
+      )->getBody(), TRUE);
+    }
+    catch (\Exception $e) {
+      $this->logger->error('Failed to retrieve dataset structure: @error.', [
+        '@error' => $e->getMessage(),
+      ]);
+    }
+  }
+
+  /**
+   * Get indicators for dataset.
+   *
+   * @param string $urn
+   *   The dataset urn string.
+   * @param bool $full
+   *   The parameter for getting all datasets.
+   * @param array $selected_indicators
+   *   The parameter for getting only selected indicators.
+   *
+   * @return array
+   *   The dataset indicators list.
+   */
+  public function datasetIndicators(string $urn, bool $full = FALSE, array $selected_indicators = []) {
+    $avaiability_data = $this->datasetAvaiability($urn);
+    $indicators = [];
+
+    if (empty($selected_indicators) && !empty($avaiability_data['data']['dataConstraints'][0]['cubeRegions'][0]['memberSelection'])) {
+      $member_selection = $avaiability_data['data']['dataConstraints'][0]['cubeRegions'][0]['memberSelection'];
+      foreach ($member_selection as $value) {
+        if ($value['componentId'] == 'INDICATOR') {
+          $indicators = array_column($value['selectionValues'], 'memberValue');
+          break;
+        }
+      }
+    }
+
+    if ($full) {
+      $dataset_structure = $this->getDasetStructure($urn, TRUE);
+      if ($dataset_structure['data']['glossaries']) {
+        $dataset_glossaries = $dataset_structure['data']['glossaries'];
+
+        $indicators_items = [];
+        foreach ($dataset_glossaries as $dataset_glossary) {
+          // @todo check ability to implement better condition.
+          if (str_contains($dataset_glossary['id'], 'INDICATOR')) {
+            $indicators_items = $dataset_glossary['terms'];
+            break;
+          }
+        }
+      }
+
+      $indicators_items = array_combine(array_column($indicators_items, 'id'), $indicators_items);
+
+      if (empty($selected_indicators)) {
+        $indicators = array_intersect_key($indicators_items, array_flip($indicators));
+      }
+      else {
+        $indicators = array_intersect_key($indicators_items, array_flip($selected_indicators));
+      }
+    }
+
+    return $indicators;
   }
 
 }
