@@ -25,7 +25,8 @@ function quanthub_sdmx_sync_datasets_cron() {
  * Implements hook_ENTITY_TYPE_presave().
  */
 function quanthub_sdmx_sync_node_presave(EntityInterface $entity) {
-  if ($entity->bundle() == 'gauge') {
+  // Update gauge value on save if value is empty. Gauge just created.
+  if ($entity->bundle() == 'gauge' && $entity->field_gauge_value->isEmpty()) {
     $filter = $entity->field_gauge_filter->getString();
     $urn = $entity->field_dataset->entity->field_quanthub_urn->getString();
     $gauge_updates = \Drupal::service('sdmx_sync_gauges')->getGaugeLastValueAndObservation(
