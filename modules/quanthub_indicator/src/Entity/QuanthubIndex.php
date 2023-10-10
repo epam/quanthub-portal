@@ -81,61 +81,6 @@ class QuanthubIndex extends Index {
   /**
    * {@inheritdoc}
    */
-  public function loadItemsMultiple(array $item_ids) {
-    // Group the requested items by datasource. This will also later be used to
-    // determine whether all items were loaded successfully.
-    $items_by_datasource = [];
-    foreach ($item_ids as $item_id) {
-      [$datasource_id, $raw_id] = Utility::splitCombinedId($item_id);
-      $items_by_datasource[$datasource_id][$raw_id] = $item_id;
-    }
-
-    // Load the items from the datasources and keep track of which were
-    // successfully retrieved.
-    $items = [];
-    foreach ($items_by_datasource as $datasource_id => $raw_ids) {
-      try {
-        $datasource = $this->getDatasource($datasource_id);
-        $datasource_items = $datasource->loadMultiple(array_keys($raw_ids));
-        foreach ($datasource_items as $raw_id => $item) {
-
-          $id = $raw_ids[$raw_id];
-          $items[$id] = $item;
-          // Remember that we successfully loaded this item.
-          unset($items_by_datasource[$datasource_id][$raw_id]);
-        }
-      }
-      catch (SearchApiException $e) {
-        $this->logException($e);
-        // If the complete datasource could not be loaded, don't report all its
-        // individual requested items as missing.
-        unset($items_by_datasource[$datasource_id]);
-      }
-    }
-
-    // Check whether there are requested items that couldn't be loaded.
-    $items_by_datasource = array_filter($items_by_datasource);
-    if ($items_by_datasource) {
-      // Extract the second-level values of the two-dimensional array (that is,
-      // the combined item IDs) and log a warning reporting their absence.
-      $missing_ids = array_reduce(array_map('array_values', $items_by_datasource), 'array_merge', []);
-      $args['%index'] = $this->label();
-      $args['@items'] = '"' . implode('", "', $missing_ids) . '"';
-      $this->getLogger()->warning('Could not load the following items on index %index: @items.', $args);
-      // Also remove those items from tracking so we don't keep trying to load
-      // them.
-      foreach ($items_by_datasource as $datasource_id => $raw_ids) {
-        $this->trackItemsDeleted($datasource_id, array_keys($raw_ids));
-      }
-    }
-
-    // Return the loaded items.
-    return $items;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function indexSpecificItems(array $search_objects) {
     if (!$search_objects || $this->read_only) {
       return [];
@@ -151,6 +96,8 @@ class QuanthubIndex extends Index {
       $items[$item_id] = \Drupal::getContainer()
         ->get('search_api.fields_helper')
         ->createItemFromObject($this, $object, $item_id);
+
+      // Logic for indicator indexing (multiple search items for one node).
       if (str_contains($item_id, '_indicator_')) {
         $parts = explode('_indicator_', $item_id);
         if (!empty($parts[1])) {
