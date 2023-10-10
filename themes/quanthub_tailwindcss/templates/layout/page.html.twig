@@ -73,12 +73,3 @@
     {{ page.footer }}
   </footer>
 {% endif %}
-
-<script>
-  const className = "is-sticky"; const header =
-  document.querySelector("header.header"); const scrollTrigger =
-  header.clientHeight || 72; 
-  window.onscroll = () => { if (window.scrollY >= scrollTrigger) {
-  header.classList.add(className); } else { header.classList.remove(className);
-  } };
-</script>
