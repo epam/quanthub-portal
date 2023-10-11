@@ -2,6 +2,7 @@
 
 namespace Drupal\quanthub_indicator\Plugin\search_api\processor;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
@@ -180,41 +181,7 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
 
       switch ($field->getFieldIdentifier()) {
         case 'rendered_item':
-          if ($langcode) {
-            $indicator_title = $this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$langcode];
-            $indicator_uri = Url::fromRoute(
-              self::EXPLORER_ROUTE,
-              [],
-              [
-                'query' => [
-                  'urn' => $this->datasetUrn,
-                  'filter' => $this->getDimensionsFilterUrl($this->datasetUrn),
-                ],
-                'language' => $this->languageManager->getLanguage($langcode),
-              ]
-            )->toUriString();
-
-            $dataset_uri = Url::fromRoute(
-              'entity.node.canonical',
-              ['node' => $dataset_entity->id()],
-              ['language' => $this->languageManager->getLanguage($langcode)]
-            )->toUriString();
-
-            $indicator_renderable = [
-              '#theme' => 'quanthub_indicator',
-              '#indicator_title' => $indicator_title,
-              '#indicator_uri' => $indicator_uri,
-              '#indicator_langcode' => $langcode,
-              '#indicator_dataset' => $dataset_entity,
-              '#indicator_dataset_uri' => $dataset_uri,
-            ];
-
-            $rendered_indicator = $this->renderer->renderPlain($indicator_renderable);
-
-            $field_values[0]->setText($rendered_indicator);
-            $field_values[0]->setOriginalText($rendered_indicator);
-            $field->setValues($field_values);
-          }
+          $this->processRenderedItemField($field, $dataset_entity);
           break;
 
         case 'title':
@@ -224,6 +191,57 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
             $field->setValues($field_values);
           }
           break;
+      }
+    }
+  }
+
+  /**
+   * Process rendered item field.
+   *
+   * @param \Drupal\search_api\Item\FieldInterface $field
+   *   The search field item.
+   * @param \Drupal\Core\Entity\EntityInterface $dataset_entity
+   *   The dataset content entity.
+   */
+  public function processRenderedItemField(FieldInterface $field, EntityInterface $dataset_entity) {
+    if ($this->indicatorId) {
+      $langcode = $this->entity->get('langcode')->getString();
+      $field_values = $field->getValues();
+
+      if ($langcode) {
+        $indicator_title = $this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$langcode];
+        $indicator_uri = Url::fromRoute(
+          self::EXPLORER_ROUTE,
+          [],
+          [
+            'query' => [
+              'urn' => $this->datasetUrn,
+              'filter' => $this->getDimensionsFilterUrl($this->datasetUrn),
+            ],
+            'language' => $this->languageManager->getLanguage($langcode),
+          ]
+        )->toUriString();
+
+        $dataset_uri = Url::fromRoute(
+          'entity.node.canonical',
+          ['node' => $dataset_entity->id()],
+          ['language' => $this->languageManager->getLanguage($langcode)]
+        )->toUriString();
+
+        $indicator_renderable = [
+          '#theme' => 'quanthub_indicator',
+          '#indicator_title' => $indicator_title,
+          '#indicator_uri' => $indicator_uri,
+          '#indicator_langcode' => $langcode,
+          '#indicator_dataset' => $dataset_entity,
+          '#indicator_dataset_uri' => $dataset_uri,
+        ];
+
+        $rendered_indicator = $this->renderer->renderPlain($indicator_renderable);
+
+        $field_values[0]->setText($rendered_indicator);
+        $field_values[0]->setOriginalText($rendered_indicator);
+        $field->setValues($field_values);
       }
     }
   }
