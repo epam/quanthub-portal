@@ -212,7 +212,9 @@ class QuanthubIndicatorContentEntityTrackingManager extends ContentEntityTrackin
       ->field_quanthub_urn
       ->getString();
 
-    return $this->sdmxClient->datasetIndicators($dataset_urn, TRUE);
+    $dimension_id = $entity->field_indicator_parameter->getString();
+
+    return $this->sdmxClient->datasetIndicators($dataset_urn, $dimension_id);
   }
 
 }

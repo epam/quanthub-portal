@@ -13,11 +13,6 @@ use Psr\Log\LoggerInterface;
 class QuanthubSdmxClient {
 
   /**
-   * The dataset availability dimension component id.
-   */
-  const AVAILABILITY_DIMENSION_COMPONENT_ID = 'INDICATOR';
-
-  /**
    * The dataset structure dimension component id.
    */
   const STRUCTURE_DIMENSION_ID = 'INDICATOR';
@@ -223,60 +218,59 @@ class QuanthubSdmxClient {
    * Get indicators for dataset.
    *
    * @param string $urn
-   *   The dataset urn string.
-   * @param bool $full
-   *   The parameter for getting all datasets.
+   *   The dataset urn.
+   * @param string $dimension_id
+   *   The indicator dimension id.
    * @param array $selected_indicators
    *   The parameter for getting only selected indicators.
    *
    * @return array
    *   The dataset indicators list.
    */
-  public function datasetIndicators(string $urn, bool $full = FALSE, array $selected_indicators = []) {
-    $avaiability_data = $this->datasetAvaiability($urn);
+  public function datasetIndicators(string $urn, string $dimension_id = '', array $selected_indicators = []) {
+    $dimension_id = $dimension_id ?: self::STRUCTURE_DIMENSION_ID;
     $indicators = [];
 
+    $avaiability_data = $this->datasetAvaiability($urn);
     if (empty($selected_indicators) && !empty($avaiability_data['data']['dataConstraints'][0]['cubeRegions'][0]['memberSelection'])) {
       $member_selection = $avaiability_data['data']['dataConstraints'][0]['cubeRegions'][0]['memberSelection'];
       foreach ($member_selection as $value) {
         // Should be hardcoded, the same as in structure query dimension id.
-        if ($value['componentId'] == self::AVAILABILITY_DIMENSION_COMPONENT_ID) {
+        if ($value['componentId'] == $dimension_id) {
           $indicators = array_column($value['selectionValues'], 'memberValue');
           break;
         }
       }
     }
 
-    if ($full) {
-      $dataset_structure = $this->getDasetStructure($urn, TRUE);
-      if ($dataset_structure['data']['glossaries']) {
-        $dataset_glossaries = $dataset_structure['data']['glossaries'];
+    $dataset_structure = $this->getDasetStructure($urn, TRUE);
+    if ($dataset_structure['data']['glossaries']) {
+      $dataset_glossaries = $dataset_structure['data']['glossaries'];
 
-        if (!empty($dataset_structure['data']['dataStructures'][0]['dataStructureComponents']['dimensionList']['dimensions'])) {
-          $dimensions = $dataset_structure['data']['dataStructures'][0]['dataStructureComponents']['dimensionList']['dimensions'];
-          foreach ($dimensions as $dimension) {
+      if (!empty($dataset_structure['data']['dataStructures'][0]['dataStructureComponents']['dimensionList']['dimensions'])) {
+        $dimensions = $dataset_structure['data']['dataStructures'][0]['dataStructureComponents']['dimensionList']['dimensions'];
+        foreach ($dimensions as $dimension) {
 
-            // Should be hardcoded, the same as
-            // in availability query dimension componentId.
-            if ($dimension['id'] == self::STRUCTURE_DIMENSION_ID) {
-              $full_indicator_concept_identity = $dimension['conceptIdentity'];
-              // Parse dimension concept identity:
-              // 1. Get xxx:xxxx - agency and name.
-              // 2. Id string that located after version (x.x.x) and dot.
-              if (preg_match('/=([\w_:]+)\([\d.~*]+\)\.([\w_]+)/', $full_indicator_concept_identity, $matches)) {
-                $indicator_concept_identity = $matches[1];
-                $indicator_concept_identity_id = $matches[2];
-                [$indicator_concept_agency, $indicator_concept_name] = explode(':', $indicator_concept_identity);
-                if (!empty($indicator_concept_agency) && !empty($indicator_concept_name)) {
-                  foreach ($dataset_structure['data']['conceptSchemes'] as $conceptScheme) {
-                    if (
-                      $conceptScheme['id'] == $indicator_concept_name &&
-                      $conceptScheme['agency'] = $indicator_concept_agency
-                    ) {
-                      foreach ($conceptScheme['concepts'] as $concept) {
-                        if ($concept['id'] == $indicator_concept_identity_id) {
-                          $indicator_enumeration = $concept['coreRepresentation']['enumeration'];
-                        }
+          // Should be hardcoded, the same as
+          // in availability query dimension componentId.
+          if ($dimension['id'] == $dimension_id) {
+            $full_indicator_concept_identity = $dimension['conceptIdentity'];
+            // Parse dimension concept identity:
+            // 1. Get xxx:xxxx - agency and name
+            // 2. Id string that located after version (x.x.x) and dot.
+            if (preg_match('/=([\w_:]+)\([\d.~*]+\)\.([\w_]+)/', $full_indicator_concept_identity, $matches)) {
+              $indicator_concept_identity = $matches[1];
+              $indicator_concept_identity_id = $matches[2];
+              [$indicator_concept_agency, $indicator_concept_name] = explode(':', $indicator_concept_identity);
+              if (!empty($indicator_concept_agency) && !empty($indicator_concept_name)) {
+                foreach ($dataset_structure['data']['conceptSchemes'] as $conceptScheme) {
+                  if (
+                    $conceptScheme['id'] == $indicator_concept_name &&
+                    $conceptScheme['agency'] = $indicator_concept_agency
+                  ) {
+                    foreach ($conceptScheme['concepts'] as $concept) {
+                      if ($concept['id'] == $indicator_concept_identity_id) {
+                        $indicator_enumeration = $concept['coreRepresentation']['enumeration'];
                       }
                     }
                   }
@@ -285,13 +279,13 @@ class QuanthubSdmxClient {
             }
           }
         }
+      }
 
-        $indicators_items = [];
-        foreach ($dataset_glossaries as $dataset_glossary) {
-          foreach ($dataset_glossary['links'] as $dataset_glossary_link) {
-            if ($dataset_glossary_link['urn'] == $indicator_enumeration) {
-              $indicators_items = $dataset_glossary['terms'];
-            }
+      $indicators_items = [];
+      foreach ($dataset_glossaries as $dataset_glossary) {
+        foreach ($dataset_glossary['links'] as $dataset_glossary_link) {
+          if ($dataset_glossary_link['urn'] == $indicator_enumeration) {
+            $indicators_items = $dataset_glossary['terms'];
           }
         }
       }

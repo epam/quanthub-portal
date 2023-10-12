@@ -283,6 +283,7 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
       $entity = $item->getOriginalObject()->getValue();
 
       if ($entity->getType() == 'indicator') {
+        $indicator_dimension_id = $entity->field_indicator_parameter->getString();
         $dataset_urn = $entity
           ->field_dataset
           ->first()
@@ -294,16 +295,19 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
 
         if ($item->getExtraData('indicator_id')) {
           $datasets_indicators_data[$dataset_urn][] = $item->getExtraData('indicator_id');
+          $indicator_dimension_ids[$dataset_urn] = $indicator_dimension_id;
         }
       }
     }
 
-    foreach ($datasets_indicators_data as $datasets_urn => $dataset_indicators) {
-      $this->loadedIndicators[$datasets_urn] = $this->sdmxClient->datasetIndicators(
-        $datasets_urn,
-        TRUE,
-        $dataset_indicators
-      );
+    if ($datasets_indicators_data) {
+      foreach ($datasets_indicators_data as $datasets_urn => $dataset_indicators) {
+        $this->loadedIndicators[$datasets_urn] = $this->sdmxClient->datasetIndicators(
+          $datasets_urn,
+          $indicator_dimension_ids[$dataset_urn],
+          $dataset_indicators
+        );
+      }
     }
   }
 
