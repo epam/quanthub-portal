@@ -8,7 +8,6 @@ use Drupal\search_api\Event\IndexingItemsEvent;
 use Drupal\search_api\Event\ItemsIndexedEvent;
 use Drupal\search_api\Event\SearchApiEvents;
 use Drupal\search_api\SearchApiException;
-use Drupal\search_api\Utility\Utility;
 
 /**
  * Defines the search index configuration entity.
