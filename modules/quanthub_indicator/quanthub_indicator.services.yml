@@ -1,0 +1,6 @@
+services:
+  quanthub_indicator_event_subscriber:
+    # Name of this service, using the event subscriber class that will listen for the events.
+    class: '\Drupal\quanthub_indicator\EventSubscriber\QuanthubIndicatorEventSubscriber'
+    tags:
+      - { name: 'event_subscriber' }
