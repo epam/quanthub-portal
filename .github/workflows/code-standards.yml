@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - 1.0.x
+      - 1.1.x
 env:
   PHP_VERSION: 8.1
 
