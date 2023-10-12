@@ -257,12 +257,16 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
    */
   public function getDimensionsFilterUrl(string $urn) {
     $dimensions_url = '';
+    $indicator_dimension_id = $this->entity->field_indicator_parameter->getString();
+    if (empty($indicator_dimension_id)) {
+      $indicator_dimension_id = $this->sdmxClient::STRUCTURE_DIMENSION_ID;
+    }
     if (!empty($this->datasetsDimensions[$urn])) {
       $dimensions_parts = [];
       foreach ($this->datasetsDimensions[$urn] as $key => $dimension) {
         // @todo make configurable INDICATOR.
         $dimensions_parts[$key] = match ($dimension) {
-          'INDICATOR' => $this->indicatorId,
+          $indicator_dimension_id => $this->indicatorId,
           default => '*',
         };
       }
