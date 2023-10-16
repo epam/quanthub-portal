@@ -258,7 +258,7 @@ class QuanthubSdmxClient {
             // Parse dimension concept identity:
             // 1. Get xxx:xxxx - agency and name
             // 2. Id string that located after version (x.x.x) and dot.
-            if (preg_match('/=([\w_:]+)\([\d.~*]+\)\.([\w_]+)/', $full_indicator_concept_identity, $matches)) {
+            if (preg_match('/=([\w_:]+)\([\d.~*+]+\)\.([\w_]+)/', $full_indicator_concept_identity, $matches)) {
               $indicator_concept_identity = $matches[1];
               $indicator_concept_identity_id = $matches[2];
               [$indicator_concept_agency, $indicator_concept_name] = explode(':', $indicator_concept_identity);
@@ -271,6 +271,8 @@ class QuanthubSdmxClient {
                     foreach ($conceptScheme['concepts'] as $concept) {
                       if ($concept['id'] == $indicator_concept_identity_id) {
                         $indicator_enumeration = $concept['coreRepresentation']['enumeration'];
+                        // Remove versions because we don't need this here.
+                        $indicator_enumeration = preg_replace('/\(.*\)/','', $indicator_enumeration);
                       }
                     }
                   }
@@ -284,7 +286,7 @@ class QuanthubSdmxClient {
       $indicators_items = [];
       foreach ($dataset_glossaries as $dataset_glossary) {
         foreach ($dataset_glossary['links'] as $dataset_glossary_link) {
-          if ($dataset_glossary_link['urn'] == $indicator_enumeration) {
+          if (str_contains($dataset_glossary_link['urn'], $indicator_enumeration)) {
             $indicators_items = $dataset_glossary['terms'];
           }
         }

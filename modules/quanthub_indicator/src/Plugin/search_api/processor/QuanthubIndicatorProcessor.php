@@ -186,8 +186,7 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
 
         case 'title':
           if ($langcode) {
-            $field_values[0]->setText($this->loadedIndicators[$this->indicatorId]['names'][$langcode]);
-            $field_values[0]->setOriginalText($this->loadedIndicators[$this->indicatorId]['names'][$langcode]);
+            $field_values[0] = $this->loadedIndicators[$this->indicatorId]['names'][$langcode];
             $field->setValues($field_values);
           }
           break;
