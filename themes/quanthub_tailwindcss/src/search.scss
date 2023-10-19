@@ -350,7 +350,7 @@ form {
 }
 
 .pager__item--next {
-  background-image: url('/assets/images/btn-next.svg');
+  background-image: url('/assets/images/btn-next.svg') !important;
 }
 
 .pager__item--first,
@@ -406,7 +406,7 @@ form {
   .field--name-title {
     @include two-lines(32px);
   }
-    
+
   .facet-item {
     .facets-checkbox {
       height: 0;
