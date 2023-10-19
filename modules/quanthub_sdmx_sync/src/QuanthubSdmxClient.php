@@ -272,7 +272,7 @@ class QuanthubSdmxClient {
                       if ($concept['id'] == $indicator_concept_identity_id) {
                         $indicator_enumeration = $concept['coreRepresentation']['enumeration'];
                         // Remove versions because we don't need this here.
-                        $indicator_enumeration = preg_replace('/\(.*\)/','', $indicator_enumeration);
+                        $indicator_enumeration = preg_replace('/\(.*\)/', '', $indicator_enumeration);
                       }
                     }
                   }
