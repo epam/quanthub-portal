@@ -1,0 +1,6 @@
+quanthub_artifact_browser_menu_item:
+  title: 'Artefact Browser'
+  route_name: quanthub_artifact_browser
+  parent: main
+  menu_name: main
+  weight: 100

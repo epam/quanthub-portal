@@ -87,7 +87,7 @@ class ArtifactBrowserController extends ControllerBase {
    * Returns translatable page title.
    */
   public function getTitle(): string {
-    return $this->t('Artifact Browser');
+    return $this->t('Artefact Browser');
   }
 
 }
