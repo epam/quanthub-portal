@@ -1,5 +1,5 @@
-quanthub_artifact_browser.example:
-  path: '/artifact-browser/{artifact_type}/{artifact_urn}'
+quanthub_artifact_browser:
+  path: '/artefact-browser/{artifact_type}/{artifact_urn}'
   defaults:
     _title_callback: '\Drupal\quanthub_artifact_browser\Controller\ArtifactBrowserController::getTitle'
     _controller: '\Drupal\quanthub_artifact_browser\Controller\ArtifactBrowserController::build'
