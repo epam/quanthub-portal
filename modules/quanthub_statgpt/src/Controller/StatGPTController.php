@@ -87,7 +87,7 @@ class StatGPTController extends ControllerBase {
    * Returns translatable page title.
    */
   public function getTitle(): string {
-    return $this->t('Analytical Studio');
+    return $this->t('Data Studio');
   }
 
 }
