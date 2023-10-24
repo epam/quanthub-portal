@@ -14,16 +14,18 @@
 #}
 {% set classes = ['region', 'region-' ~ (region|clean_class)] %}
 <div {{ attributes.addClass(classes) }}>
-  {{ drupal_entity('block', 'quanthub_tailwindcss_branding') }}
-  <div class="menu--wrapper">
-    <a class="mobile-drop-link">Open</a>
-    <div class="menu-holder">
-      {{ drupal_entity('block', 'search_in_header') }}
-      <div class="top-navs">
-        {{ drupal_menu('main', expand = true) }}
-        {{ drupal_entity('block', 'languageswitcher') }}
-      </div>
-      {{ drupal_entity('block', 'quanthub_tailwindcss_account_menu') }}
-    </div>
-  </div>
+	{{ drupal_entity('block', 'quanthub_tailwindcss_branding') }}
+	<div class="menu--wrapper">
+		<a class="mobile-drop-link">Open</a>
+		<div class="menu-holder flex">
+			{{ drupal_menu('main', expand = true) }}
+			<div class="top-navs">
+				<div class="menu__search">
+            		{{ drupal_entity('block', 'search_in_header') }}
+          		</div>
+				{{ drupal_entity('block', 'languageswitcher') }}
+			{{ drupal_entity('block', 'quanthub_tailwindcss_account_menu') }}
+			</div>
+		</div>
+	</div>
 </div>

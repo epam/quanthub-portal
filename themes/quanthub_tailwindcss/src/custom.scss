@@ -118,12 +118,12 @@
 }
 
 //use if need to change color of image
-@mixin mask-icon($image){
+@mixin mask-icon($image, $size: 24px) {
   $path: '/assets/images/' + $image;
   content: '';
   display: block;
-  width: 24px;
-  height: 24px;
+  width: $size;
+  height: $size;
   font-size: 0;
   line-height: 0;
   mask-image: url($path);
@@ -288,15 +288,15 @@ aside + .flex-1 .region-content {
     @apply mb-4 mt-10;
   }
   .views-row {
-    .card{
-      .ico-time{
-        .separator{
+    .card {
+      .ico-time {
+        .separator {
           @apply hidden;
         }
       }
     }
   }
 }
-.download_button_id button{
+.download_button_id button {
   width: auto !important;
 }
