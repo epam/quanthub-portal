@@ -55,9 +55,6 @@ body {
           display: block !important;
         }
       }
-      .header--search-icon {
-        display: none !important;
-      }
       .block-views-exposed-filter-blocks {
         display: block;
       }
@@ -371,6 +368,9 @@ body {
       top: 79px;
     }
   }
+  .header--search-icon {
+    display: none !important;
+  }
   @screen md {
     &.menu-opened {
       .header,
@@ -413,7 +413,7 @@ body {
       background: $white !important;
     }
   }
-  
+
   .header.scrolled {
     border-color: $ntrls-600;
     transition: all 0.3s ease-in;

@@ -27,6 +27,10 @@
         }
       });
 
+      window.addEventListener('resize', () => {
+        handleSearchClick();
+      });
+
       handleLanguageSwitcher();
       handleDropdownclick();
       handlePageOutsideClick();
