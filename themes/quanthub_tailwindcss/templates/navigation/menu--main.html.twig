@@ -30,7 +30,7 @@ We call a macro which calls itself to render the full tree.
   {% import _self as menus %}
   {% if items %}
     {% if menu_level == 0 %}
-    <ul{{ attributes.addClass('navbar-nav ml-auto') }}>
+    <ul{{ attributes.addClass('navbar-nav') }}>
     {% else %}
     <ul class="dropdown-menu">
     {% endif %}

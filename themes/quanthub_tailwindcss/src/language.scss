@@ -1,10 +1,10 @@
 .language-switcher-language-url {
-  margin-left: 1rem;
   width: 70px;
   height: 40px;
   position: relative;
   @screen md {
     margin-left: 0;
+    height: auto;
   }
   .links {
     @include header-4;
@@ -14,15 +14,26 @@
     margin: 0.5rem 1rem;
     padding: 0 24px;
     background: $white;
-     // TODO: delete custom color
+    // TODO: delete custom color
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
     z-index: 5;
+    @screen md {
+      position: initial !important;
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      @apply flex flex-col;
+    }
 
     li {
       border-top: 1px solid $ntrls-400;
       padding: 1rem 0;
       display: none;
+      @screen md {
+        padding: 0;
+      }
 
       a {
         display: block;
@@ -54,37 +65,51 @@
       border: 0;
       padding: 0;
       display: flex;
+      @screen md {
+        position: initial !important;
+        order: -1;
+      }
+      &:hover {
+        &::after {
+          @include mask-icon('triangle-arrow-up.svg', 16px);
+        }
+      }
 
       &::after {
-        margin: 4px 0 0 4px;
-        @include basic-icon('arrow-down-dark.svg');
+        margin: 4px 0 0px 3px;
+        @include mask-icon('triangle-arrow-down.svg', 16px);
+        background-color: $primary;
       }
     }
-  }
 
-  &:hover {
-    .links li:not(.is-active) {
-      display: block;
+    &.show {
+      li:not(.is-active) {
+        display: block;
+        @screen md {
+          font-weight: 400;
+          margin: 16px 0 8px 0;
+        }
+      }
     }
   }
 }
 
 .path-frontpage {
   .header {
-    &:not(.is-sticky) {
+    &:not(.scrolled) {
       .language-switcher-language-url {
         .links {
           li.is-active {
             &::after {
-              @include basic-icon('arrow-down-white.svg');
-              @screen sm {
-                @include basic-icon('arrow-down-dark.svg');
+              background-color: $white;
+              @screen md {
+                background-color: $primary;
               }
             }
 
             a.is-active {
               color: $white;
-              @screen sm {
+              @screen md {
                 color: $primary;
               }
             }
