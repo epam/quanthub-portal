@@ -40,6 +40,7 @@
   };
 
   const isDesktopView = () => window.innerWidth > 1279;
+  const isMaxSearchView = () => window.innerWidth > 1919;
 
   const headerHeight = () => (window.innerWidth > 1536 ? 104 : 80);
 
@@ -175,27 +176,18 @@
   };
 
   const handleSearchClick = () => {
-    if (isDesktopView()) {
+    if (isMaxSearchView()) {
       return;
     }
     const searchMenu = $('.menu__search');
     if (!searchMenu.find('.header--search-icon').length) {
       searchMenu.append('<div class="header--search-icon"></div>');
     }
-    if (!searchMenu.find('.header--close-icon').length) {
-      searchMenu.find('.form-item-search-api-fulltext').append('<div class="header--close-icon"></div>');
-    }
     const searchIconEl = searchMenu.find('.header--search-icon');
-    const searchCloseIconEl = searchMenu.find('.header--close-icon');
     searchIconEl.off('click');
-    searchCloseIconEl.off('click');
     searchIconEl.on('click', () => {
-      searchMenu.addClass('show');
-      headerEl.addClass('search-opened');
-    });
-    searchCloseIconEl.on('click', () => {
-      searchMenu.removeClass('show');
-      headerEl.removeClass('search-opened');
+      searchMenu.toggleClass('show');
+      headerEl.toggleClass('search-opened');
     });
   };
 

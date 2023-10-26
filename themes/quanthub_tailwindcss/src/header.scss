@@ -1,11 +1,18 @@
 $header-height: 72px;
+$tooolbar-height: 79px;
 
 .path-explorer,
-.path-artifact-browser,
+.path-artefact-browser,
 .path-statgpt {
-  margin-top: 0 !important;
+  padding-top: 0 !important;
   .header {
     position: initial !important;
+  }
+}
+.toolbar-tray-open.user-logged-in {
+  margin-top: $header-height;
+  .header {
+    top: $tooolbar-height;
   }
 }
 body {
@@ -30,6 +37,9 @@ body {
     .mobile-drop-link {
       @include mask-icon('close.svg');
       background-color: $primary;
+    }
+    .header--search-icon {
+      display: none !important;
     }
   }
   .menu-holder {
@@ -163,6 +173,9 @@ body {
   position: relative;
   .block-system-branding-block {
     margin-right: 80px;
+    @screen 2xl {
+      margin-right: 32px;
+    }
   }
   border-bottom: 1px solid $ntrls-600;
 }
@@ -172,7 +185,7 @@ body {
       display: block;
     }
   }
-  @screen lg {
+  @screen 2xl {
     .form--inline {
       height: 0;
     }
@@ -207,6 +220,10 @@ body {
     margin: 0 !important;
     #edit-search-api-fulltext {
       width: 400px;
+      @screen md {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
     }
   }
 }
@@ -249,10 +266,12 @@ body {
 }
 .menu--wrapper {
   flex: 1;
-  .nav-link.is-active {
-    border-bottom: 2px solid;
-    padding-bottom: inherit;
-    border-color: $primary;
+  .nav-link {
+    border-bottom: 2px solid transparent;
+    &.is-active {
+      padding-bottom: 0;
+      border-color: $primary;
+    }
   }
   .navbar-nav {
     display: flex;
@@ -285,6 +304,9 @@ body {
       & > a {
         display: flex;
         align-items: center;
+        @screen md {
+          width: fit-content;
+        }
         &:after {
           background-color: $primary;
           @include mask-icon('triangle-arrow-down.svg', 16px);
@@ -337,8 +359,15 @@ body {
 .menu--account {
   .nav-item {
     a {
+      @apply flex items-center;
       @include base-button;
       @include primary-filled-button;
+      @include header-4;
+      border-radius: 4px !important;
+      &:hover {
+        border-color: $prpl-600 !important;
+        background-color: $prpl-600 !important;
+      }
     }
   }
 }
@@ -363,11 +392,6 @@ body {
 }
 
 .path-frontpage {
-  &.user-logged-in {
-    .header {
-      top: 79px;
-    }
-  }
   .header--search-icon {
     display: none !important;
   }
@@ -473,8 +497,14 @@ body {
         .menu--account {
           .nav-item {
             a {
-              color: $primary;
+              @include secondary-button;
+              @apply flex items-center;
+              @include header-4;
+              color: $primary !important;
               background-color: $white !important;
+              &:hover {
+                background-color: $prpl-100 !important;
+              }
             }
           }
         }
