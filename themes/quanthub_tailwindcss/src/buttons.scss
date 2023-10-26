@@ -79,7 +79,7 @@
   }
 }
 
-.secondary-button {
+@mixin secondary-button {
   @include base-button;
   @include rounded-button;
   @include non-primary-filled-button;
@@ -102,7 +102,11 @@
   }
 }
 
-.tertiary-button {
+.secondary-button {
+  @include secondary-button;
+}
+
+@mixin tertiary-button {
   @include base-button;
   @include rounded-button;
   @include non-primary-filled-button;
@@ -132,6 +136,10 @@
     color: $primary;
     background-color: $prpl-100;
   }
+}
+
+.tertiary-button {
+  @include tertiary-button;
 }
 
 .floating-button {
