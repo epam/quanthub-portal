@@ -5,8 +5,8 @@
   .link--download {
     height: 28px;
   }
-  .dataset--item{
-    .dataset--content{
+  .dataset--item {
+    .dataset--content {
       .separator {
         @apply hidden;
       }
@@ -44,13 +44,27 @@
 
   > .view-content {
     grid-area: 2 / 1 / 3 / 2;
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 1.5rem;
     margin: 0;
     padding-right: 40px;
+
+    .dataset--item,
+    .dataset--content {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+    }
+
+    .dataset--text {
+      flex: 1 1 0%;
+      display: flex;
+      height: max-content;
+    }
 
     @screen xl {
       padding-right: 20px;
@@ -69,7 +83,7 @@
     }
 
     .views-row {
-      width: calc(50% - 0.75rem);
+      width: 100%;
       margin-bottom: 1.25rem;
       @screen sm {
         width: 100%;
