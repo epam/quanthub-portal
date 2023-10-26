@@ -307,6 +307,13 @@ form {
       &:not(:first-child) {
         @apply border-top;
       }
+
+      .explorer-button {
+        &:before {
+          @include basic-icon('explorer.svg');
+          margin-right: 4px;
+        }
+      }
     }
   }
 }

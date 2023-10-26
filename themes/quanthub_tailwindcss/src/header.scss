@@ -78,6 +78,10 @@ body {
         background-color: white;
         left: 0;
         width: calc(100vw - 10px) !important;
+        input {
+          @include caption-1;
+          color: $ntrls-800;
+        }
       }
       .top-navs {
         width: 100%;
@@ -179,6 +183,14 @@ body {
   }
   border-bottom: 1px solid $ntrls-600;
 }
+.menu-opened {
+  .menu__search {
+    .form-item-search-api-fulltext {
+      top: 0 !important;
+      height: 32px !important;
+    }
+  }
+}
 .menu__search {
   @screen md {
     .block-views-exposed-filter-blocks {
@@ -210,9 +222,13 @@ body {
         align-items: center;
         position: absolute;
         height: 72px;
-        background-color: white;
         left: 0;
+        background-color: $white;
         width: calc(100vw - 10px) !important;
+        input {
+          @include caption-1;
+          color: $ntrls-800;
+        }
       }
     }
   }
@@ -271,6 +287,9 @@ body {
     &.is-active {
       padding-bottom: 0;
       border-color: $primary;
+      &:hover {
+        border-color: $prpl-1000 !important;
+      }
     }
   }
   .navbar-nav {
@@ -294,6 +313,7 @@ body {
 
     a {
       &:hover {
+        color: $prpl-1000;
         text-decoration: none;
       }
     }
@@ -440,7 +460,6 @@ body {
 
   .header.scrolled {
     border-color: $ntrls-600;
-    transition: all 0.3s ease-in;
 
     .region-header {
       border-color: $ntrls-600;
@@ -450,11 +469,22 @@ body {
       .site-title {
         color: $primary !important;
       }
+      .nav-item {
+        &:hover {
+          a {
+            color: $prpl-1000 !important;
+            text-decoration: none;
+          }
+        }
+      }
       .menu--account {
         .nav-item {
           a {
             color: $white !important;
             background-color: $primary !important;
+            &:hover {
+              background-color: $prpl-600 !important;
+            }
           }
         }
       }
@@ -479,16 +509,27 @@ body {
     }
   }
   .header {
-    transition: all 0.3s ease-in;
     .header--search-icon {
       @apply hidden;
     }
     &:not(.scrolled) {
       background: linear-gradient(83deg, #062759 0%, #3d419b 100%);
-      -webkit-backface-visibility: hidden;
       .region-header {
         border-color: transparent;
-
+        .nav-item {
+          a {
+            &:hover {
+              color: $prpl-100 !important;
+            }
+          }
+          .dropdown-menu {
+            a {
+              &:hover {
+                color: $primary !important;
+              }
+            }
+          }
+        }
         .nav-item,
         .nav-link,
         .site-title {

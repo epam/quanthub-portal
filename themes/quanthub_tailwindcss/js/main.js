@@ -19,16 +19,16 @@
 
   Drupal.behaviors.handleMenu = {
     attach: () => {
+      handleResize();
       window.addEventListener('scroll', () => {
-        if (window.scrollY > 0) {
-          headerEl.addClass('scrolled');
-        } else {
-          headerEl.removeClass('scrolled');
-        }
+        handleResize();
       });
 
       window.addEventListener('resize', () => {
         handleSearchClick();
+        if (isDesktopView()) {
+          bodyEl.removeClass('menu-opened');
+        }
       });
 
       handleLanguageSwitcher();
@@ -37,6 +37,14 @@
       handleSearchClick();
       handleMenuMobileClick();
     },
+  };
+
+  const handleResize = () => {
+    if (window.scrollY > 0) {
+      headerEl.addClass('scrolled');
+    } else {
+      headerEl.removeClass('scrolled');
+    }
   };
 
   const isDesktopView = () => window.innerWidth > 1279;
