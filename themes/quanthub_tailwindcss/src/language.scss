@@ -2,7 +2,7 @@
   width: 70px;
   height: 40px;
   position: relative;
-  @screen md {
+  @screen mobile-menu {
     margin-left: 0;
     height: auto;
   }
@@ -18,7 +18,7 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
     z-index: 5;
-    @screen md {
+    @screen mobile-menu {
       position: initial !important;
       box-shadow: none;
       border-radius: 0;
@@ -31,7 +31,7 @@
       border-top: 1px solid $ntrls-400;
       padding: 1rem 0;
       display: none;
-      @screen md {
+      @screen mobile-menu {
         padding: 0;
       }
 
@@ -65,7 +65,7 @@
       border: 0;
       padding: 0;
       display: flex;
-      @screen md {
+      @screen mobile-menu {
         position: initial !important;
         order: -1;
       }
@@ -85,7 +85,7 @@
     &.show {
       li:not(.is-active) {
         display: block;
-        @screen md {
+        @screen mobile-menu {
           font-weight: 400;
           margin: 16px 0 8px 0;
         }
@@ -102,14 +102,14 @@
           li.is-active {
             &::after {
               background-color: $white;
-              @screen md {
+              @screen mobile-menu {
                 background-color: $primary;
               }
             }
 
             a.is-active {
               color: $white;
-              @screen md {
+              @screen mobile-menu {
                 color: $primary;
               }
             }

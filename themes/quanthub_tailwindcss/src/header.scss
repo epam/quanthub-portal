@@ -28,7 +28,7 @@ body {
   height: $header-height;
 }
 
-@screen md {
+@screen mobile-menu {
   .mobile-drop-link {
     @include mask-icon('ico-menu-dark.svg');
     background-color: $primary;
@@ -192,7 +192,7 @@ body {
   }
 }
 .menu__search {
-  @screen md {
+  @screen mobile-menu {
     .block-views-exposed-filter-blocks {
       display: block;
     }
@@ -236,7 +236,7 @@ body {
     margin: 0 !important;
     #edit-search-api-fulltext {
       width: 400px;
-      @screen md {
+      @screen mobile-menu {
         width: 100% !important;
         max-width: 100% !important;
       }
@@ -260,7 +260,7 @@ body {
     &:hover {
       text-decoration: none;
     }
-    @screen md {
+    @screen mobile-menu {
       @include header-2;
     }
   }
@@ -286,10 +286,8 @@ body {
     border-bottom: 2px solid transparent;
     &.is-active {
       padding-bottom: 0;
-      border-color: $primary;
-      &:hover {
-        border-color: $prpl-1000 !important;
-      }
+      border-color: $prpl-1000;
+      color: $prpl-1000;
     }
   }
   .navbar-nav {
@@ -302,7 +300,7 @@ body {
     @screen lg {
       gap: 1rem;
     }
-    @screen md {
+    @screen mobile-menu {
       gap: 0;
     }
 
@@ -324,7 +322,7 @@ body {
       & > a {
         display: flex;
         align-items: center;
-        @screen md {
+        @screen mobile-menu {
           width: fit-content;
         }
         &:after {
@@ -406,7 +404,7 @@ body {
   flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
-  @screen md {
+  @screen mobile-menu {
     border-bottom: $ntrls-600;
   }
 }
@@ -415,7 +413,7 @@ body {
   .header--search-icon {
     display: none !important;
   }
-  @screen md {
+  @screen mobile-menu {
     &.menu-opened {
       .header,
       .header:not(.scrolled) {
@@ -438,6 +436,9 @@ body {
         .navbar-nav {
           .dropdown {
             & > a {
+              &:hover {
+                color: $prpl-1000 !important;
+              }
               &:after {
                 background-color: $primary;
               }
@@ -468,14 +469,6 @@ body {
       .nav-link,
       .site-title {
         color: $primary !important;
-      }
-      .nav-item {
-        &:hover {
-          a {
-            color: $prpl-1000 !important;
-            text-decoration: none;
-          }
-        }
       }
       .menu--account {
         .nav-item {
@@ -512,6 +505,8 @@ body {
     .header--search-icon {
       @apply hidden;
     }
+  }
+  .header {
     &:not(.scrolled) {
       background: linear-gradient(83deg, #062759 0%, #3d419b 100%);
       .region-header {
@@ -525,7 +520,7 @@ body {
           .dropdown-menu {
             a {
               &:hover {
-                color: $primary !important;
+                color: $prpl-1000 !important;
               }
             }
           }
@@ -551,7 +546,7 @@ body {
         }
         .menu-holder {
           background: transparent;
-          @screen md {
+          @screen mobile-menu {
             background: $white;
           }
         }

@@ -47,10 +47,8 @@
     }
   };
 
-  const isDesktopView = () => window.innerWidth > 1279;
+  const isDesktopView = () => window.innerWidth > 1119;
   const isMaxSearchView = () => window.innerWidth > 1919;
-
-  const headerHeight = () => (window.innerWidth > 1536 ? 104 : 80);
 
   const addBackdrop = () => {
     if (!backdropEl.hasClass('show')) {
