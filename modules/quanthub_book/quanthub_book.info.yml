@@ -1,0 +1,5 @@
+name: 'Quanthub Book'
+type: module
+description: 'Quanthub book add additional functionality to book according to our needs.'
+core_version_requirement: ^8 || ^9
+package: 'Epam Quanthub'
