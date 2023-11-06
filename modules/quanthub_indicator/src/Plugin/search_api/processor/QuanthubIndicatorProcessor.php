@@ -186,7 +186,7 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
 
         case 'title':
           if ($langcode) {
-            $field_values[0] = $this->loadedIndicators[$this->indicatorId]['names'][$langcode];
+            $field_values[0] = $this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$langcode];
             $field->setValues($field_values);
           }
           break;
@@ -227,6 +227,13 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
           ['language' => $this->languageManager->getLanguage($langcode)]
         )->toUriString();
 
+        $topics_links = [];
+        if (!$dataset_entity->field_topics->isEmpty()) {
+          foreach ($dataset_entity->field_topics->referencedEntities() as $referencedEntity) {
+            $topics_links[] = $referencedEntity->toLink();
+          }
+        }
+
         $indicator_renderable = [
           '#theme' => 'quanthub_indicator',
           '#indicator_title' => $indicator_title,
@@ -234,6 +241,7 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
           '#indicator_langcode' => $langcode,
           '#indicator_dataset' => $dataset_entity,
           '#indicator_dataset_uri' => $dataset_uri,
+          '#indicator_topics' => $topics_links,
         ];
 
         $rendered_indicator = $this->renderer->renderPlain($indicator_renderable);

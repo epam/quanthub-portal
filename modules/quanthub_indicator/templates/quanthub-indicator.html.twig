@@ -1,7 +1,25 @@
-<p>{{ link(indicator_title, indicator_uri, create_attribute({'class': ['indicator-title', 'indicator-link']})) }}</p>
+<h2 class="flex gap-2 items-start mb-2 xs:flex-col">
+  <span class="indicator indicator--dataset">
+    <span class="indicator--icon"></span>
+    Indicator
+  </span>
+  {{ link(indicator_title, indicator_uri, create_attribute({'class': ['indicator-title', 'indicator-link']})) }}
+</h2>
 
 {% if indicator_description is not null %}
   <p>{{ indicator_description }}</p>
 {% endif %}
 
-<p>{{ link(indicator_dataset.label, indicator_dataset_uri, create_attribute({'class': ['indicator-dataset', 'indicator-dataset-link']})) }}</p>
+<p>
+  <span>Dataset:</span>
+  {{ link(indicator_dataset.label, indicator_dataset_uri, create_attribute({'class': ['indicator-dataset', 'indicator-dataset-link']})) }}
+</p>
+
+{% if indicator_topics is not empty %}
+  <p>
+    <span>Topics:</span>
+    {% for item in indicator_topics %}
+      {{ item }}
+    {% endfor %}
+  </p>
+{% endif %}
