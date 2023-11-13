@@ -1,25 +1,32 @@
-<h2 class="flex gap-2 items-start mb-2 xs:flex-col">
-  <span class="indicator indicator--dataset">
-    <span class="indicator--icon"></span>
-    {{ 'Indicator'|t }}
-  </span>
-  {{ link(indicator_title, indicator_uri, create_attribute({'class': ['indicator-title', 'indicator-link']})) }}
-</h2>
+<div class="flex gap-2 items-start mb-2 xs:flex-col node__title-info">
+	<span class="indicator indicator--indicator">
+		<span class="indicator--icon"></span>
+		{{ 'Indicator'|t }}
+	</span>
 
-{% if indicator_description is not null %}
-  <p>{{ indicator_description }}</p>
-{% endif %}
-
-<p>
-  <span>{{ 'Dataset:'|t }}</span>
-  {{ link(indicator_dataset.label, indicator_dataset_uri, create_attribute({'class': ['indicator-dataset', 'indicator-dataset-link']})) }}
-</p>
-
-{% if indicator_topics is not empty %}
-  <p>
-    <span>{{ 'Topics:'|t }}</span>
-    {% for item in indicator_topics %}
-      {{ item }}
-    {% endfor %}
-  </p>
-{% endif %}
+</div>
+<div class="node__content">
+	{% if indicator_description is not null %}
+		<p>{{ indicator_description }}</p>
+	{% endif %}
+	<h2>
+		<p class="field--name-title">
+			{{ link(indicator_title, indicator_uri, create_attribute({'class': ['indicator-title', 'indicator-link']})) }}
+		</p>
+	</h2>
+	<div class="field--name-lable">
+		{{ '@dataset'|t({
+            '@dataset': 'Dataset'
+          }) }}:
+		{{ link(indicator_dataset.label, indicator_dataset_uri, create_attribute({'class': ['indicator-dataset', 'indicator-dataset-link']})) }}
+	</div>
+	{% if indicator_topics is not empty %}
+		<div class="field--name-field-topics">
+			{% for item in indicator_topics %}
+				<span class="field__item">
+					{{ item }}
+				</span>
+			{% endfor %}
+		</div>
+	{% endif %}
+</div>
