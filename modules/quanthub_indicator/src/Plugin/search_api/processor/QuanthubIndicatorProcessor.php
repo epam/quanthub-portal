@@ -229,7 +229,9 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
         $topics_links = [];
         if (!$dataset_entity->field_topics->isEmpty()) {
           foreach ($dataset_entity->field_topics->referencedEntities() as $referencedEntity) {
-            $topics_links[] = $referencedEntity->toLink();
+            if ($referencedEntity->hasTranslation($langcode)) {
+              $topics_links[] = $referencedEntity->getTranslation($langcode)->toLink();
+            }
           }
         }
 
