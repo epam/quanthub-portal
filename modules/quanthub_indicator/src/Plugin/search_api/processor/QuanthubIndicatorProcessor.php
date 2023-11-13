@@ -8,6 +8,7 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\quanthub_sdmx_sync\QuanthubSdmxClient;
 use Drupal\search_api\Item\FieldInterface;
+use Drupal\search_api\Plugin\search_api\data_type\value\TextValue;
 use Drupal\search_api\Processor\FieldsProcessorPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -177,8 +178,6 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
       ->getValue();
 
     if ($this->indicatorId) {
-      $field_values = $field->getValues();
-
       switch ($field->getFieldIdentifier()) {
         case 'rendered_item':
           $this->processRenderedItemField($field, $dataset_entity);
@@ -186,8 +185,8 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
 
         case 'title':
           if ($langcode) {
-            $field_values[0] = $this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$langcode];
-            $field->setValues($field_values);
+            $new_field_values[] = new TextValue($this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$langcode]);
+            $field->setValues($new_field_values);
           }
           break;
       }
