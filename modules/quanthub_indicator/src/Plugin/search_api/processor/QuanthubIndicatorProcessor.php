@@ -178,8 +178,6 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
       ->getValue();
 
     if ($this->indicatorId) {
-      $field_values = $field->getValues();
-
       switch ($field->getFieldIdentifier()) {
         case 'rendered_item':
           $this->processRenderedItemField($field, $dataset_entity);
