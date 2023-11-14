@@ -155,10 +155,8 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
         ) {
           $this->datasetsDimensions[$this->datasetUrn] = $this->sdmxClient->getDimensions($this->datasetUrn);
         }
-        foreach ($item->getFields() as $name => $field) {
-          if ($this->testField($name, $field)) {
-            $this->processField($field);
-          }
+        foreach ($item->getFields() as $field) {
+          $this->processField($field);
         }
       }
     }
@@ -189,6 +187,26 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
             $field->setValues($new_field_values);
           }
           break;
+
+        case 'field_topics':
+          $topics = [];
+          foreach ($dataset_entity->field_topics->referencedEntities() as $referencedEntity) {
+            if ($referencedEntity->hasTranslation($langcode)) {
+              $topics[] = $referencedEntity->getTranslation($langcode)->id();
+            }
+          }
+          $field->setValues($topics);
+          break;
+
+        case 'topics_name':
+          $topic_names = [];
+          foreach ($dataset_entity->field_topics->referencedEntities() as $referencedEntity) {
+            if ($referencedEntity->hasTranslation($langcode)) {
+              $topic_names[] = new TextValue($referencedEntity->getTranslation($langcode)->name->getString());
+            }
+          }
+
+          $field->setValues($topic_names);
       }
     }
   }
