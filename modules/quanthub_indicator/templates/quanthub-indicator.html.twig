@@ -1,7 +1,7 @@
 <div class="flex gap-2 items-start mb-2 xs:flex-col node__title-info">
 	<span class="indicator indicator--indicator">
 		<span class="indicator--icon"></span>
-		{{ 'Indicator'|t }}
+		{{ indicator_bundle_label }}
 	</span>
 
 </div>
@@ -15,10 +15,8 @@
 		</p>
 	</h2>
 	<div class="field--name-lable">
-		{{ '@dataset'|t({
-            '@dataset': 'Dataset'
-          }) }}:
-		{{ link(indicator_dataset.label, indicator_dataset_uri, create_attribute({'class': ['indicator-dataset', 'indicator-dataset-link']})) }}
+		{{ indicator_dataset_bundle_label }}:
+		{{ indicator_dataset_link }}
 	</div>
 	{% if indicator_topics is not empty %}
 		<div class="field--name-field-topics">
