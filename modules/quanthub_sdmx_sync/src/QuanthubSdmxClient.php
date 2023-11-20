@@ -284,10 +284,12 @@ class QuanthubSdmxClient {
       }
 
       $indicators_items = [];
-      foreach ($dataset_glossaries as $dataset_glossary) {
-        foreach ($dataset_glossary['links'] as $dataset_glossary_link) {
-          if (str_contains($dataset_glossary_link['urn'], $indicator_enumeration)) {
-            $indicators_items = $dataset_glossary['terms'];
+      if (!empty($indicator_enumeration)) {
+        foreach ($dataset_glossaries as $dataset_glossary) {
+          foreach ($dataset_glossary['links'] as $dataset_glossary_link) {
+            if (str_contains($dataset_glossary_link['urn'], $indicator_enumeration)) {
+              $indicators_items = $dataset_glossary['terms'];
+            }
           }
         }
       }
@@ -300,6 +302,10 @@ class QuanthubSdmxClient {
       else {
         $indicators = array_intersect_key($indicators_items, array_flip($selected_indicators));
       }
+    }
+
+    if (empty($indicators)) {
+      $this->logger->warning('SDMX Client didn\'t find indicators for ' . $urn);
     }
 
     return $indicators;
