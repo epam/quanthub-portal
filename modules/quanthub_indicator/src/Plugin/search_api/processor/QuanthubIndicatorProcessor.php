@@ -211,7 +211,7 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
             break;
 
           case 'title':
-            if ($this->langcode) {
+            if ($this->langcode && !empty($this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode])) {
               $new_field_values[] = new TextValue($this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode]);
               $field->setValues($new_field_values);
             }
@@ -253,8 +253,13 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
     if ($this->indicatorId) {
       $field_values = $field->getValues();
 
-      if ($this->langcode) {
-        $indicator_title = $this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode];
+      if ($this->langcode && !empty($this->loadedIndicators[$this->datasetUrn][$this->indicatorId])) {
+        if (!empty($this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode])) {
+          $indicator_title = $this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode];
+        }
+        else {
+          $indicator_title = $this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['name'];
+        }
         $indicator_uri = Url::fromRoute(
           self::EXPLORER_ROUTE,
           [],
