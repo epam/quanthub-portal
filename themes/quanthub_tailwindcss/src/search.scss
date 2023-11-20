@@ -239,45 +239,57 @@ form {
   gap: 4px;
   align-items: center;
   padding: 4px 12px;
-  border-radius: 24px;
+  border-radius: 24px;   
+  border: 1px solid;
   background: $blue-800;
-  color: $white;
+  color: $ntrls-1000;
   margin-top: 4px;
   &--icon {
+    background-color: $ntrls-1000;
     width: 16px !important;
     height: 16px !important;
   }
 }
-
+.indicator__content{
+  a{
+    @include header-5;
+  }
+}
 .indicator--dataset {
-  background: $grn-1000;
+  background: $grn-200;
+  border-color:$grn-600;
   .indicator--icon {
-    background-color: $white;
     @include mask-icon('ico-dataflow-white.svg');
   }
 }
-
+.indicator--indicator {
+  background: $aqmrn-400;
+  border-color:$aqmrn-900;
+  .indicator--icon {
+    @include mask-icon('explorer.svg');
+  }
+}
 .indicator--news {
-  background: $pink-1000;
+  background: $pink-200;
+  border-color:$pink-600;
 
   .indicator--icon {
-    background-color: $white;
     @include mask-icon('ico-document-white.svg');
   }
 }
 
 .indicator--publication {
-  background: $blue-800;
+  background: $blue-400;
+  border-color:$blue-800;
   .indicator--icon {
-    background-color: $white;
     @include mask-icon('ico-audit-white.svg');
   }
 }
 
 .indicator--release {
   background: $ylw-900;
+  border-color:$grn-600;
   .indicator--icon {
-    background-color: $white;
     @include mask-icon('ico-time.svg');
   }
 }
@@ -292,7 +304,6 @@ form {
   @screen xs {
     @include undo-block-cloud;
   }
-
   .view-header {
     @include paragraph-3;
   }
@@ -305,7 +316,7 @@ form {
       padding: 24px 0;
 
       &:not(:first-child) {
-        @apply border-top;
+          border-top: 1px solid $ntrls-600;
       }
 
       .explorer-button {

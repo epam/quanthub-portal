@@ -1,25 +1,31 @@
 <h2 class="flex gap-2 items-start mb-2 xs:flex-col">
-  <span class="indicator indicator--dataset">
-    <span class="indicator--icon"></span>
-    {{ 'Indicator'|t }}
-  </span>
-  {{ link(indicator_title, indicator_uri, create_attribute({'class': ['indicator-title', 'indicator-link']})) }}
+	<span class="indicator indicator--indicator">
+		<span class="indicator--icon"></span>
+		{{ 'Indicator'|t }}
+	</span>
+	{{ link(indicator_title, indicator_uri, create_attribute({'class': ['indicator-title', 'indicator-link']})) }}
 </h2>
 
 {% if indicator_description is not null %}
-  <p>{{ indicator_description }}</p>
+	<p>{{ indicator_description }}</p>
 {% endif %}
 
-<p>
-  <span>{{ 'Dataset:'|t }}</span>
-  {{ link(indicator_dataset.label, indicator_dataset_uri, create_attribute({'class': ['indicator-dataset', 'indicator-dataset-link']})) }}
+<p class="indicator__content">
+	<span>{{ 'Dataset:'|t }}</span>
+	{{ link(indicator_dataset.label, indicator_dataset_uri, create_attribute({'class': ['indicator-dataset', 'indicator-dataset-link']})) }}
 </p>
 
 {% if indicator_topics is not empty %}
-  <p>
-    <span>{{ 'Topics:'|t }}</span>
-    {% for item in indicator_topics %}
-      {{ item }}
-    {% endfor %}
-  </p>
+	<div class="flex flex-wrap  items-center">
+		<span class="mr-1">{{ 'Topics:'|t }}</span>
+		<div class="field--name-field-topics items-center ml-1">
+			{% for item in indicator_topics %}
+				<div class="field__item">
+					{{ item }}
+				</div>
+
+			{% endfor %}
+		</div>
+
+	</div>
 {% endif %}
