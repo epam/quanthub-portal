@@ -270,7 +270,7 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
             ],
             'language' => $this->language,
           ]
-        )->toUriString();
+        );
 
         $dataset_uri = $dataset_entity->toLink(
           NULL,
