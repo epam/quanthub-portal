@@ -3,11 +3,14 @@
 namespace Drupal\quanthub_indicator\Plugin\search_api\processor;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
+use Drupal\node\Entity\NodeType;
 use Drupal\quanthub_sdmx_sync\QuanthubSdmxClient;
 use Drupal\search_api\Item\FieldInterface;
+use Drupal\search_api\Plugin\search_api\data_type\value\TextValue;
 use Drupal\search_api\Processor\FieldsProcessorPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -89,6 +92,20 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
   protected $indicatorId = FALSE;
 
   /**
+   * The langcode string.
+   *
+   * @var string|null
+   */
+  private $langcode;
+
+  /**
+   * The language object.
+   *
+   * @var \Drupal\Core\Language\LanguageInterface|null
+   */
+  private ?LanguageInterface $language;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -144,7 +161,14 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
     foreach ($items as $item) {
       // Our search processor work only for indicator.
       if ($item->getOriginalObject()->getValue()->getType() == 'indicator') {
-        $this->entity = $item->getOriginalObject()->getValue();
+        $this->langcode = $item->getLanguage();
+        $this->language = $this->languageManager->getLanguage($this->langcode);
+
+        $config_original_language = $this->languageManager->getConfigOverrideLanguage();
+        $this->languageManager->setConfigOverrideLanguage($this->language);
+
+        $this->entity = $item->getOriginalObject()->getValue()->getTranslation($this->langcode);
+
         $this->datasetUrn = $this->entity->field_dataset->first()->entity->field_quanthub_urn->getString();
         $this->indicatorId = $item->getExtraData('indicator_id') ?: FALSE;
 
@@ -154,11 +178,11 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
         ) {
           $this->datasetsDimensions[$this->datasetUrn] = $this->sdmxClient->getDimensions($this->datasetUrn);
         }
-        foreach ($item->getFields() as $name => $field) {
-          if ($this->testField($name, $field)) {
-            $this->processField($field);
-          }
+        foreach ($item->getFields() as $field) {
+          $this->processField($field);
         }
+
+        $this->languageManager->setConfigOverrideLanguage($config_original_language);
       }
     }
   }
@@ -167,29 +191,52 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
    * Process the field.
    */
   protected function processField(FieldInterface $field) {
-    parent::processField($field);
-    $langcode = $this->entity->get('langcode')->getString();
+    if ($this->entity->getType() == 'indicator') {
+      parent::processField($field);
 
-    $dataset_entity = $this->entity->field_dataset
-      ->first()
-      ->get('entity')
-      ->getTarget()
-      ->getValue();
+      $dataset_entity = $this->entity->field_dataset
+        ->first()
+        ->get('entity')
+        ->getTarget()
+        ->getValue();
 
-    if ($this->indicatorId) {
-      $field_values = $field->getValues();
+      if ($dataset_entity->hasTranslation($this->langcode)) {
+        $dataset_entity_localized = $dataset_entity->getTranslation($this->langcode);
+      }
 
-      switch ($field->getFieldIdentifier()) {
-        case 'rendered_item':
-          $this->processRenderedItemField($field, $dataset_entity);
-          break;
+      if ($this->indicatorId && $dataset_entity_localized) {
+        switch ($field->getFieldIdentifier()) {
+          case 'rendered_item':
+            $this->processRenderedItemField($field, $dataset_entity_localized);
+            break;
 
-        case 'title':
-          if ($langcode) {
-            $field_values[0] = $this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$langcode];
-            $field->setValues($field_values);
-          }
-          break;
+          case 'title':
+            if ($this->langcode && !empty($this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode])) {
+              $new_field_values[] = new TextValue($this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode]);
+              $field->setValues($new_field_values);
+            }
+            break;
+
+          case 'field_topics':
+            $topics = [];
+            foreach ($dataset_entity_localized->field_topics->referencedEntities() as $referencedEntity) {
+              if ($referencedEntity->hasTranslation($this->langcode)) {
+                $topics[] = $referencedEntity->getTranslation($this->langcode)->id();
+              }
+            }
+            $field->setValues($topics);
+            break;
+
+          case 'topics_name':
+            $topic_names = [];
+            foreach ($dataset_entity_localized->field_topics->referencedEntities() as $referencedEntity) {
+              if ($referencedEntity->hasTranslation($this->langcode)) {
+                $topic_names[] = new TextValue($referencedEntity->getTranslation($this->langcode)->name->getString());
+              }
+            }
+            $field->setValues($topic_names);
+            break;
+        }
       }
     }
   }
@@ -204,11 +251,15 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
    */
   public function processRenderedItemField(FieldInterface $field, EntityInterface $dataset_entity) {
     if ($this->indicatorId) {
-      $langcode = $this->entity->get('langcode')->getString();
       $field_values = $field->getValues();
 
-      if ($langcode) {
-        $indicator_title = $this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$langcode];
+      if ($this->langcode && !empty($this->loadedIndicators[$this->datasetUrn][$this->indicatorId])) {
+        if (!empty($this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode])) {
+          $indicator_title = $this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode];
+        }
+        else {
+          $indicator_title = $this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['name'];
+        }
         $indicator_uri = Url::fromRoute(
           self::EXPLORER_ROUTE,
           [],
@@ -217,30 +268,40 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
               'urn' => $this->datasetUrn,
               'filter' => $this->getDimensionsFilterUrl($this->datasetUrn),
             ],
-            'language' => $this->languageManager->getLanguage($langcode),
+            'language' => $this->language,
           ]
-        )->toUriString();
+        );
 
-        $dataset_uri = Url::fromRoute(
-          'entity.node.canonical',
-          ['node' => $dataset_entity->id()],
-          ['language' => $this->languageManager->getLanguage($langcode)]
-        )->toUriString();
+        $dataset_uri = $dataset_entity->toLink(
+          NULL,
+          'canonical',
+          [
+            'class' => [
+              'indicator-dataset',
+              'indicator-dataset-link',
+            ],
+          ]
+        )->toString();
 
         $topics_links = [];
         if (!$dataset_entity->field_topics->isEmpty()) {
           foreach ($dataset_entity->field_topics->referencedEntities() as $referencedEntity) {
-            $topics_links[] = $referencedEntity->toLink();
+            if ($referencedEntity->hasTranslation($this->langcode)) {
+              $topics_links[] = $referencedEntity->getTranslation($this->langcode)->toLink();
+            }
           }
         }
+
+        $dataset_bundle_label = NodeType::load('dataset')->label();
+        $indicator_bundle_label = NodeType::load('indicator')->label();
 
         $indicator_renderable = [
           '#theme' => 'quanthub_indicator',
           '#indicator_title' => $indicator_title,
           '#indicator_uri' => $indicator_uri,
-          '#indicator_langcode' => $langcode,
-          '#indicator_dataset' => $dataset_entity,
-          '#indicator_dataset_uri' => $dataset_uri,
+          '#indicator_dataset_link' => $dataset_uri,
+          '#indicator_dataset_bundle_label' => $dataset_bundle_label,
+          '#indicator_bundle_label' => $indicator_bundle_label,
           '#indicator_topics' => $topics_links,
         ];
 

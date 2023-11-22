@@ -21,6 +21,7 @@ class QuanthubIndicatorServiceProvider extends ServiceProviderBase {
       $definition = $container->getDefinition('search_api.entity_datasource.tracking_manager');
       $definition->setClass('Drupal\quanthub_indicator\QuanthubIndicatorContentEntityTrackingManager');
       $definition->addArgument(new Reference('sdmx_client'));
+      $definition->addArgument(new Reference('database'));
     }
   }
 
