@@ -8,6 +8,7 @@ use Drupal\search_api\Event\IndexingItemsEvent;
 use Drupal\search_api\Event\ItemsIndexedEvent;
 use Drupal\search_api\Event\SearchApiEvents;
 use Drupal\search_api\SearchApiException;
+use Drupal\search_api\Utility\Utility;
 
 /**
  * Defines the search index configuration entity.
@@ -176,6 +177,130 @@ class QuanthubIndex extends Index {
     }
 
     return $processed_ids;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadItemsMultiple(array $item_ids) {
+    // Group the requested items by datasource. This will also later be used to
+    // determine whether all items were loaded successfully.
+    $items_by_datasource = [];
+    foreach ($item_ids as $item_id) {
+      [$datasource_id, $raw_id] = Utility::splitCombinedId($item_id);
+      $items_by_datasource[$datasource_id][$raw_id] = $item_id;
+    }
+
+    // Load the items from the datasources and keep track of which were
+    // successfully retrieved.
+    $items = [];
+    foreach ($items_by_datasource as $datasource_id => $raw_ids) {
+      try {
+        $datasource = $this->getDatasource($datasource_id);
+        $datasource_items = $datasource->loadMultiple(array_keys($raw_ids));
+        foreach ($datasource_items as $raw_id => $item) {
+          $id = $raw_ids[$raw_id];
+          $items[$id] = $item;
+          // Remember that we successfully loaded this item.
+          unset($items_by_datasource[$datasource_id][$raw_id]);
+        }
+      }
+      catch (SearchApiException $e) {
+        $this->logException($e);
+        // If the complete datasource could not be loaded, don't report all its
+        // individual requested items as missing.
+        unset($items_by_datasource[$datasource_id]);
+      }
+    }
+
+    // Check whether there are requested items that couldn't be loaded.
+    $items_by_datasource = array_filter($items_by_datasource);
+    if ($items_by_datasource) {
+      // Extract the second-level values of the two-dimensional array (that is,
+      // the combined item IDs) and log a warning reporting their absence.
+      $missing_ids = array_reduce(array_map('array_values', $items_by_datasource), 'array_merge', []);
+
+      $filtered_missing_ids = [];
+      foreach ($missing_ids as $missing_id) {
+        if (!str_contains($missing_id, 'indicator')) {
+          $filtered_missing_ids[] = $missing_id;
+        }
+      }
+
+      if (!empty($filtered_missing_ids)) {
+        $args['%index'] = $this->label();
+        $args['@items'] = '"' . implode('", "', $filtered_missing_ids) . '"';
+        $this->getLogger()
+          ->warning('Could not load the following items on index %index: @items.', $args);
+        // Also remove those items from tracking so we don't keep trying to load
+        // them.
+      }
+    }
+    foreach ($items_by_datasource as $datasource_id => $raw_ids) {
+      $this->trackItemsDeleted($datasource_id, array_keys($raw_ids));
+    }
+
+    // Return the loaded items.
+    return $items;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function trackItemsDeleted($datasource_id, array $ids) {
+    if (!$this->status()) {
+      return;
+    }
+
+    $item_ids = [];
+    foreach ($ids as $id) {
+      if (str_contains($id, 'indicator')) {
+        $item_ids[] = $id;
+      }
+      else {
+        $item_ids[] = Utility::createCombinedId($datasource_id, $id);
+      }
+    }
+    if ($this->hasValidTracker()) {
+      $this->getTrackerInstance()->trackItemsDeleted($item_ids);
+    }
+    if (!$this->isReadOnly() && $this->hasValidServer()) {
+      $this->getServerInstance()->deleteItems($this, $item_ids);
+    }
+  }
+
+  /**
+   * Tracks insertion or updating of items.
+   *
+   * Used as a helper method in trackItemsInserted() and trackItemsUpdated() to
+   * avoid code duplication.
+   *
+   * @param string $datasource_id
+   *   The ID of the datasource to which the items belong.
+   * @param array $ids
+   *   An array of datasource-specific item IDs.
+   * @param string $tracker_method
+   *   The method to call on the tracker. Must be either "trackItemsInserted" or
+   *   "trackItemsUpdated".
+   */
+  protected function trackItemsInsertedOrUpdated($datasource_id, array $ids, $tracker_method) {
+    if ($this->hasValidTracker() && $this->status()) {
+      $item_ids = [];
+      foreach ($ids as $id) {
+        if (str_contains($id, 'indicator')) {
+          $item_ids[] = $id;
+        }
+        else {
+          $item_ids[] = Utility::createCombinedId($datasource_id, $id);
+        }
+      }
+      $this->getTrackerInstance()->$tracker_method($item_ids);
+      if (!$this->isReadOnly() && $this->getOption('index_directly')
+        && !$this->isBatchTracking()) {
+        \Drupal::getContainer()->get('search_api.post_request_indexing')
+          ->registerIndexingOperation($this->id(), $item_ids);
+      }
+    }
   }
 
 }

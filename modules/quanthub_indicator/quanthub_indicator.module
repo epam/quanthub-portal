@@ -26,10 +26,10 @@ function quanthub_indicator_theme($existing, $type, $theme, $path) {
         'indicator_title' => NULL,
         'indicator_description' => NULL,
         'indicator_uri' => NULL,
-        'indicator_langcode' => NULL,
-        'indicator_dataset' => NULL,
-        'indicator_dataset_uri' => NULL,
+        'indicator_dataset_link' => NULL,
         'indicator_topics' => NULL,
+        'indicator_dataset_bundle_label' => NULL,
+        'indicator_bundle_label' => NULL,
       ],
     ],
   ];
