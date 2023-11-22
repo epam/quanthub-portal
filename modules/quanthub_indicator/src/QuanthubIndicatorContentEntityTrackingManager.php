@@ -2,6 +2,7 @@
 
 namespace Drupal\quanthub_indicator;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -11,7 +12,7 @@ use Drupal\search_api\Plugin\search_api\datasource\ContentEntityTrackingManager;
 use Drupal\search_api\Task\TaskManagerInterface;
 
 /**
- * Quanhub indicator tracking manager, added logic for tracking indicator CT.
+ * Quanthub indicator tracking manager, added logic for tracking indicator CT.
  */
 class QuanthubIndicatorContentEntityTrackingManager extends ContentEntityTrackingManager {
 
@@ -21,6 +22,13 @@ class QuanthubIndicatorContentEntityTrackingManager extends ContentEntityTrackin
    * @var \Drupal\quanthub_sdmx_sync\QuanthubSdmxClient
    */
   protected $sdmxClient;
+
+  /**
+   * The database connection service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
 
   /**
    * Constructs a new class instance.
@@ -33,12 +41,21 @@ class QuanthubIndicatorContentEntityTrackingManager extends ContentEntityTrackin
    *   The task manager.
    * @param \Drupal\quanthub_sdmx_sync\QuanthubSdmxClient $sdmxClient
    *   The SDMX client.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database service.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, LanguageManagerInterface $languageManager, TaskManagerInterface $taskManager, QuanthubSdmxClient $sdmxClient) {
+  public function __construct(
+    EntityTypeManagerInterface $entityTypeManager,
+    LanguageManagerInterface $languageManager,
+    TaskManagerInterface $taskManager,
+    QuanthubSdmxClient $sdmxClient,
+    Connection $database
+  ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->languageManager = $languageManager;
     $this->taskManager = $taskManager;
     $this->sdmxClient = $sdmxClient;
+    $this->database = $database;
   }
 
   /**
@@ -102,10 +119,19 @@ class QuanthubIndicatorContentEntityTrackingManager extends ContentEntityTrackin
       if ($inserted_ids) {
         $filtered_item_ids = static::filterValidItemids($index, $datasource_id, $inserted_ids);
         if ($filtered_item_ids) {
-          if (!empty($indicators)) {
-            foreach ($indicators as $indicator) {
-              $filtered_indicator_id = $filtered_item_ids[0] . '_indicator_' . $indicator['id'];
-              $index->trackItemsInserted($datasource_id, [$filtered_indicator_id]);
+          if ($entity->getType() == 'indicator') {
+            if (!empty($indicators)) {
+              foreach ($inserted_translations as $inserted_translation) {
+                if ($entity->hasTranslation($inserted_translation)) {
+                  $filtered_indicator_id = [];
+                  foreach ($indicators as $indicator) {
+                    $filtered_indicator_id[] = $this->prepareSearchApiEntityKey($entity->getTranslation($inserted_translation)) . '_indicator_' . $indicator['id'];
+                  }
+                  if (!empty($filtered_indicator_id)) {
+                    $index->trackItemsInserted($datasource_id, $filtered_indicator_id);
+                  }
+                }
+              }
             }
           }
           else {
@@ -115,11 +141,36 @@ class QuanthubIndicatorContentEntityTrackingManager extends ContentEntityTrackin
       }
       if ($updated_ids) {
         $filtered_item_ids = static::filterValidItemids($index, $datasource_id, $updated_ids);
-        if ($filtered_item_ids) {
-          if (!empty($indicators)) {
-            foreach ($indicators as $indicator) {
-              $filtered_indicator_id = $filtered_item_ids[0] . '_indicator_' . $indicator['id'];
-              $index->trackItemsUpdated($datasource_id, [$filtered_indicator_id]);
+        if ($filtered_item_ids && !empty($updated_translations)) {
+          if ($entity->getType() == 'indicator') {
+            foreach ($updated_translations as $updated_translation) {
+              if ($entity->hasTranslation($updated_translation)) {
+                $indicators_tracker_ids = $this->getIndicatorsTrackerIds($entity, $updated_translation);
+
+                $existed_sdmx_indicators = [];
+                foreach ($indicators as $indicator) {
+                  $existed_sdmx_indicators[] = $this->prepareSearchApiEntityKey($entity, $updated_translation) . '_indicator_' . $indicator['id'];
+                }
+
+                // Diff between existed indicator.
+                // if someone disappear we need to remove.
+                $indicators_to_delete = array_diff($indicators_tracker_ids, $existed_sdmx_indicators);
+                if (!empty($indicators_to_delete)) {
+                  $index->trackItemsDeleted($datasource_id, $indicators_to_delete);
+                }
+
+                // All new indicators should be inserted.
+                $indicators_to_insert = array_diff($existed_sdmx_indicators, $indicators_tracker_ids);
+                if (!empty($indicators_to_insert)) {
+                  $index->trackItemsInserted($datasource_id, $indicators_to_insert);
+                }
+
+                // Existed indicators should be updated.
+                $indicators_to_update = array_intersect($indicators_tracker_ids, $existed_sdmx_indicators);
+                if (!empty($indicators_to_update)) {
+                  $index->trackItemsUpdated($datasource_id, $indicators_to_update);
+                }
+              }
             }
           }
           else {
@@ -130,10 +181,15 @@ class QuanthubIndicatorContentEntityTrackingManager extends ContentEntityTrackin
       if ($deleted_ids) {
         $filtered_item_ids = static::filterValidItemids($index, $datasource_id, $deleted_ids);
         if ($filtered_item_ids) {
-          if (!empty($indicators)) {
-            foreach ($indicators as $indicator) {
-              $filtered_indicator_id = $filtered_item_ids[0] . '_indicator_' . $indicator['id'];
-              $index->trackItemsDeleted($datasource_id, [$filtered_indicator_id]);
+          if ($entity->getType() == 'indicator') {
+            foreach ($deleted_translations as $deleted_translation) {
+              // Get items related to this indicator.
+              // There could be difference between saved indicators and
+              // news list from sdmx.
+              // So just remove all that we have in tracker db table.
+              $indicators_tracker_ids = $this->getIndicatorsTrackerIds($entity, $deleted_translation);
+
+              $index->trackItemsDeleted($datasource_id, $indicators_tracker_ids);
             }
           }
           else {
@@ -175,24 +231,27 @@ class QuanthubIndicatorContentEntityTrackingManager extends ContentEntityTrackin
 
     $indicators_ids = [];
     if ($entity->getType() == 'indicator') {
-      $indicators_ids = $this->getIndicatorsToIndex($entity);
-    }
+      $indicators_ids = $this->getIndicatorsTrackerIds($entity);
+      $datasource_id = 'entity:' . $entity->getEntityTypeId();
 
-    // Remove the search items for all the entity's translations.
-    $item_ids = [];
-    $entity_id = $entity->id();
-    foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
-      $item_ids[] = $entity_id . ':' . $langcode;
-      if (!empty($indicators_ids)) {
-        foreach ($indicators_ids as $indicators_id) {
-          $item_ids[] = $entity_id . ':' . $langcode . '_indicator_' . $indicators_id;
-        }
+      foreach ($indexes as $index) {
+        $index->trackItemsDeleted($datasource_id, $indicators_ids);
       }
     }
-    $datasource_id = 'entity:' . $entity->getEntityTypeId();
-    foreach ($indexes as $index) {
-      $index->trackItemsDeleted($datasource_id, $item_ids);
-    }
+  }
+
+  /**
+   * Get indicators ids in tracker db table search item.
+   */
+  public function getIndicatorsTrackerIds(EntityInterface $indicator_entity, $langcode = NULL) {
+
+    $indicator_entity_key = $this->prepareSearchApiEntityKey($indicator_entity, $langcode);
+    return $this->database
+      ->select('search_api_item', 'si')
+      ->fields('si', ['item_id'])
+      ->condition('si.item_id', $indicator_entity_key . '%', 'LIKE')
+      ->execute()
+      ->fetchCol();
   }
 
   /**
@@ -215,6 +274,17 @@ class QuanthubIndicatorContentEntityTrackingManager extends ContentEntityTrackin
     $dimension_id = $entity->field_indicator_parameter->getString();
 
     return $this->sdmxClient->datasetIndicators($dataset_urn, $dimension_id);
+  }
+
+  /**
+   * Prepare key for search_api_item db table.
+   */
+  private function prepareSearchApiEntityKey($entity, $langcode = NULL) {
+    if (!$langcode) {
+      $langcode = $entity->language()->getId();
+    }
+
+    return 'entity:' . $entity->getEntityTypeId() . '/' . $entity->id() . ':' . $langcode;
   }
 
 }
