@@ -40,10 +40,10 @@
     settings: settings
   });
 
-  context.report.off("loaded");
-  context.report.on("loaded", function () {
+  context.report.off("rendered");
+  context.report.on("rendered", function () {
     applyLocaleBookmark(context);
-    context.report.off("loaded");
+    context.report.off("rendered");
   });
 
   window.addEventListener('DOMContentLoaded', () => {
