@@ -2,12 +2,12 @@ const INTERVAL_TIME = 30 * 1000;
 const TIME_TO_UPDATE = 2 * 60 * 1000;
 
 function applyLocaleBookmark(context) {
-  let bookmarks = await context.report.bookmarksManager.getBookmarks();
-  bookmarks.forEach(bm => {
-    if (bm.displayName === context.report.config.settings.localeSettings.language) {
-      await context.report.bookmarksManager.apply(bm.name);
-    }
-  });
+  context.report.bookmarksManager.getBookmarks()
+    .then(bookmarks => bookmarks.forEach(bm => {
+      if (bm.displayName === context.report.config.settings.localeSettings.language) {
+        context.report.bookmarksManager.apply(bm.name);
+      }
+    }));
 }
 
 function checkTokenAndUpdate($, context) {
