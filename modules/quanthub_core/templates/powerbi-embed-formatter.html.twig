@@ -42,7 +42,7 @@
 
   context.report.off("loaded");
   context.report.on("loaded", function () {
-    applyLocaleBookmark();
+    applyLocaleBookmark(context);
     context.report.off("loaded");
   });
 
