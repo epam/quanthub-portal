@@ -210,6 +210,7 @@
     });
   };
 })(jQuery, Drupal);
+
 (function ($, Drupal) {
   const gaugesBlock = $('.block-views-blockgauges-home-gauges');
   const gaugesBlock2 = $('.block-views-blockgauges-home-gauges .view-gauges');

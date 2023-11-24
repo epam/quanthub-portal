@@ -1,18 +1,30 @@
 .footer {
   @apply wrapper;
-  padding-top: 40px;
-  padding-bottom: 24px;
-  @screen md {
-    padding-bottom: 20px;
-  }
+  padding:40px 0 0 0;
   @screen sm {
     padding-top: 40px;
-    padding-bottom: 16px;
   }
 
   .footer-wrapper {
+    margin:32px 0;
+    padding:0 40px;
+    @screen md{
+      padding:0 16px;
+    }
     @apply flex justify-between flex-nowrap gap-4;
 
+    &> div{
+      flex-basis: 20% !important;
+      @screen sm{
+        flex-basis:100% !important;
+      }
+    }
+
+  .region-footer{
+    @apply hidden;
+    width:0;
+    flex-basis: 0 !important;
+  }
     @screen md {
       @apply flex-wrap gap-12;
 
@@ -20,17 +32,31 @@
         @apply basis-full;
       }
     }
+    @screen sm{
+      gap:24px;
+    }
   }
-
+.footer--copyright{
+  @include caption-2;
+  padding: 8px 0 !important;
+  background-color: $ntrls-200;
+}
   .footer--logo {
     .navbar-brand {
       .site-title {
-        @include header-4;
+        @include display-3;
+        @screen md{
+          @include header-2;
+        }
       }
     }
     .site-logo {
-      width: 32px;
-      height: 32px;
+      width: 44px;
+      height: 44px;
+      @screen md{
+        width: 32px;
+        height: 32px;
+      }
     }
     img {
       @apply mr-[1rem] inline-block align-middle;
@@ -41,42 +67,7 @@
   }
 
   .navbar-nav {
-    display: flex;
-    justify-content: flex-start;
-    gap: 4rem;
-
-    @screen sm {
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    li li {
-      margin-bottom: 0.5rem;
-
-      @screen md {
-        margin-bottom: 1rem;
-      }
-
-      &:last-child {
-        margin: 0;
-      }
-    }
-
-    a {
-      color: $ntrls-1000;
-    }
-
-    > li > a {
-      display: inline-block;
-      vertical-align: top;
-      @include header-4;
-      margin-bottom: 0.5rem;
-
-      @screen md {
-        @include header-2;
-        margin-bottom: 1rem;
-      }
-    }
+    @apply hidden;
   }
 }
 

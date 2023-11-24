@@ -12,6 +12,9 @@
  * @see template_preprocess_region()
  */
 #}
+
+{{ drupal_view('topics', 'block_1') }}
+
 {% set classes = ['region', 'region-' ~ (region|clean_class)] %}
 <div class="footer-wrapper">
   <div class="basis-3/12 footer--logo">
@@ -38,7 +41,7 @@
     </ul>
   </div>
 </div>
-<div class="text-center pt-12 sm:pt-20">
+<div class="text-center footer--copyright">
   &copy;EPAM, 2022. {{
     '@copyright'|t({
       '@copyright': ' All right reserved'

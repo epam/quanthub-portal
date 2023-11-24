@@ -1,20 +1,27 @@
 .topics--tree {
-  margin-top: 56px;
-  @include block-cloud;
   @apply overflow-hidden;
   @include paragraph-4;
+  padding:0 40px 32px 40px;
   color: $primary;
+  border-bottom: 1px solid $ntrls-600;
 
+  @screen md{
+    padding:0 16px 32px 16px;
+  }
+  @screen sm{
+    padding:0 16px;
+    border: none;
+  }
   h3 {
-    @include header-2;
+    @include header-4 ;
     a {
+      color:$ntrls-1000;
       @apply pointer-events-none;
     }
   }
 
   h2 {
-    @include header-with-line;
-    margin: 0;
+    @apply hidden;
   }
 
   .view-grouping-header {
@@ -25,28 +32,77 @@
     @apply flex flex-wrap justify-between;
 
     .view-grouping {
-      flex-basis: 290px;
-      max-width: 320px;
-      margin-right: 32px;
-      margin-top: 42px;
+      min-width: 160px;
       &:last-child {
         @apply mr-0;
       }
 
       &-content > div {
         @apply mt-4 relative;
-        padding-left: 25px;
-
-        &:before {
-          content: '';
-          left: 11px;
-          top: 10px;
-          border-color: $primary;
-          @apply absolute  border-solid  border-2  rounded-sm;
+        @include body-1;
+        a{
+          color:$ntrls-1000;
         }
       }
     }
   }
+  @screen sm {
+    .view-content {
+      display: flex !important;
+      @apply flex-col;
+      gap: 0 !important;
+    }
+    .view-grouping {
+      border-bottom: 1px solid $ntrls-600;
+      max-width: 100% !important;
+      flex-basis: auto !important;
+      .view-grouping-content {
+        position: relative;
+        @apply pr-5;
+        padding: 12px 0;
+        & > div {
+          padding: 12px 0 !important;
+          margin: 0 !important;
+          @apply hidden;
+        }
+        
+        &.show {
+          h3::after {
+            @include basic-icon('triangle-arrow-up.svg');
+          }
+        }
+        h3 {
+          position: relative;
+          margin-bottom: 0 !important;
+          @apply cursor-pointer;
+          & + div {
+            padding-top: 24px !important;
+          }
+          &:after {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            @include mask-icon('triangle-arrow-down.svg');
+            background-color:$ntrls-1000;
+            width: 16px;
+            height: 16px;
+          }
+        }
+        &.show {
+          & > div {
+            @apply block;
+          }
+          h3 {
+            a:after {
+              rotate: 180deg;
+            }
+          }
+        }
+      }
+    }
+  }
+
 }
 
 .topics--search-by {
