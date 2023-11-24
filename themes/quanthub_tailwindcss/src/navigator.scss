@@ -1,0 +1,66 @@
+.path-datasets,
+.path-publications,
+.path-news {
+    .region-left-sidebar {
+
+        .facet-item {
+            .facets-checkbox {
+              height: 0;
+              width: 16px;
+              margin-right: 8px;
+              &:before {
+                @apply inline-block absolute box-border;
+                @include basic-icon('checkbox-rectangle-icon.svg');
+                top: 4px;
+                width: 16px !important;
+                min-width: 16px !important;
+                background-size: 16px !important;
+              }
+              &:indeterminate {
+                &:before {
+                  @include basic-icon('checkbox-semi-checked.svg');
+                }
+              }
+              &:checked {
+                &:before {
+                  @include basic-icon('checkmark-icon.svg');
+                }
+              }
+            }
+          }
+    }
+    .topics--tree {
+        @apply hidden;
+    }
+    .news--listing,
+    .dataset--listing, 
+    .publications--listing {
+        margin:0 !important;
+    }
+    .block-system-main-block {
+        @include block-cloud;
+        padding: 16px 24px;
+        h2 {
+            margin-top:0 !important;
+            &:after{
+                @apply hidden;
+            }
+        }
+        .search--meta-icon {
+            height: auto;
+        }
+        .view-content {
+            column-gap: 0;
+            row-gap: 0;
+            .views-row{
+                width:100%;
+                padding:24px 0;
+                & + .views-row{
+                    border-top:1px solid $ntrls-600;
+                }
+            }
+        }
+    }
+
+}
+
