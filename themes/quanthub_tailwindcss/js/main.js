@@ -210,3 +210,83 @@
     });
   };
 })(jQuery, Drupal);
+(function ($, Drupal) {
+  const gaugesBlock = $('.block-views-blockgauges-home-gauges');
+  const gaugesBlock2 = $('.block-views-blockgauges-home-gauges .view-gauges');
+  const content = $('.block-views-blockgauges-home-gauges .view-content');
+  const arrowBack = $('.gauges-arrows--back');
+  const arrowForward = $('.gauges-arrows--forward');
+  const arrowHeader = $('.gauges-arrows');
+  const gaugesGap = 80;
+  Drupal.behaviors.handleFactoidsBehaviour = {
+    attach: () => {
+      if (gaugesBlock.length) {
+        handleScroll();
+        $(window).resize(function () {
+          handleScroll();
+        });
+      }
+    },
+  };
+
+  const getWidthValues = () => {
+    const rowsCount = $('.block-views-blockgauges-home-gauges .view-content .views-row').length;
+    const rowWidth = $($('.block-views-blockgauges-home-gauges .view-content .views-row')[0]).outerWidth();
+    const scrollStep = rowWidth + gaugesGap;
+    const contentWidth = rowsCount * scrollStep - gaugesGap;
+    return {
+      scrollStep,
+      contentWidth,
+    };
+  };
+
+  const handleScroll = () => {
+    let scrollPosition = content.scrollLeft();
+    resetArrowStyles(scrollPosition, arrowBack, arrowForward, maxScrolPosition);
+    const blockMaxWidth = gaugesBlock2.width();
+    const { scrollStep, contentWidth } = getWidthValues();
+    const maxScrolPosition = contentWidth - blockMaxWidth;
+    gaugesBlock.addClass('scrollable');
+
+    if (blockMaxWidth > contentWidth || window.innerWidth < 720) {
+      gaugesBlock.removeClass('scrollable');
+      arrowHeader.hide();
+      return;
+    }
+    content.off('scroll');
+    content.on('scroll', () => {
+      resetArrowStyles(content.scrollLeft(), arrowBack, arrowForward, maxScrolPosition);
+    });
+    arrowHeader.show();
+    arrowForward.off('click');
+    arrowForward.on('click', () => {
+      if (scrollPosition + scrollStep < maxScrolPosition) {
+        scrollPosition += scrollStep;
+      } else {
+        scrollPosition = maxScrolPosition;
+      }
+      content.animate({ scrollLeft: scrollPosition }, 300);
+    });
+    arrowBack.off('click');
+    arrowBack.on('click', () => {
+      if (scrollPosition > scrollStep) {
+        scrollPosition -= scrollStep;
+      } else {
+        scrollPosition = 0;
+      }
+      content.animate({ scrollLeft: scrollPosition }, 300);
+    });
+  };
+
+  const resetArrowStyles = (scrollPosition, arrowBack, arrowForward, maxScrolPosition) => {
+    arrowForward.removeClass('disabled');
+    arrowBack.removeClass('disabled');
+
+    if (scrollPosition === maxScrolPosition) {
+      arrowForward.addClass('disabled');
+    }
+    if (scrollPosition === 0) {
+      arrowBack.addClass('disabled');
+    }
+  };
+})(jQuery, Drupal);

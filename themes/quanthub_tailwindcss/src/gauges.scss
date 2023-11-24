@@ -1,0 +1,148 @@
+.block-views-blockgauges-home-gauges {
+  padding-top: 60px;
+  background-color: $white;
+  &.scrollable {
+    @apply pb-10;
+  } 
+  h2 {
+    @apply display-3;
+    max-width: 304px !important;
+    @screen sm {
+      max-width: 100% !important;
+    }
+  }
+  .gauges-header {
+    @apply flex justify-between items-center pl-10 pr-10;
+    @screen sm {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    .gauges-arrows {
+      @screen sm {
+        display: none;
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      @apply flex cursor-pointer;
+      gap: 16px;
+      &--forward {
+        transform: scale(-1, 1);
+      }
+      &--back,
+      &--forward {
+        @include mask-icon('basic-arrow.svg');
+        background-size: contain;
+        background-color: $primary;
+        height: 24px;
+        width: 24px;
+
+        &.disabled {
+          cursor: default;
+          background-color: $ntrls-700;
+        }
+      }
+    }
+  }
+  @screen sm-min {
+    ::-webkit-scrollbar-button:decrement {
+      width: 20%;
+      height: 200px;
+      display: block;
+      background: $white;
+    }
+  }
+  @screen sm {
+    ::-webkit-scrollbar-button:end {
+      width: 16px;
+      height: 16px;
+      display: block;
+      background: $white;
+    }
+  }
+  .view-gauges {
+    @apply pl-10;
+    @screen sm {
+      padding-left: 16px;
+    }
+  }
+  .view-content {
+    @apply flex;
+    margin-top: 40px;
+    overflow: auto;
+    gap: 80px;
+    .views-row {
+      width: 304px;
+      min-width: 304px;
+      margin-bottom: 40px;
+      cursor: pointer;
+      @apply relative;
+      @screen sm {
+        width: 242px;
+        min-width: 242px;
+        margin-bottom: 32px;
+      }
+      &:hover {
+        .gauge-title {
+          text-decoration: underline;
+        }
+      }
+      a {
+        &:hover {
+          text-decoration: none;
+        }
+        .gauge-head {
+          color: $primary;
+          @include header-2 ;
+          max-height: max-content !important;
+          height: 60px;
+          position: relative;
+          margin-bottom: 32px;
+          border-bottom: 2px solid $ylw-900;
+          .gauge-title {
+            margin-right: 72px;
+            max-width: 100%;
+            display: inline-block;
+          }
+          @screen sm {
+            @include header-4;
+            margin-bottom: 0;
+          }
+        }
+        .gauge-main {
+          color: $ntrls-1000;
+          @include gauge-value;
+          margin-bottom: 16px;
+          @screen sm {
+            margin-bottom: 4px;
+          }
+          .gauge-value {
+            @apply flex truncate;
+            align-items: baseline;
+          }
+          .gauge-unit-measure {
+            margin-left: 16px;
+            @screen sm {
+              margin-left: 8px;
+            }
+          }
+        }
+        .gauge-footer {
+          position: absolute;
+          top: 32px;
+          color: $ntrls-800;
+          @include body-1 ;
+          display: flex;
+            gap: 4px;
+            align-items: center;
+          &:before{
+            background-color: $ntrls-800;
+            @include mask-icon('ico-time.svg');
+            width:16px;
+            height:16px;
+          }
+        }
+      }
+    }
+  }
+}
