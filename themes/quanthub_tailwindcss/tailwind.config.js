@@ -9,6 +9,7 @@ module.exports = {
         'mobile-menu': {'max': '1119px'},
         'md': {'max': '1023px'},
         'sm': {'max': '719px'},
+        'sm-min': {'min': '720px'},
         'xs': {'max': '428px'},
       },
     },
