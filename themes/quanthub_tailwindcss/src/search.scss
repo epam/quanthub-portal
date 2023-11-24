@@ -40,14 +40,32 @@ form {
   @screen lg {
     height: 480px;
   }
-  @screen md {
-    height: 594px;
-  }
 
+    display: grid;
+    grid-template-columns: repeat(12,1fr);
+    
+      &:after{
+        content:'';
+        height: 100%;
+        grid-column-start: 5;
+        grid-column-end: 13;
+        display: flex;
+        background: url('/assets/images/bg-earth.svg') 100% 40px no-repeat;
+        background-size: contain;
+        @screen lg{
+           background-position: 0 0;
+        }
+        @screen md {
+          grid-column-start: 1;
+        }
+      }
+    
+  
   .banner {
-    background: url('/assets/images/bg-earth.svg') 100% 40px no-repeat;
     padding: 140px 195px 0;
     height: 100%;
+    height: max-content;
+    @apply absolute;
 
     @screen 2xl {
       padding-left: 163px;
@@ -57,16 +75,13 @@ form {
       padding-top: 123px;
     }
     @screen lg {
-      padding-top: 70px;
-      background-position: 100% 100%;
+      padding-top: 72px;
     }
     @screen md {
-      padding-top: 276px;
-      background-position: 0 0;
-      background-size: contain;
+      padding-top: 156px;
     }
     @screen sm {
-      padding-top: 212px;
+      padding-top: 156px;
     }
 
     .search--block {
