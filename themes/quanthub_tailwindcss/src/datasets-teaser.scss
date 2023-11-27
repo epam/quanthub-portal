@@ -14,6 +14,16 @@
   }
 }
 
+.dataset--buttons{
+  @screen sm{
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 12px;
+    .ico-time{
+      padding-left:0;
+    }
+  }
+}
 .datasets--popular--block {
   @apply wrapper;
   display: grid;
@@ -78,8 +88,8 @@
       }
     }
 
-    @screen sm {
-      padding: 0 0 16px;
+    @screen sm{
+      grid-template-columns: 1fr;
     }
 
     .views-row {
