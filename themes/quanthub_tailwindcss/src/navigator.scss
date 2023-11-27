@@ -1,6 +1,11 @@
 .path-datasets,
 .path-publications,
 .path-news {
+  .region-content{
+    .topics--tree{
+      @apply hidden;
+    }
+  }
     .region-left-sidebar {
 
         .facet-item {
