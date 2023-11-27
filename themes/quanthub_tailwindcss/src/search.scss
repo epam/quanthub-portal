@@ -62,13 +62,13 @@ form {
     
   
   .banner {
-    padding: 140px 195px 0;
+    padding: 80px 40px;
     height: 100%;
     height: max-content;
     @apply absolute;
 
     @screen 2xl {
-      padding-left: 163px;
+      padding-top: 52px;
     }
     @screen xl {
       @apply wrapper;
@@ -85,7 +85,7 @@ form {
     }
 
     .search--block {
-      width: 65%;
+      width: 80%;
       @screen sm {
         width: 100%;
         p {
