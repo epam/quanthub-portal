@@ -94,15 +94,17 @@
         .gauge-head {
           color: $primary;
           @include header-2 ;
-          max-height: max-content !important;
-          height: 64px;
+          height:48px;
+          min-height:48px;
           position: relative;
           margin-bottom: 12px;
-          border-bottom: 2px solid $ylw-900;
+          padding-bottom: 32px;
+          border-bottom: 2px solid $ylw-900;    
+          box-sizing: content-box;
           .gauge-title {
-            margin-right: 72px;
             max-width: 100%;
             display: inline-block;
+            @include two-lines(24px);
           }
           @screen sm {
             @include header-4;
@@ -130,7 +132,7 @@
         }
         .gauge-footer {
           position: absolute;
-          top: 31px;
+          bottom: 134px;
           color: $ntrls-800;
           @include body-1 ;
           display: flex;
