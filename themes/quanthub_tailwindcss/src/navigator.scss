@@ -4,6 +4,9 @@
     .region-left-sidebar {
 
         .facet-item {
+          .facet-item__value{
+            @apply cursor-pointer;
+          }
             .facets-checkbox {
               height: 0;
               width: 16px;

@@ -416,6 +416,7 @@ form {
 
   .facet-item__value {
     flex-grow: 1;
+    @apply cursor-pointer;
   }
 
   .item-list__checkbox {
