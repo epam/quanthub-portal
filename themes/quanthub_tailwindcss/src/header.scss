@@ -382,6 +382,7 @@ body {
       @include primary-filled-button;
       @include header-4;
       border-radius: 4px !important;
+      height: 40px !important;
       &:hover {
         border-color: $prpl-600 !important;
         background-color: $prpl-600 !important;
