@@ -34,6 +34,7 @@ class QuantHubScaleNumberWidget extends NumberWidget {
       1000 => $this->t('Thousands'),
       1000000 => $this->t('Millions'),
       1000000000 => $this->t('Billions'),
+      1000000000000 => $this->t('Trillions'),
     ];
     $element['value']['#empty_option'] = $this->t('No scaling');
 
