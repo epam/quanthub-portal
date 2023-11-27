@@ -68,7 +68,8 @@ form {
     @apply absolute;
 
     @screen 2xl {
-      padding-top: 52px;
+      padding-top: 100px;
+      padding-left: 140px;
     }
     @screen xl {
       @apply wrapper;
@@ -85,7 +86,7 @@ form {
     }
 
     .search--block {
-      width: 65%;
+      width: 100%;
       @screen sm {
         width: 100%;
         p {
