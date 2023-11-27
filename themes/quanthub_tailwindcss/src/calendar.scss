@@ -2,19 +2,33 @@
   main[role='main'] {
     @include col-10;
   }
-}
+  .region-content{
+    padding-left:0;
+    padding-right: 0;
+  }
 
 .view-releases {
   @include block-cloud;
 }
-
+.fc-day-grid-container{
+  height: max-content !important;
+}
+.fc-row{
+height:90px !important;
+&.fc-widget-header{
+  height:20px !important;
+}
+}
 .fc-unthemed td {
   border-color: $ntrls-300;
   .fc-today {
     background: $prpl-200;
   }
 }
-
+.fc-day-grid-event{
+background-color: $grn-1000 !important;
+border:none !important;
+}
 .fc-widget-content {
   background: $white;
 }
@@ -120,4 +134,6 @@
   &:hover {
     background-color: $prpl-100 !important;
   }
+}
+
 }

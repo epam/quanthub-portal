@@ -136,3 +136,8 @@ font-size: 96px;
 @apply font-bold;
 line-height: 100%;
 }
+@mixin gauge-unit {
+  @apply font-bold;
+  font-size: 56px;
+  line-height: 56px;
+}

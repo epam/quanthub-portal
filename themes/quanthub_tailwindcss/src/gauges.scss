@@ -95,9 +95,9 @@
           color: $primary;
           @include header-2 ;
           max-height: max-content !important;
-          height: 60px;
+          height: 64px;
           position: relative;
-          margin-bottom: 32px;
+          margin-bottom: 12px;
           border-bottom: 2px solid $ylw-900;
           .gauge-title {
             margin-right: 72px;
@@ -111,16 +111,17 @@
         }
         .gauge-main {
           color: $ntrls-1000;
-          @include gauge-value;
           margin-bottom: 16px;
           @screen sm {
             margin-bottom: 4px;
           }
           .gauge-value {
+            @include gauge-value;
             @apply flex truncate;
             align-items: baseline;
           }
           .gauge-unit-measure {
+            @include gauge-unit;
             margin-left: 16px;
             @screen sm {
               margin-left: 8px;
@@ -129,7 +130,7 @@
         }
         .gauge-footer {
           position: absolute;
-          top: 32px;
+          top: 31px;
           color: $ntrls-800;
           @include body-1 ;
           display: flex;
