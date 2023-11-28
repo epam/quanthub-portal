@@ -86,7 +86,7 @@
       {% if node.bundle == 'news' %}
         <span class="indicator indicator--news">
           <span class="indicator--icon"></span>
-          {{ 'News'|t([], {'langcode': node.langcode.langcode }) }}
+          {{ 'News'|t([], {'context': 'singular', 'langcode': node.langcode.langcode }) }}
         </span>
       {% endif %}
       {% if node.bundle == 'publication' %}
