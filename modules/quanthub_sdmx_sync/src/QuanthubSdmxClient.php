@@ -145,17 +145,10 @@ class QuanthubSdmxClient {
    *   Transformed dataset urn string.
    */
   public function transformUrn(string $dataset_urn): string {
-    // Change divider between agency and dataset id.
-    $dataset_urn_url = str_replace(':', '/', $dataset_urn);
-    // Transform versioning of dataset logic.
-    if (preg_match("/\([0-9.]/", $dataset_urn_url)) {
-      $dataset_urn_url = str_replace('(', '/', $dataset_urn_url);
-      $dataset_urn_url = str_replace(')', '', $dataset_urn_url);
-    }
-    else {
-      // We need latest dataset version, if version isn't specified.
-      $dataset_urn_url = str_replace('(*)', '/latest', $dataset_urn_url);
-    }
+    // Change divider ':' between agency and dataset id to '/'.
+    // Transform versioning of dataset logic for url request..
+    $dataset_urn_url = str_replace([':', '('], '/', $dataset_urn);
+    $dataset_urn_url = str_replace(')', '', $dataset_urn_url);
 
     return $dataset_urn_url;
   }
