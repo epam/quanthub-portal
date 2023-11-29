@@ -138,7 +138,7 @@
               {{ 'Updated'|t([], {'langcode': node.langcode.langcode }) }}
             </span>
             <span class="separator">|</span>
-            {{ node.fields.changed.value|format_date('quanthub_medium') }}
+            {{ node.fields.changed.value|format_date('quanthub_medium', langcode = node.langcode.langcode) }}
           </span>
         {% endif %}
       </div>
@@ -149,7 +149,7 @@
         <span class="ico-time ml-auto xs:gap-1">
           {{ 'Posted'|t([], {'langcode': node.langcode.langcode }) }}
           <span class="separator">|</span>
-          {{ node.fields.changed.value|format_date('quanthub_medium') }}
+          {{ node.fields.changed.value|format_date('quanthub_medium', langcode = node.langcode.langcode) }}
         </span>
       </footer>
     {% endif %}
