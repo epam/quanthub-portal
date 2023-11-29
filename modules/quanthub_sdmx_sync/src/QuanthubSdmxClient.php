@@ -146,7 +146,7 @@ class QuanthubSdmxClient {
    */
   public function transformUrn(string $dataset_urn): string {
     // Change divider ':' between agency and dataset id to '/'.
-    // Transform versioning of dataset logic for url request..
+    // Transform versioning of dataset logic for url request.
     $dataset_urn_url = str_replace([':', '('], '/', $dataset_urn);
     $dataset_urn_url = str_replace(')', '', $dataset_urn_url);
 
