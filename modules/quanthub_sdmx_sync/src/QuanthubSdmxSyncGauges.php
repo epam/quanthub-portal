@@ -120,7 +120,8 @@ class QuanthubSdmxSyncGauges {
       $structure_observations = array_column($structure_series, 'observations');
       $structure_observations = end($structure_observations);
       $last_serie_value = end($structure_observations);
-      $last_serie_value = end($last_serie_value);
+      // First item is value in serie item.
+      $last_serie_value = reset($last_serie_value);
 
       return compact('last_serie_value', 'last_structure_observation');
     }
