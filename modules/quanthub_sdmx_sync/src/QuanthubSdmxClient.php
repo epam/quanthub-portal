@@ -78,7 +78,7 @@ class QuanthubSdmxClient {
    *   The dataset urn's list.
    */
   public function getDatasetList() {
-    $dataset_structure = $this->getDasetStructure(ALL_LATEST_DATAFLOWS, TRUE, FALSE);
+    $dataset_structure = $this->getDasetStructure(self::ALL_LATEST_DATAFLOWS, TRUE, FALSE);
 
     $datasets = [];
     if (!empty($dataset_structure['data']['dataflows'])) {
