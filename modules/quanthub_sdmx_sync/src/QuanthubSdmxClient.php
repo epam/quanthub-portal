@@ -76,7 +76,7 @@ class QuanthubSdmxClient {
    *
    * @return array
    *   The dataset urn's list.
-   */  
+   */
   public function getDatasetList() {
     $dataset_structure = $this->getDasetStructure(ALL_LATEST_DATAFLOWS, TRUE, FALSE);
 
@@ -90,7 +90,7 @@ class QuanthubSdmxClient {
 
     return $datasets;
   }
-  
+
   /**
    * The get dataflow request to SDMX api.
    *
