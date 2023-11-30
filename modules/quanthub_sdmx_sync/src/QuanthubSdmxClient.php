@@ -66,26 +66,50 @@ class QuanthubSdmxClient {
     $this->headers['authorization'] = 'Bearer ' . $this->userInfo->getToken();
   }
 
+
   /**
-   * The get request to SDMX api.
+   * The get dataflow list request to SDMX api.
+   *
+   * @return array
+   *   The dataset urn's list.
+   */  
+  public function getDatasetList() {
+    $dataset_structure = $this->getDasetStructure('all:all(latest)', TRUE, FALSE);
+
+    $datasets = [];
+    if (!empty($dataset_structure['data']['dataflows'])) {
+      $dataflow_data = $dataset_structure['data']['dataflows'];
+      foreach ($dataflow_data as $value) {
+        $datasets[] = $value['agencyID'] . ':' . $value['id'] . '(' . $value['version'] . ')';
+      }
+    }
+
+    return $datasets;
+  }
+
+  
+  /**
+   * The get dataflow request to SDMX api.
    *
    * @param string $urn
    *   The dataset urn.
-   * @param bool $full_structure
-   *   The option of getting structure.
+   * @param bool $full_detail
+   *   The option of getting full detail.
+   * @param bool $references
+   *   The option of getting references.
    *
    * @return array
    *   The response body array decoded json.
    */
-  public function getDasetStructure(string $urn, $full_structure = FALSE) {
+  public function getDasetStructure(string $urn, $full_detail = FALSE, $references = FALSE) {
     $baseUri = getenv('SDMX_API_URL') . '/workspaces/' . getenv('SDMX_WORKSPACE_ID') . '/registry/sdmx-plus/structure/dataflow/';
 
     $guzzleClient = $this->httpClientFactory->fromOptions([
       'base_uri' => $baseUri,
       'headers' => $this->headers,
       'query' => [
-        'detail' => $full_structure ? 'full' : 'allcompletestubs',
-        'references' => $full_structure ? 'all' : 'none',
+        'detail' => $full_detail ? 'full' : 'allcompletestubs',
+        'references' => $references ? 'all' : 'none',
       ],
     ]);
 
@@ -160,7 +184,7 @@ class QuanthubSdmxClient {
    *   The dataset urn string.
    */
   public function getDimensions(string $urn) {
-    $dataset_structure = $this->getDasetStructure($urn, TRUE);
+    $dataset_structure = $this->getDasetStructure($urn, TRUE, TRUE);
 
     $dimensions = [];
     if (!empty($dataset_structure['data']['dataStructures'][0]['dataStructureComponents']['dimensionList']['dimensions'])) {
@@ -236,7 +260,7 @@ class QuanthubSdmxClient {
       }
     }
 
-    $dataset_structure = $this->getDasetStructure($urn, TRUE);
+    $dataset_structure = $this->getDasetStructure($urn, TRUE, TRUE);
     if ($dataset_structure['data']['glossaries']) {
       $dataset_glossaries = $dataset_structure['data']['glossaries'];
 
