@@ -18,6 +18,11 @@ class QuanthubSdmxClient {
   const STRUCTURE_DIMENSION_ID = 'INDICATOR';
 
   /**
+   * All agencies, all ids, latest versions.
+   */
+  const ALL_LATEST_DATAFLOWS = 'all:all(latest)';
+
+  /**
    * The logger service.
    *
    * @var \Psr\Log\LoggerInterface
@@ -73,7 +78,7 @@ class QuanthubSdmxClient {
    *   The dataset urn's list.
    */  
   public function getDatasetList() {
-    $dataset_structure = $this->getDasetStructure('all:all(latest)', TRUE, FALSE);
+    $dataset_structure = $this->getDasetStructure(ALL_LATEST_DATAFLOWS, TRUE, FALSE);
 
     $datasets = [];
     if (!empty($dataset_structure['data']['dataflows'])) {
