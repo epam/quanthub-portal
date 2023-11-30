@@ -66,7 +66,6 @@ class QuanthubSdmxClient {
     $this->headers['authorization'] = 'Bearer ' . $this->userInfo->getToken();
   }
 
-
   /**
    * The get dataflow list request to SDMX api.
    *
@@ -86,7 +85,6 @@ class QuanthubSdmxClient {
 
     return $datasets;
   }
-
   
   /**
    * The get dataflow request to SDMX api.
