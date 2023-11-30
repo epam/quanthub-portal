@@ -21,10 +21,10 @@ services:
     class: '\Drupal\quanthub_core\XacmlSoapClient'
     arguments: ['@http_client', '@logger.factory', '@user_info', '@current_user', '@wso_token']
 
-  # Managing allowed content in user data. Work xacml_soap_client.
+  # Managing allowed content in user data. Work sdmx_client.
   allowed_content_manager:
     class: '\Drupal\quanthub_core\AllowedContentManager'
-    arguments: ['@xacml_soap_client', '@current_user', '@cache.default', '@language_manager', '@datetime.time']
+    arguments: ['@sdmx_client', '@current_user', '@cache.default', '@language_manager', '@datetime.time']
 
   # Event subscriber for getting and string user info token and attributes for anonymous user.
   anonymous_user_info_token_subscriber:
