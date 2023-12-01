@@ -21,6 +21,7 @@
  *   - class: HTML classes.
  */
 #}
+<div class="notification-container">
 {% block messages %}
 {% for type, messages in message_list %}
   {%
@@ -34,24 +35,33 @@
       'show'
     ]
   %}
+    <div class="alert__icon"></div>
+    
+    <div class="alert__content">
   <div aria-label="{{ status_headings[type] }}"{{ attributes.addClass(classes)|without('aria-label') }} role="alert">
     {% if status_headings[type] %}
-      <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
+      <div class="notification-container__title">{{ status_headings[type] }}</div>
     {% endif %}
     {% if messages|length > 1 %}
+    <div class="notification-container__text">
       <ul class="messages__list">
         {% for message in messages %}
           <li class="messages__item">{{ message }}</li>
         {% endfor %}
       </ul>
+      </div>
     {% else %}
       {{ messages|first }}
     {% endif %}
+    </div>
     {% if not attributes.hasClass('alert-webform') %}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <button type="button" class="alert__button btn-close flex items-top btn-close" data-bs-dismiss="alert" aria-label="Close">
+    
+    </button>
     {% endif %}
   </div>
   {# Remove type specific classes. #}
   {% set attributes = attributes.removeClass(classes) %}
 {% endfor %}
 {% endblock messages %}
+</div>

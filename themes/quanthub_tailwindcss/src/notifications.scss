@@ -1,0 +1,69 @@
+.notification-container {
+    right: 12px;
+    bottom: 12px;
+    @apply absolute;
+    z-index: 51;
+  }
+  .alert {
+    @apply flex  flex-row rounded;
+    background-color: $white;
+    gap: 16px;
+    width: 353px;
+    padding-right: 8px;
+    box-shadow: 0px 0px 10px 0px $shadow10;
+    z-index: 51;
+  
+    &__content {
+      padding: 16px 0;
+      gap: 4px;
+    }
+    &__button {
+      padding: 16px 0;
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+    &__icon {
+      padding: 16px 8px;
+      align-items: start;
+      @apply flex justify-between items-start;
+      &:after {
+        background-color: $white;
+        content: '';
+        display: block;
+        width: 32px;
+        height: 32px;
+        font-size: 0;
+        line-height: 0;
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: 0 0;
+        -webkit-mask-size: 32px;
+      }
+    }
+    &-error {
+      .alert__icon {
+        background-color: $red-900;
+        &:after {
+          -webkit-mask-image: url('../assets/images/check-circle.svg');
+        }
+      }
+    }
+    &-warning {
+      .alert__icon {
+        background-color: $ylw-900;
+        &:after {
+          -webkit-mask-image: url('../assets/images/warning.svg');
+        }
+      }
+    }
+    &-success {
+      .alert__icon {
+        background-color: $grn-1000;
+        &:after {
+          -webkit-mask-image: url('../assets/images/error-polygon.svg');
+        }
+      }
+    }
+  }
+  
