@@ -212,7 +212,8 @@ class QuanthubContentEntity extends ContentEntity {
               $item_ids[] = "$entity_id:$langcode" . '_indicator_' . $indicator_id;
             }
           }
-        } else {
+        }
+        else {
           $item_ids[] = "$entity_id:$langcode";
         }
       }
