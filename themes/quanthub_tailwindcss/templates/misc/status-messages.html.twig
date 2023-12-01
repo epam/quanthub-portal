@@ -35,10 +35,11 @@
       'show'
     ]
   %}
+  <div {{ attributes.addClass(classes)|without('aria-label') }}>
     <div class="alert__icon"></div>
     
     <div class="alert__content">
-  <div aria-label="{{ status_headings[type] }}"{{ attributes.addClass(classes)|without('aria-label') }} role="alert">
+  <div aria-label="{{ status_headings[type] }}" role="alert">
     {% if status_headings[type] %}
       <div class="notification-container__title">{{ status_headings[type] }}</div>
     {% endif %}
@@ -59,6 +60,7 @@
     
     </button>
     {% endif %}
+  </div>
   </div>
   {# Remove type specific classes. #}
   {% set attributes = attributes.removeClass(classes) %}
