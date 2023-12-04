@@ -300,3 +300,9 @@ aside + .flex-1 .region-content {
 .download_button_id button {
   width: auto !important;
 }
+.explorer-button {
+  &:before {
+    @include basic-icon('explorer.svg');
+    margin-right: 4px;
+  }
+}
