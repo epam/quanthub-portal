@@ -291,3 +291,24 @@
     }
   };
 })(jQuery, Drupal);
+
+(function ($, Drupal) {
+  Drupal.behaviors.handleFooterDropdown = {
+    attach: () => {
+      handleFooterDropdown();
+    },
+  };
+
+  const handleFooterDropdown = () => {
+    $(document).ready(function () {
+      const allTopicsContent = $('.topics--tree .view-grouping .view-grouping-content');
+      allTopicsContent.each((index) => {
+        const topicContent = $(allTopicsContent[index]);
+        const topicHeader = $(topicContent.find('h3'));
+        topicHeader.on('click', () => {
+          topicContent.hasClass('show') ? topicContent.removeClass('show') : topicContent.addClass('show');
+        });
+      });
+    });
+  };
+})(jQuery, Drupal);
