@@ -319,7 +319,7 @@ body {
     .dropdown {
       position: relative;
       color: $primary;
-      & > a {
+      & > a,span {
         display: flex;
         align-items: center;
         @screen mobile-menu {
@@ -332,7 +332,7 @@ body {
       }
 
       &.show {
-        & > a {
+        & > a,span {
           &:after {
             @include mask-icon('triangle-arrow-up.svg', 16px);
           }
@@ -436,7 +436,7 @@ body {
         }
         .navbar-nav {
           .dropdown {
-            & > a {
+            & > a, span {
               &:hover {
                 color: $prpl-1000 !important;
               }
@@ -494,7 +494,7 @@ body {
     .navbar-nav {
       .dropdown {
         color: $primary !important;
-        & > a {
+        & > a, span {
           &:after {
             background-color: $primary !important;
           }
@@ -564,7 +564,7 @@ body {
       .navbar-nav {
         .dropdown {
           color: $white;
-          & > a {
+          & > a, span {
             &:after {
               background-color: $white;
             }
