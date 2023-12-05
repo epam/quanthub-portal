@@ -306,6 +306,7 @@
       allTopicsContent.each((index) => {
         const topicContent = $(allTopicsContent[index]);
         const topicHeader = $(topicContent.find('h3'));
+        topicHeader.off('click');
         topicHeader.on('click', () => {
           topicContent.hasClass('show') ? topicContent.removeClass('show') : topicContent.addClass('show');
         });

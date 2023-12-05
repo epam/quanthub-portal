@@ -33,6 +33,20 @@
             }
           }
     }
+    .field--name-field-metadata{
+      @apply flex flex-row flex-wrap;
+      padding-top:8px;
+      row-gap: 8px;
+      column-gap: 16px;
+      .field__item{
+        @apply flex flex-row;
+        @include body-1;
+        gap:4px;
+        p{
+          @include lead-1;
+        }
+      }
+    }
     .news--listing,
     .dataset--listing, 
     .publications--listing {
