@@ -216,12 +216,12 @@ body {
         display: block;
       }
       .form-item-search-api-fulltext {
-        top: 72px;
+        top: 72px !important;
         display: flex;
         justify-content: center;
         align-items: center;
         position: absolute;
-        height: 72px;
+        height: 72px !important;
         left: 0;
         background-color: $white;
         width: calc(100vw - 10px) !important;

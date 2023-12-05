@@ -185,6 +185,7 @@
     if (isMaxSearchView()) {
       return;
     }
+    hideLanguageSwitcher();
     const searchMenu = $('.menu__search');
     if (!searchMenu.find('.header--search-icon').length) {
       searchMenu.append('<div class="header--search-icon"></div>');
