@@ -61,3 +61,15 @@ function quanthub_tailwindcss_preprocess_field(&$variables, $hook) {
     $variables['langcode'] = $node->language()->getId();
   }
 }
+
+/**
+ * Implements hook_preprocess_HOOK() for link.html.twig.
+ */
+function quanthub_tailwindcss_preprocess_file_link(&$variables) {
+  if ($variables['file']->bundle() === 'file') {
+    $variables['link']['#url']->setOption('attributes', [
+      'target' => '_blank',
+      'rel' => 'noopener noreferrer',
+    ]);
+  }
+}
