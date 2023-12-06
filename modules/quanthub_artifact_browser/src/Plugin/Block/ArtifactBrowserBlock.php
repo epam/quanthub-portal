@@ -20,7 +20,11 @@ class ArtifactBrowserBlock extends BlockBase {
   public function build() {
     $build = [];
     $build['quanthub_artifact_browser_block'] = [
-      '#markup' => '<div id="artifact_browser"></div>',
+      '#markup' => '<div id="artifact_browser">
+      <div class="spinner spinner--artefact-browser">
+      <div class="spinner__bg">
+      <div class="spinner__circle"></div>
+      </div></div></div>',
       '#attached' => [
         'library' => 'quanthub_artifact_browser/artifact_browser',
         'drupalSettings' => [],

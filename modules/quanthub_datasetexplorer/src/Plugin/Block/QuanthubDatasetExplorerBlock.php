@@ -20,7 +20,11 @@ class QuanthubDatasetExplorerBlock extends BlockBase {
   public function build() {
     $build = [];
     $build['quanthub_datasetexplorer_block'] = [
-      '#markup' => '<div id="dataset_explorer"></div>',
+      '#markup' => '<div id="dataset_explorer"> 
+      <div class="spinner spinner--explorer">
+      <div class="spinner__bg">
+      <div class="spinner__circle"></div>
+      </div></div></div>',
       '#attached' => [
         'library' => 'quanthub_datasetexplorer/dataset-explorer',
         'drupalSettings' => [],
