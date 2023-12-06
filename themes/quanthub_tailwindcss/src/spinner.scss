@@ -1,0 +1,63 @@
+@import './color-palette.scss';
+
+$loading-z-index: 49;
+.page{
+    @apply relative;
+}
+.spinner {
+  display: flex;
+  @apply justify-center items-center;
+  @apply absolute;
+  background: $white;
+  backdrop-filter: blur(4px);
+  z-index: $loading-z-index;
+  border-radius: 0.5rem;
+  &--explorer,&--artefact-browser{
+    width:calc(100% - 80px);   
+    height: calc(100% - 80px);
+    @screen sm{
+        width:calc(100% - 16px);
+    }
+  }
+  &--artefact-browser{
+    top:40px;
+  }
+
+ &__bg {
+    @apply flex justify-center items-center;
+    @apply w-16 h-16;
+    @apply opacity-90;
+    @apply rounded;
+    background-color: $white;
+  }
+
+  &__circle {
+    @apply w-9 h-9;
+    @apply rounded-full;
+    border: 4px var(--shadow10, $shadow10) solid;
+    border-top: 4px $prpl-1000 solid;
+    -webkit-animation: loader 1s infinite linear;
+    animation: loader 1s infinite linear;
+  }
+
+  @-webkit-keyframes loader {
+    from {
+      -webkit-transform: rotate(359deg);
+      transform: rotate(359deg);
+    }
+    to {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+  }
+  @keyframes loader {
+    from {
+      -webkit-transform: rotate(359deg);
+      transform: rotate(359deg);
+    }
+    to {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+  }
+}
