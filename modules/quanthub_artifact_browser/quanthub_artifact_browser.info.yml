@@ -2,4 +2,4 @@ name: 'Quanthub Artifact Browser'
 type: module
 description: 'Quanthub custom component Artifact Browser'
 package: 'Epam Quanthub'
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^9.5.2 || ^10
