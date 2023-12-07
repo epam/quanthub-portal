@@ -7,11 +7,12 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Session\AccountProxy;
+use Drupal\quanthub_sdmx_sync\QuanthubSdmxClient;
 
 /**
  * The Manager for allowed content.
  *
- * Getting from xacml_soap_client and storing to the cache default.
+ * Getting allowed datasets and storing to the cache default.
  */
 class AllowedContentManager implements QuanthubCoreInterface {
 
@@ -26,11 +27,11 @@ class AllowedContentManager implements QuanthubCoreInterface {
   const CACHE_TIME = 900;
 
   /**
-   * The http client for wso2 request.
+   * SDMX client.
    *
-   * @var \Drupal\quanthub_core\XacmlSoapClient
+   * @var \Drupal\quanthub_sdmx_sync\QuanthubSdmxClient
    */
-  protected $xacmlSoapClient;
+  protected $quanthubSdmxClient;
 
   /**
    * The time service.
@@ -71,13 +72,13 @@ class AllowedContentManager implements QuanthubCoreInterface {
    * {@inheritDoc}
    */
   public function __construct(
-    XacmlSoapClient $xacml_soap_client,
+    QuanthubSdmxClient $quanthubSdmxClient,
     AccountProxy $current_user,
     CacheBackendInterface $cache,
     LanguageManager $language_manager,
     Time $time,
   ) {
-    $this->xacmlSoapClient = $xacml_soap_client;
+    $this->quanthubSdmxClient = $quanthubSdmxClient;
     $this->currentUser = $current_user;
     $this->cache = $cache;
     $this->languageManager = $language_manager;
@@ -133,10 +134,10 @@ class AllowedContentManager implements QuanthubCoreInterface {
   }
 
   /**
-   * Get User Dataset List from user data.
+   * Get User's Dataset List.
    */
   public function getUserDatasetList() {
-    return $this->xacmlSoapClient->getDatasetList();
+    return $this->quanthubSdmxClient->getDatasetList();
   }
 
 }
