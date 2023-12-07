@@ -1,6 +1,15 @@
 const INTERVAL_TIME = 30 * 1000;
 const TIME_TO_UPDATE = 2 * 60 * 1000;
 
+function applyLocaleBookmark(context) {
+  context.report.bookmarksManager.getBookmarks()
+    .then(bookmarks => bookmarks.forEach(bm => {
+      if (bm.displayName === context.report.config.settings.localeSettings.language) {
+        context.report.bookmarksManager.apply(bm.name);
+      }
+    }));
+}
+
 function checkTokenAndUpdate($, context) {
   if (context.tokenExpiration == null) {
     updateToken($, context);
