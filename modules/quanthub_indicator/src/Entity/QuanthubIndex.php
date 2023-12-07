@@ -287,7 +287,7 @@ class QuanthubIndex extends Index {
     if ($this->hasValidTracker() && $this->status()) {
       $item_ids = [];
       foreach ($ids as $id) {
-        if (str_contains($id, 'indicator')) {
+        if (str_contains($id, 'entity:node')) {
           $item_ids[] = $id;
         }
         else {

@@ -18,6 +18,11 @@ class QuanthubSdmxClient {
   const STRUCTURE_DIMENSION_ID = 'INDICATOR';
 
   /**
+   * All agencies, all ids, latest versions.
+   */
+  const ALL_LATEST_DATAFLOWS = 'all:all(latest)';
+
+  /**
    * The logger service.
    *
    * @var \Psr\Log\LoggerInterface
@@ -67,25 +72,47 @@ class QuanthubSdmxClient {
   }
 
   /**
-   * The get request to SDMX api.
+   * The get dataflow list request to SDMX api.
+   *
+   * @return array
+   *   The dataset urn's list.
+   */
+  public function getDatasetList() {
+    $dataset_structure = $this->getDasetStructure(self::ALL_LATEST_DATAFLOWS, TRUE, FALSE);
+
+    $datasets = [];
+    if (!empty($dataset_structure['data']['dataflows'])) {
+      $dataflow_data = $dataset_structure['data']['dataflows'];
+      foreach ($dataflow_data as $value) {
+        $datasets[] = $value['agencyID'] . ':' . $value['id'] . '(' . $value['version'] . ')';
+      }
+    }
+
+    return $datasets;
+  }
+
+  /**
+   * The get dataflow request to SDMX api.
    *
    * @param string $urn
    *   The dataset urn.
-   * @param bool $full_structure
-   *   The option of getting structure.
+   * @param bool $full_detail
+   *   The option of getting full detail.
+   * @param bool $references
+   *   The option of getting references.
    *
    * @return array
    *   The response body array decoded json.
    */
-  public function getDasetStructure(string $urn, $full_structure = FALSE) {
+  public function getDasetStructure(string $urn, $full_detail = FALSE, $references = FALSE) {
     $baseUri = getenv('SDMX_API_URL') . '/workspaces/' . getenv('SDMX_WORKSPACE_ID') . '/registry/sdmx-plus/structure/dataflow/';
 
     $guzzleClient = $this->httpClientFactory->fromOptions([
       'base_uri' => $baseUri,
       'headers' => $this->headers,
       'query' => [
-        'detail' => $full_structure ? 'full' : 'allcompletestubs',
-        'references' => $full_structure ? 'all' : 'none',
+        'detail' => $full_detail ? 'full' : 'allcompletestubs',
+        'references' => $references ? 'all' : 'none',
       ],
     ]);
 
@@ -160,7 +187,7 @@ class QuanthubSdmxClient {
    *   The dataset urn string.
    */
   public function getDimensions(string $urn) {
-    $dataset_structure = $this->getDasetStructure($urn, TRUE);
+    $dataset_structure = $this->getDasetStructure($urn, TRUE, TRUE);
 
     $dimensions = [];
     if (!empty($dataset_structure['data']['dataStructures'][0]['dataStructureComponents']['dimensionList']['dimensions'])) {
@@ -236,7 +263,7 @@ class QuanthubSdmxClient {
       }
     }
 
-    $dataset_structure = $this->getDasetStructure($urn, TRUE);
+    $dataset_structure = $this->getDasetStructure($urn, TRUE, TRUE);
     if ($dataset_structure['data']['glossaries']) {
       $dataset_glossaries = $dataset_structure['data']['glossaries'];
 
@@ -277,12 +304,10 @@ class QuanthubSdmxClient {
       }
 
       $indicators_items = [];
-      if (!empty($indicator_enumeration)) {
-        foreach ($dataset_glossaries as $dataset_glossary) {
-          foreach ($dataset_glossary['links'] as $dataset_glossary_link) {
-            if (str_contains($dataset_glossary_link['urn'], $indicator_enumeration)) {
-              $indicators_items = $dataset_glossary['terms'];
-            }
+      foreach ($dataset_glossaries as $dataset_glossary) {
+        foreach ($dataset_glossary['links'] as $dataset_glossary_link) {
+          if (str_contains($dataset_glossary_link['urn'], $indicator_enumeration)) {
+            $indicators_items = $dataset_glossary['terms'];
           }
         }
       }
@@ -295,10 +320,6 @@ class QuanthubSdmxClient {
       else {
         $indicators = array_intersect_key($indicators_items, array_flip($selected_indicators));
       }
-    }
-
-    if (empty($indicators)) {
-      $this->logger->warning('SDMX Client didn\'t find indicators for ' . $urn);
     }
 
     return $indicators;
