@@ -1,0 +1,12 @@
+services:
+  quanthub_breadcrumbs.content:
+    class: Drupal\quanthub_breadcrumbs\ContentBreadcrumbBuilder
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: breadcrumb_builder, priority: 1004 }
+
+  quanthub_breadcrumbs.books:
+    class: Drupal\quanthub_breadcrumbs\BooksBreadcrumbBuilder
+    arguments: ['@entity_type.manager', '@current_user', '@entity.repository', '@language_manager']
+    tags:
+      - { name: breadcrumb_builder, priority: 1004 }
