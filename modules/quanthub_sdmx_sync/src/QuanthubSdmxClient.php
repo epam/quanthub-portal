@@ -278,7 +278,7 @@ class QuanthubSdmxClient {
             // Parse dimension concept identity:
             // 1. Get xxx:xxxx - agency and name
             // 2. Id string that located after version (x.x.x) and dot.
-            if (preg_match('/=([\w_:]+)\([\d.~*+]+\)\.([\w_]+)/', $full_indicator_concept_identity, $matches)) {
+            if (preg_match('/=([\w\-_:]+)\([\d.~*+]+\)\.([\w_]+)/', $full_indicator_concept_identity, $matches)) {
               $indicator_concept_identity = $matches[1];
               $indicator_concept_identity_id = $matches[2];
               [$indicator_concept_agency, $indicator_concept_name] = explode(':', $indicator_concept_identity);
