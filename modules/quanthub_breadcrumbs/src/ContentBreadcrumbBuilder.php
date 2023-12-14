@@ -3,16 +3,17 @@
 namespace Drupal\quanthub_breadcrumbs;
 
 use Drupal\Core\Breadcrumb\Breadcrumb;
-use Drupal\node\NodeInterface;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Link;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\node\NodeInterface;
 use Drupal\views\Views;
 
 /**
  * Provides a breadcrumb builder for Content types.
+ *
  * Based on the mapping content type => general content type view page.
  */
 class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
@@ -20,7 +21,9 @@ class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
 
   /**
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private mixed $entityTypeManager;
 
@@ -28,6 +31,7 @@ class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * Constructs a QuanthubBreadcrumbBuilder.
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
+   *   The entity type manager.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -36,7 +40,10 @@ class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $this->entityTypeManager = $entity_type_manager->getStorage('node');
   }
 
-  public function getContentTypeMap (): array {
+  /**
+   * Mapping content type and View page ID that shows all its content.
+   */
+  public function getContentTypeMap(): array {
     return [
       'dataset' => 'search_datasets.navigator',
       'external_dataset' => 'search_datasets.navigator',
@@ -74,7 +81,6 @@ class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $view = Views::getView($viewId);
       $view->setDisplay($displayId);
 
-      // Get the title of the view
       $viewTitle = $view->getTitle();
 
       $breadcrumb->addLink(Link::createFromRoute($viewTitle, 'view.' . $contentTypeMap[$node->getType()]));
