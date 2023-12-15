@@ -24,7 +24,7 @@ class BooksBreadcrumbBuilder extends BookBreadcrumbBuilder {
       $bundle = $node->bundle();
       return $bundle === 'book' || $bundle === 'book_content';
     }
-    return false;
+    return FALSE;
   }
 
   /**
