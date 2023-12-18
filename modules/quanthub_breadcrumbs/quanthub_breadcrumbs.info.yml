@@ -1,0 +1,5 @@
+name: Quanthub Breadcrumbs
+type: module
+description: This module rewrite the breadcrumbs block items.
+package: Epam Quanthub
+core_version_requirement: ^9 || ^10
