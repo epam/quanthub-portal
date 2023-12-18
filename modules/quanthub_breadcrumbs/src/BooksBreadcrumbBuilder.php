@@ -13,15 +13,13 @@ use Drupal\node\NodeInterface;
 
 /**
  * Provides a breadcrumb builder for Books.
- *
- * Extend the core BookBreadcrumbBuilder and add the current node title item.
  */
 class BooksBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
   use StringTranslationTrait;
 
   /**
-   * Constructs a QuanthubBreadcrumbBuilder.
+   * Constructs a BooksBreadcrumbBuilder.
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   The entity type manager.
