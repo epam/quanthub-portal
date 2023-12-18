@@ -2,18 +2,34 @@
 
 namespace Drupal\quanthub_breadcrumbs;
 
-use Drupal\book\BookBreadcrumbBuilder;
 use Drupal\Core\Breadcrumb\Breadcrumb;
+use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\NodeInterface;
 
 /**
  * Provides a breadcrumb builder for Books.
- *
- * Extend the core BookBreadcrumbBuilder and add the current node title item.
  */
-class BooksBreadcrumbBuilder extends BookBreadcrumbBuilder {
+class BooksBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+
+  use StringTranslationTrait;
+
+  /**
+   * Constructs a BooksBreadcrumbBuilder.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
+   *   The entity type manager.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function __construct(EntityTypeManager $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager->getStorage('node');
+  }
 
   /**
    * {@inheritdoc}
@@ -31,39 +47,42 @@ class BooksBreadcrumbBuilder extends BookBreadcrumbBuilder {
    * {@inheritdoc}
    */
   public function build(RouteMatchInterface $route_match): Breadcrumb {
-    $breadcrumb = parent::build($route_match);
+    $breadcrumb = new Breadcrumb();
+
+    /** @var \Drupal\node\Entity\Node $node */
     $node = $route_match->getParameter('node');
-    if ($breadcrumb) {
-      if ($node->bundle() == 'book') {
-        $breadcrumb->addLink(Link::createFromRoute($node->getTitle(), '<none>'));
-      }
+    $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
 
-      if ($node->bundle() == 'book_content') {
-        $parentPageId = $node->get('field_book_page_ref')->first()->getString();
-        $book = $this->nodeStorage->load($parentPageId)->book;
+    if ($node->bundle() == 'book') {
+      // Book Name breadcrumb item for all children elements.
+      $bookId = $node->book['bid'];
+      $bookNode = $this->entityTypeManager->load($bookId);
 
-        $depth = 1;
-        $bookNodeIds = [];
-        while (!empty($book['p' . ($depth + 1)])) {
-          $bookNodeIds[] = $book['p' . $depth];
-          $depth++;
-        }
-        /** @var \Drupal\node\NodeInterface[] $parentBooks */
-        $parentBooks = $this->nodeStorage->loadMultiple($bookNodeIds);
-        $parentBooks = array_map([$this->entityRepository, 'getTranslationFromContext'], $parentBooks);
-        if (count($parentBooks) > 0) {
-          $depth = 1;
-          while (!empty($book['p' . ($depth + 1)])) {
-            if (!empty($parentBooks[$book['p' . $depth]]) && ($parentBook = $parentBooks[$book['p' . $depth]])) {
-              $breadcrumb->addCacheableDependency($parentBook);
-              $breadcrumb->addLink($parentBook->toLink());
-            }
-            $depth++;
-          }
-        }
-        $breadcrumb->addLink(Link::createFromRoute($node->getTitle(), '<none>'));
+      $breadcrumb->addLink($bookNode->toLink());
+    }
+
+    if ($node->bundle() == 'book_content') {
+      // Get first referenced node.
+      $referencedPageId = $node->field_book_page_ref->first()->getString();
+      $referencedNode = $this->entityTypeManager->load($referencedPageId);
+
+      // Get book node by id from referenced node.
+      $bookId = $referencedNode->book['bid'];
+      $bookNode = $this->entityTypeManager->load($bookId);
+      // Book Name item.
+      $breadcrumb->addLink($bookNode->toLink());
+      // Book content node Title item.
+      $breadcrumb->addLink(Link::createFromRoute($node->getTitle(), '<none>'));
+    }
+
+    $parameters = $route_match->getParameters();
+    foreach ($parameters as $parameter) {
+      if ($parameter instanceof CacheableDependencyInterface) {
+        $breadcrumb->addCacheableDependency($parameter);
       }
     }
+
+    $breadcrumb->addCacheContexts(['route', 'url.path', 'languages']);
 
     return $breadcrumb;
   }

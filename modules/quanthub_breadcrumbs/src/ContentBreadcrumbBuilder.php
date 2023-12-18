@@ -28,7 +28,7 @@ class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   private mixed $entityTypeManager;
 
   /**
-   * Constructs a QuanthubBreadcrumbBuilder.
+   * Constructs a ContentBreadcrumbBuilder.
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   The entity type manager.
@@ -41,7 +41,7 @@ class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   }
 
   /**
-   * Mapping content type and View page ID that shows all its content.
+   * Mapping content type and general View page ID for this content type.
    */
   public function getContentTypeMap(): array {
     return [
@@ -88,7 +88,7 @@ class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     $breadcrumb->addLink(Link::createFromRoute($node->getTitle(), '<none>'));
 
-    $breadcrumb->addCacheContexts(['route', 'languages']);
+    $breadcrumb->addCacheContexts(['route', 'url.path', 'languages']);
     $breadcrumb->addCacheTags(['node:' . $node->id()]);
 
     return $breadcrumb;
