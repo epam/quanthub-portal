@@ -43,7 +43,7 @@ form {
 
     display: grid;
     grid-template-columns: repeat(12,1fr);
-    
+
       &:after{
         content:'';
         height: 100%;
@@ -59,8 +59,8 @@ form {
           grid-column-start: 1;
         }
       }
-    
-  
+
+
   .banner {
     padding: 80px 40px;
     height: 100%;
@@ -255,7 +255,7 @@ form {
   gap: 4px;
   align-items: center;
   padding: 4px 12px;
-  border-radius: 24px;   
+  border-radius: 24px;
   border: 1px solid;
   background: $blue-800;
   color: $ntrls-1000;
@@ -438,6 +438,21 @@ form {
   }
 }
 .path-search {
+  .field--name-field-metadata{
+    @apply flex flex-row flex-wrap;
+    padding-top:8px;
+    row-gap: 8px;
+    column-gap: 16px;
+    .field__item{
+      @apply flex flex-row;
+      @include body-1;
+      gap:4px;
+      p{
+        @include lead-1;
+      }
+    }
+  }
+
   .field--name-title {
     @include two-lines(32px);
   }
