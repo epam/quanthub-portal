@@ -19,15 +19,22 @@ use Drupal\quanthub_core\Form\PowerBIMediaForm;
 function quanthub_core_node_access(EntityInterface $entity, $operation, AccountInterface $account) {
   if ($operation == 'view') {
     if ($entity->bundle() == 'dataset') {
+      // @todo remove when entitlement will be released.
+      if (
+        in_array('content_editor', $account->getRoles()) ||
+        in_array('publisher', $account->getRoles())
+      ) {
+        return AccessResult::allowed();
+      }
       if (getenv('WSO_IGNORE') !== 'TRUE') {
         $allowed_datasets = \Drupal::service('allowed_content_manager')
           ->getAllowedDatasetList();
       }
       if (!empty($allowed_datasets)) {
         $node_dataset = $entity->field_quanthub_urn->getString();
-        // @todo We are not checking quanthub dataset version here.
+        // @todo need to change and handle version of dataset urn.
         foreach ($allowed_datasets as $allowed_dataset) {
-          if (strpos($node_dataset, $allowed_dataset) !== FALSE) {
+          if (str_contains($node_dataset, $allowed_dataset)) {
             return AccessResult::allowed();
           }
         }
@@ -35,16 +42,23 @@ function quanthub_core_node_access(EntityInterface $entity, $operation, AccountI
       }
     }
     if ($entity->bundle() == 'publication') {
+      // @todo remove when entitlement will be released.
+      if (
+        in_array('content_editor', $account->getRoles()) ||
+        in_array('publisher', $account->getRoles())
+      ) {
+        return AccessResult::allowed();
+      }
       // @todo rewrite in db_select.
-      $node_dataset = $entity?->get('field_dataset')?->first()?->get('entity')?->getTarget()?->getValue()?->get('field_quanthub_urn')?->getString();
+      $node_dataset = $entity->get('field_dataset')?->first()?->get('entity')?->getTarget()?->getValue()?->get('field_quanthub_urn')?->getString();
       if (getenv('WSO_IGNORE') !== 'TRUE') {
         $allowed_datasets = \Drupal::service('allowed_content_manager')
           ->getAllowedDatasetList();
       }
       if (!empty($allowed_datasets)) {
-        // @todo We are not checking quanthub dataset version here.
+        // @todo need to change and handle version of dataset urn.
         foreach ($allowed_datasets as $allowed_dataset) {
-          if (strpos($node_dataset, $allowed_dataset) !== FALSE) {
+          if (str_contains($node_dataset, $allowed_dataset)) {
             return AccessResult::allowed();
           }
         }

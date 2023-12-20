@@ -89,6 +89,16 @@ class AllowedContentManager implements QuanthubCoreInterface {
    * Get Datasets IDs from cache if not existed updated this by request to wso2.
    */
   public function getAllowedDatasetList() {
+    // For admin, editor and publisher, show all content related to datasets.
+    // @todo remove publisher and content_editor when entitlements released.
+    if (
+      $this->currentUser->id() == 1 ||
+      in_array('content_editor', $this->currentUser->getRoles()) ||
+      in_array('publisher', $this->currentUser->getRoles())
+    ) {
+      return [];
+    }
+
     // Check that user authenticated and is not admin.
     // Check that dataset list is not already saved to cache.
     if ($cache = $this->cache->get($this->getCacheCid())) {
@@ -114,10 +124,6 @@ class AllowedContentManager implements QuanthubCoreInterface {
         // with datasets and publications.
         Cache::invalidateTags(['allowed_content_tag:' . $this->currentUser->id()]);
       }
-    }
-    // For admin show all content related to datasets.
-    if ($this->currentUser->id() == 1) {
-      return [];
     }
 
     return $this->datasets;
