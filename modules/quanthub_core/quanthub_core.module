@@ -6,11 +6,9 @@
  */
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\quanthub_core\Form\PowerBIMediaForm;
@@ -280,16 +278,5 @@ function quanthub_core_language_switch_links_alter(array &$links, $type, Url $ur
       case 'uk':
         $link['title'] = t('Ukr', [], ['langcode' => 'uk']);
     }
-  }
-}
-
-/**
- * Implements hook_system_breadcrumb_alter().
- */
-function quanthub_core_system_breadcrumb_alter(Breadcrumb $breadcrumb, RouteMatchInterface $route_match): void {
-  // Alter breadcrumb for a search page route.
-  if ($route_match->getRouteName() == 'view.search.page_1') {
-    $links = $breadcrumb->getLinks();
-    end($links)->setText(t('Search Results'));
   }
 }
