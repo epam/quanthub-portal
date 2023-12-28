@@ -67,6 +67,11 @@
  *
  */
 #}
+{#
+  @todo remove number_format when twig intl-extra will be possible to install in Drupal.
+  Currently problem with collision with filter names.
+  Example format_number in Drupal and Twig Intl-extra.
+#}
 
 {% set quanthub_urn = node.field_dataset[0].entity.field_quanthub_urn.value %}
 
@@ -82,15 +87,31 @@
         {% if node.field_gauge_value is not empty %}
           {% if node.field_gauge_scale is empty %}
             {% if node.field_gauge_round_number is empty or node.field_gauge_round_number.value == 0 %}
-              {{ node.field_gauge_value.value }}
+              {% if node.langcode.langcode == 'uk' %}
+                {{ node.field_gauge_value.value|number_format(2, ",") }}
+              {% else %}
+                {{ node.field_gauge_value.value }}
+              {% endif %}
             {% else %}
-              {{ node.field_gauge_value.value|round(node.field_gauge_round_number.value) }}
+              {% if node.langcode.langcode == 'uk' %}
+                {{ node.field_gauge_value.value|round(node.field_gauge_round_number.value)|number_format(1, ',') }}
+              {% else %}
+                {{ node.field_gauge_value.value|round(node.field_gauge_round_number.value)|number_format(1, '.') }}
+              {% endif %}
             {% endif %}
           {% else %}
             {% if node.field_gauge_round_number is empty or node.field_gauge_round_number.value == 0 %}
-              {{ (node.field_gauge_value.value / node.field_gauge_scale.value) }}
+              {% if node.langcode.langcode == 'uk' %}
+                {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|number_format(1, ',') }}
+              {% else %}
+                {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|number_format(1, '.') }}
+              {% endif %}
             {% else %}
-              {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|round(node.field_gauge_round_number.value) }}
+              {% if node.langcode.langcode == 'uk' %}
+                {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|round(node.field_gauge_round_number.value)|number_format(1, ',') }}
+              {% else %}
+                {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|round(node.field_gauge_round_number.value)|number_format(1, '.') }}
+              {% endif %}
             {% endif %}
           {% endif %}
         {% endif %}
