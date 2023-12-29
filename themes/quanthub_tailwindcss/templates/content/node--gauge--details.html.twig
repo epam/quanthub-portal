@@ -88,29 +88,29 @@
           {% if node.field_gauge_scale is empty %}
             {% if node.field_gauge_round_number is empty or node.field_gauge_round_number.value == 0 %}
               {% if node.langcode.langcode == 'uk' %}
-                {{ node.field_gauge_value.value|number_format(2, ",") }}
+                {{ node.field_gauge_value.value|round|number_format(0, ',', ' ') }}
               {% else %}
-                {{ node.field_gauge_value.value }}
+                {{ node.field_gauge_value.value|round|number_format(0, '.', ',') }}
               {% endif %}
             {% else %}
               {% if node.langcode.langcode == 'uk' %}
-                {{ node.field_gauge_value.value|round(node.field_gauge_round_number.value)|number_format(1, ',') }}
+                {{ node.field_gauge_value.value|round(node.field_gauge_round_number.value)|number_format(node.field_gauge_round_number.value, ',', ' ') }}
               {% else %}
-                {{ node.field_gauge_value.value|round(node.field_gauge_round_number.value)|number_format(1, '.') }}
+                {{ node.field_gauge_value.value|round(node.field_gauge_round_number.value)|number_format(node.field_gauge_round_number.value, '.', ',') }}
               {% endif %}
             {% endif %}
           {% else %}
             {% if node.field_gauge_round_number is empty or node.field_gauge_round_number.value == 0 %}
               {% if node.langcode.langcode == 'uk' %}
-                {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|number_format(1, ',') }}
+                {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|round|number_format(0, ',', ' ') }}
               {% else %}
-                {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|number_format(1, '.') }}
+                {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|round|number_format(0, '.', ',') }}
               {% endif %}
             {% else %}
               {% if node.langcode.langcode == 'uk' %}
-                {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|round(node.field_gauge_round_number.value)|number_format(1, ',') }}
+                {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|round(node.field_gauge_round_number.value)|number_format(node.field_gauge_round_number.value, ',', ' ') }}
               {% else %}
-                {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|round(node.field_gauge_round_number.value)|number_format(1, '.') }}
+                {{ (node.field_gauge_value.value / node.field_gauge_scale.value)|round(node.field_gauge_round_number.value)|number_format(node.field_gauge_round_number.value, '.', ',') }}
               {% endif %}
             {% endif %}
           {% endif %}
