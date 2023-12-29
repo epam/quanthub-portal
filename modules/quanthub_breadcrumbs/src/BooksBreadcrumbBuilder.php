@@ -77,6 +77,7 @@ class BooksBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       if ($bookNode instanceof NodeInterface && $bookNode->hasTranslation($currentLanguage)) {
         $breadcrumb->addLink($bookNode->getTranslation($currentLanguage)->toLink());
       }
+      $breadcrumb->addCacheableDependency($bookNode);
     }
 
     if ($node->bundle() == 'book_content') {
@@ -93,6 +94,7 @@ class BooksBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       }
       // Book content node Title item.
       $breadcrumb->addLink(Link::createFromRoute($node->getTitle(), '<none>'));
+      $breadcrumb->addCacheableDependency($bookNode);
     }
 
     $parameters = $route_match->getParameters();
