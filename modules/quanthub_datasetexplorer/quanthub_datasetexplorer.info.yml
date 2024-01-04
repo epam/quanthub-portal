@@ -1,5 +1,5 @@
 name: 'Quanthub Dataset Explorer'
 type: module
 description: 'Quanthub custom component Dataset Explorer.'
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 package: 'Epam Quanthub'
