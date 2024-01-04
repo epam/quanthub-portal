@@ -1,7 +1,6 @@
 name: Quanthub Tailwind
 description: Quanthub theme for Drupal 8/9 and Tailwind CSS.
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 type: theme
 base theme: classy
 libraries:
