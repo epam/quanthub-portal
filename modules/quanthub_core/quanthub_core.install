@@ -226,3 +226,35 @@ function quanthub_core_update_8004() {
     }
   }
 }
+
+/**
+ * Move all terms from old vocabularies to the new 'Topics'.
+ */
+function quanthub_core_update_8005() {
+  $old_vocabularies = [
+    'economy_and_finance',
+    'education',
+    'environment',
+    'global_markets',
+    'government_finance',
+  ];
+  $topics_vocabulary_id = 'topics';
+
+  // Move all terms to the new vocabulary.
+  foreach ($old_vocabularies as $vocabulary) {
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vocabulary);
+
+    foreach ($terms as $term) {
+      $term_entity = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($term->tid);
+      $term_entity->set('vid', $topics_vocabulary_id);
+      $term_entity->save();
+    }
+
+    // Deleting vocabularies.
+    if ($vocabulary_to_delete = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->load($vocabulary)) {
+      $vocabulary_to_delete->delete();
+    }
+  }
+
+  return t('Moved all terms from old vocabularies to Topics. Old vocabularies have been deleted.');
+}
