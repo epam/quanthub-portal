@@ -230,7 +230,7 @@ function quanthub_core_update_8004() {
 /**
  * Move all terms from old vocabularies to the new 'Topics'.
  */
-function quanthub_core_update_8307() {
+function quanthub_core_update_8308() {
   $old_vocabularies = [
     'economy_and_finance',
     'education',
@@ -239,20 +239,6 @@ function quanthub_core_update_8307() {
     'government_finance'
   ];
   $topics_vocabulary_id = 'topics';
-
-  $messenger = \Drupal::messenger();
-  // Check if 'Topics' vocabulary already exists.
-  if ($new_vocabulary = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->load($topics_vocabulary_id)) {
-    $messenger->addWarning(t('Vocabulary @vid already exists.', ['@vid' => $topics_vocabulary_id]));
-  }
-  else {
-    // Create a new vocabulary 'Topics'.
-    $new_vocabulary = \Drupal\taxonomy\Entity\Vocabulary::create([
-      'vid' => $topics_vocabulary_id,
-      'name' => 'Topics',
-    ]);
-    $new_vocabulary->save();
-  }
 
   // Move all terms to the new vocabulary.
   foreach ($old_vocabularies as $vocabulary) {
