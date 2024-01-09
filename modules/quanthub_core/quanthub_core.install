@@ -230,7 +230,7 @@ function quanthub_core_update_8004() {
 /**
  * Move all terms from old vocabularies to the new 'Topics'.
  */
-function quanthub_core_update_8005() {
+function quanthub_core_update_8307() {
   $old_vocabularies = [
     'economy_and_finance',
     'education',
@@ -240,9 +240,10 @@ function quanthub_core_update_8005() {
   ];
   $topics_vocabulary_id = 'topics';
 
+  $messenger = \Drupal::messenger();
   // Check if 'Topics' vocabulary already exists.
   if ($new_vocabulary = \Drupal::entityTypeManager()->getStorage('taxonomy_vocabulary')->load($topics_vocabulary_id)) {
-    drupal_set_message(t('Vocabulary @vid already exists.', ['@vid' => $topics_vocabulary_id]), 'warning');
+    $messenger->addWarning(t('Vocabulary @vid already exists.', ['@vid' => $topics_vocabulary_id]));
   }
   else {
     // Create a new vocabulary 'Topics'.
