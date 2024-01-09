@@ -236,7 +236,7 @@ function quanthub_core_update_8005() {
     'education',
     'environment',
     'global_markets',
-    'government_finance'
+    'government_finance',
   ];
   $topics_vocabulary_id = 'topics';
 
