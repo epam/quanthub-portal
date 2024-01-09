@@ -230,7 +230,7 @@ function quanthub_core_update_8004() {
 /**
  * Move all terms from old vocabularies to the new 'Topics'.
  */
-function quanthub_core_update_8308() {
+function quanthub_core_update_8005() {
   $old_vocabularies = [
     'economy_and_finance',
     'education',
