@@ -1,7 +1,8 @@
 quanthub_codelists.codelists:
-  path: '/codelists'
+  path: '/codelists/{codelist_urn}'
   defaults:
     _controller: '\Drupal\quanthub_codelists\Controller\CodeLists::codelists'
+    codelist_urn: NULL
     _title_callback: '\Drupal\quanthub_codelists\Controller\CodeLists::getTitle'
   requirements:
     _permission: 'access content'
