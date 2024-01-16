@@ -60,9 +60,11 @@
     <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
     <div class="flex sm:block">
       {% if page.left_sidebar %}
-        <aside class="aside" role="complementary">
-          {{ page.left_sidebar }}
-        </aside>
+        {% if drupal_view_result('search', 'page_1') is not empty %}
+          <aside class="aside" role="complementary">
+            {{ page.left_sidebar }}
+          </aside>
+        {% endif %}
       {% endif %}
 
       <div class="flex-1 min-w-0">
