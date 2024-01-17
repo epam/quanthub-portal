@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\quanthub_core\Form\PowerBIMediaForm;
+use Drupal\Core\Asset\AttachedAssetsInterface;
 
 /**
  * Implements hook_ENTITY_TYPE_access().
@@ -277,6 +278,30 @@ function quanthub_core_language_switch_links_alter(array &$links, $type, Url $ur
 
       case 'uk':
         $link['title'] = t('Ukr', [], ['langcode' => 'uk']);
+    }
+  }
+}
+
+/**
+ * Implements hook_js_alter().
+ */
+function quanthub_core_js_alter(&$javascript, AttachedAssetsInterface $assets) {
+  // Disable aggregation for layout builder.
+  if (str_contains(\Drupal::routeMatch()->getRouteName(), 'layout_builder')) {
+    foreach ($javascript as &$js_asset) {
+      $js_asset['preprocess'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_css_alter().
+ */
+function quanthub_core_css_alter(&$css, AttachedAssetsInterface $assets) {
+  // Disable aggregation for layout builder.
+  if (str_contains(\Drupal::routeMatch()->getRouteName(), 'layout_builder')) {
+    foreach ($css as &$css_asset) {
+      $css_asset['preprocess'] = FALSE;
     }
   }
 }
