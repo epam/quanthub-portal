@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\filter\FilterFormatInterface;
 use Drupal\quanthub_core\Form\PowerBIMediaForm;
 
 /**
@@ -303,5 +304,18 @@ function quanthub_core_css_alter(&$css, AttachedAssetsInterface $assets) {
     foreach ($css as &$css_asset) {
       $css_asset['preprocess'] = FALSE;
     }
+  }
+}
+
+/**
+ * Implements hook_editor_xss_filter_alter().
+ */
+function quanthub_core_editor_xss_filter_alter(
+  &$editor_xss_filter_class,
+  FilterFormatInterface $format,
+  FilterFormatInterface $original_format = NULL
+) {
+  if ($format->getOriginalId() == 'basic_html') {
+    $editor_xss_filter_class = '\\Drupal\\quanthub_core\\EditorXssFilter\\StandardWithStyles';
   }
 }
