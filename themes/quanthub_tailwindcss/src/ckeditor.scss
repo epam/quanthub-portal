@@ -1,0 +1,19 @@
+.path-node {
+  div.field.text-formatted {
+    p {
+      &.text-align-center {
+        text-align: center;
+      }
+      &.text-align-right {
+        text-align: right;
+      }
+      &.text-align-left {
+        text-align: left;
+      }
+    }
+    table {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
