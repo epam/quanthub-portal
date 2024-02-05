@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.3.1 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com
 *//*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
@@ -26,17 +26,20 @@
 4. Use the user's configured `sans` font-family by default.
 5. Use the user's configured `sans` font-feature-settings by default.
 6. Use the user's configured `sans` font-variation-settings by default.
+7. Disable tap highlights on iOS
 */
 
-html {
+html,
+:host {
   line-height: 1.5; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
   -moz-tab-size: 4; /* 3 */
   -o-tab-size: 4;
      tab-size: 4; /* 3 */
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */
   font-feature-settings: normal; /* 5 */
   font-variation-settings: normal; /* 6 */
+  -webkit-tap-highlight-color: transparent; /* 7 */
 }
 
 /*
@@ -104,8 +107,10 @@ strong {
 }
 
 /*
-1. Use the user's configured `mono` font family by default.
-2. Correct the odd `em` font sizing in all browsers.
+1. Use the user's configured `mono` font-family by default.
+2. Use the user's configured `mono` font-feature-settings by default.
+3. Use the user's configured `mono` font-variation-settings by default.
+4. Correct the odd `em` font sizing in all browsers.
 */
 
 code,
@@ -113,7 +118,9 @@ kbd,
 samp,
 pre {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */
-  font-size: 1em; /* 2 */
+  font-feature-settings: normal; /* 2 */
+  font-variation-settings: normal; /* 3 */
+  font-size: 1em; /* 4 */
 }
 
 /*
@@ -168,6 +175,8 @@ optgroup,
 select,
 textarea {
   font-family: inherit; /* 1 */
+  font-feature-settings: inherit; /* 1 */
+  font-variation-settings: inherit; /* 1 */
   font-size: 100%; /* 1 */
   font-weight: inherit; /* 1 */
   line-height: inherit; /* 1 */
@@ -306,6 +315,13 @@ menu {
 }
 
 /*
+Reset default styling for dialogs.
+*/
+dialog {
+  padding: 0;
+}
+
+/*
 Prevent resizing textareas horizontally by default.
 */
 
@@ -408,6 +424,9 @@ video {
   --tw-pan-y:  ;
   --tw-pinch-zoom:  ;
   --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
   --tw-ordinal:  ;
   --tw-slashed-zero:  ;
   --tw-numeric-figure:  ;
@@ -455,6 +474,9 @@ video {
   --tw-pan-y:  ;
   --tw-pinch-zoom:  ;
   --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
   --tw-ordinal:  ;
   --tw-slashed-zero:  ;
   --tw-numeric-figure:  ;
@@ -603,6 +625,8 @@ video {
   padding-top: 0.5rem;
 }.text-center {
   text-align: center;
+}.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }@font-face{font-family:"Open Sans";font-style:normal;font-weight:400;src:url(57cd57a648021fa1c396.ttf) format("truetype")}@font-face{font-family:"Open Sans";font-style:italic;font-weight:400;src:url(dfdc57f049b12560a7d9.ttf) format("truetype")}@font-face{font-family:"Open Sans";font-style:normal;font-weight:600;src:url(2b370b191e5562dadc78.ttf) format("truetype")}@font-face{font-family:"Open Sans";font-style:normal;font-weight:700;src:url(a0fe34bea92d4e1a84d6.ttf) format("truetype")}.primary-button {
   display: flex;
   flex-direction: row;
@@ -872,7 +896,7 @@ video {
   font-weight: 400;font-size:12px;line-height:16px;display: flex;align-items: center;
 }.page-node-type-news .page main>.ag-root-wrapper .ag-row .ag-cell,.page-node-type-publication .page main>.ag-root-wrapper .ag-row .ag-cell{box-shadow:0 0 5px rgba(63,64,74,.85);box-shadow:none;padding:24px;background:#ffffff;background:var(--white, #ffffff);box-shadow:0 0 5px rgba(63,64,74,.85);border-radius:8px;box-shadow:none;margin-bottom: 5rem;padding-top: 0px}.ag-root-wrapper .ag-row .ag-cell{color:#3f404a;color:var(--ntrls-1000, #3f404a)}.path-explorer .block-page-title-block {
   display: none;
-}.block-facets:not(:first-child).facet-inactive.path-explorer .block-page-title-block{border:none}.path-explorer .placeholder-banner-wrapper__content{width:auto}.svg-current-color path{fill:currentColor}@media (max-width: 428px) {.xs\:header-2 {
+}.block-facets:not(:first-child).facet-inactive.path-explorer .block-page-title-block{border:none}.path-explorer .placeholder-banner-wrapper__content{width:auto}.path-node div.field.text-formatted p.text-align-center{text-align:center}.path-node div.field.text-formatted p.text-align-right{text-align:right}.path-node div.field.text-formatted p.text-align-left{text-align:left}.path-node div.field.text-formatted table{margin-left:auto;margin-right:auto}.svg-current-color path{fill:currentColor}@media (max-width: 428px) {.xs\:header-2 {
     font-weight: 700;font-size:20px;line-height:32px;
   }
 }@media (max-width: 719px) {
