@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Quanthub Book module.
+ */
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function quanthub_book_entity_type_alter(array &$entity_types) {
+  $entity_types['node']->addConstraint('QuanthubBookRequired');
+}
