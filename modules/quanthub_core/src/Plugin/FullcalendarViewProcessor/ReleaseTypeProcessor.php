@@ -34,12 +34,12 @@ class ReleaseTypeProcessor extends FullcalendarViewProcessorBase {
       if (!empty($entries[$key])) {
         $entries[$key]['backgroundColor'] = match($release_type) {
           // @todo Set colors from the UI.
-          'dataset' => '#A1ECC7',
-          'press_release' => '#99CBFF',
-          'report_submission' => '#C6DCEC',
-          'announcement' => '#FFCDA3',
-          'other' => '#EBABB9',
-          default => '#EBABB9'
+          'dataset' => '#a1ecc7',
+          'press_release' => '#99cbff',
+          'report_submission' => '#ffcda3',
+          'announcement' => '#f5d5dc',
+          'other' => '#dcd1f9',
+          default => '#dcd1f9'
         };
       }
     }
