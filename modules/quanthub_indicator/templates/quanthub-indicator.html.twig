@@ -27,10 +27,14 @@
 			{% endfor %}
 		</div>
 	{% endif %}
-	<div class="download_button_id mr-2 action-block" data-btn-class="secondary-button" 
-	data-urn="SSSU:DF_LABOR_FORCE(~)" 
-	data-parameter="INDICATOR"
-	data-value="EMPLOYED_INFORMALLY"
-	data-type="INDICATOR"></div>
-					
+	<div
+    class="download_button_id mr-2 action-block"
+    data-btn-class="secondary-button"
+    data-urn="{{ indicator_dataset_urn }}"
+	  data-parameter="{{ indicator_parameter }}"
+    data-title="{{ indicator_title }}"
+	  data-value="{{ indicator_data_value }}"
+	  data-type="INDICATOR"
+  ></div>
+
 </div>

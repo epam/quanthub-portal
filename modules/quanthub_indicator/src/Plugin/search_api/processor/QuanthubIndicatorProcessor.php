@@ -303,6 +303,9 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
           '#indicator_dataset_bundle_label' => $dataset_bundle_label,
           '#indicator_bundle_label' => $indicator_bundle_label,
           '#indicator_topics' => $topics_links,
+          '#indicator_dataset_urn' => $this->datasetUrn,
+          '#indicator_data_value' => $this->getDimensionsFilterUrl($this->datasetUrn),
+          '#indicator_parameter' => $this->entity->field_indicator_parameter->getString() ?? QuanthubSdmxClient::STRUCTURE_DIMENSION_ID,
         ];
 
         $rendered_indicator = $this->renderer->renderPlain($indicator_renderable);
@@ -327,7 +330,7 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
     $dimensions_url = '';
     $indicator_dimension_id = $this->entity->field_indicator_parameter->getString();
     if (empty($indicator_dimension_id)) {
-      $indicator_dimension_id = $this->sdmxClient::STRUCTURE_DIMENSION_ID;
+      $indicator_dimension_id = QuanthubSdmxClient::STRUCTURE_DIMENSION_ID;
     }
     if (!empty($this->datasetsDimensions[$urn])) {
       $dimensions_parts = [];
