@@ -305,7 +305,7 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
           '#indicator_topics' => $topics_links,
           '#indicator_dataset_urn' => $this->datasetUrn,
           '#indicator_data_value' => $this->getDimensionsFilterUrl($this->datasetUrn),
-          '#indicator_parameter' => $this->entity->field_indicator_parameter->getString() ?? QuanthubSdmxClient::STRUCTURE_DIMENSION_ID,
+          '#indicator_parameter' => $this->entity->field_indicator_parameter->getString() ?: QuanthubSdmxClient::STRUCTURE_DIMENSION_ID,
         ];
 
         $rendered_indicator = $this->renderer->renderPlain($indicator_renderable);
