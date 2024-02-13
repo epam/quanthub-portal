@@ -161,7 +161,7 @@ final class DatasetExplorer extends ControllerBase {
    * Returns translatable page title.
    */
   public function getTitle(): string {
-    return $this->t('Data');
+    return $this->t('Data Bank');
   }
 
 }
