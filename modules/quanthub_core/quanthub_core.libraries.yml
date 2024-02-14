@@ -5,3 +5,11 @@ qh_core-power-bi-customizer:
     - core/jquery
     - core/drupalSettings
     - core/once
+
+qh_core_power_bi_renderer:
+  js:
+    js/qh_core_power_bi_renderer.js: { preprocess: false, minified: false }
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
+    - core/once
