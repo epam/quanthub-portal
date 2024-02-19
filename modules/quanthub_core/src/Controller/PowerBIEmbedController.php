@@ -66,6 +66,7 @@ class PowerBIEmbedController extends ControllerBase {
 
     $media_storage = $this->entityTypeManager->getStorage('media');
     $media_ids = $media_storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('bundle', 'power_bi')
       ->condition('field_media_power_bi.report_id', $reportId)
       ->execute();
