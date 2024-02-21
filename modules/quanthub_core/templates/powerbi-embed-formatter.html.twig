@@ -1,8 +1,10 @@
 {{ attach_library('quanthub_core/qh_core_power_bi_renderer') }}
 
+{% set unique = random() %}
+
 <div
   data-report-id="{{ report_id }}"
-  data-selector='pbi-{{ field_name }}-{{ embed_id }}'
+  data-selector='pbi-{{ field_name }}-{{ embed_id }}-{{ unique }}'
   data-token-expiration='{{ token_expiration }}'
   data-extradatasets='{{ extra_datasets }}'
   data-report-page='{{ report_page }}'
@@ -15,5 +17,5 @@
   data-report-height='{{ report_height }}'
   data-report-title='{{ report_title }}'
 >
-  <div id="pbi-{{ field_name }}-{{ embed_id }}"></div>
+  <div id="pbi-{{ field_name }}-{{ embed_id }}-{{ unique }}"></div>
 </div>
