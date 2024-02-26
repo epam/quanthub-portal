@@ -20,7 +20,11 @@ class StatGPTBlock extends BlockBase {
   public function build() {
     $build = [];
     $build['quanthub_statgpt_block'] = [
-      '#markup' => '<div id="statgpt"></div>',
+      '#markup' => '<div id="statgpt">
+      <div class="spinner spinner--statgpt">
+      <div class="spinner__bg">
+      <div class="spinner__circle"></div>
+      </div></div></div>',
       '#attached' => [
         'library' => 'quanthub_statgpt/statgpt',
         'drupalSettings' => [],
