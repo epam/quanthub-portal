@@ -12,7 +12,7 @@ $loading-z-index: 49;
   backdrop-filter: blur(4px);
   z-index: $loading-z-index;
   border-radius: 0.5rem;
-  &--explorer,&--artefact-browser{
+  &--explorer,&--artefact-browser,&--statgpt{
     width:calc(100% - 80px);   
     height: calc(100% - 80px);
     @screen sm{
