@@ -89,7 +89,7 @@ class BooksBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
       // Get book node by id from referenced node.
       $bookId = $referencedNode->book['bid'];
-      if ($bookId) {
+      if (!empty($bookId)) {
         $bookNode = $this->entityTypeManager->load($bookId);
       }
       // Book Name item.
