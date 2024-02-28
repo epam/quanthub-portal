@@ -89,7 +89,9 @@ class BooksBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
       // Get book node by id from referenced node.
       $bookId = $referencedNode->book['bid'];
-      $bookNode = $this->entityTypeManager->load($bookId);
+      if (!empty($bookId)) {
+        $bookNode = $this->entityTypeManager->load($bookId);
+      }
       // Book Name item.
       if ($bookNode instanceof NodeInterface && $bookNode->hasTranslation($currentLanguage)) {
         $breadcrumb->addLink($bookNode->getTranslation($currentLanguage)->toLink());
