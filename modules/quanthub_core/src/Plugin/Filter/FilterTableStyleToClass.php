@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\quanthub_core\Plugin\Filter;
 
@@ -30,9 +30,9 @@ class FilterTableStyleToClass extends FilterBase {
       // Handle each table with special inline styles.
       foreach ($xpath->query('//table[@style]') as $table) {
         $classes = $table->getAttribute('class');
-        // If table has a style of 'border-width:0', add 'table-borderless' class.
+        // If table has style of 'border-width:0' add 'table-borderless' class.
         if (str_contains($table->getAttribute('style'), 'border-width:0')) {
-          // Add 'table-borderless' class
+          // Add 'table-borderless' class.
           $classes .= ' borderless';
           $classes = trim($classes);
           $table->setAttribute('class', $classes);
@@ -40,7 +40,7 @@ class FilterTableStyleToClass extends FilterBase {
 
         // If table has a style of 'width:100%', add 'table-wide' class.
         if (str_contains($table->getAttribute('style'), 'width:100%')) {
-          // Add 'table-wide' class
+          // Add 'table-wide' class.
           $classes .= ' table-wide';
           $classes = trim($classes);
           $table->setAttribute('class', $classes);
@@ -55,7 +55,7 @@ class FilterTableStyleToClass extends FilterBase {
 
         // If table has a style of 'border-width:0', add 'td-borderless' class.
         if (str_contains($td->getAttribute('style'), 'border-width:0')) {
-          // Add 'table-borderless' class
+          // Add 'table-borderless' class.
           $classes .= ' borderless';
           $classes = trim($classes);
           $td->setAttribute('class', $classes);

@@ -326,12 +326,12 @@ function quanthub_core_editor_xss_filter_alter(
 function quanthub_core_ckeditor5_plugin_info_alter(array &$plugin_definitions): void {
   $plugins = [
     'ckeditor5_table_properties',
-    'ckeditor5_table_cell_properties'
+    'ckeditor5_table_cell_properties',
   ];
 
   // Workaround to disable condition plugin 'ckeditor5_arbitraryHtmlSupport'
   // to enable table properties for editors with HTML restrictions.
-  foreach ($plugins as $plugin_id){
+  foreach ($plugins as $plugin_id) {
     $conditions = $plugin_definitions[$plugin_id]->getConditions();
     unset($conditions['plugins'][1]);
 
