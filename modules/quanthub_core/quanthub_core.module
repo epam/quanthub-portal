@@ -14,6 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\quanthub_core\Form\PowerBIMediaForm;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 
 /**
  * Implements hook_ENTITY_TYPE_access().
