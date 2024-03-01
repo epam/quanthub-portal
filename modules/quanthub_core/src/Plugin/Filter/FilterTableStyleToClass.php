@@ -22,7 +22,7 @@ class FilterTableStyleToClass extends FilterBase {
    * {@inheritdoc}
    */
   public function process($text, $langcode) {
-    if (!empty($text) && is_array($text) || is_string($text)) {
+    if (!empty($text) && (is_array($text) || is_string($text))) {
       $dom = new \DOMDocument();
       $dom->loadHTML(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
