@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Quanthub Indicator Processor"),
  *   description = @Translation(""),
  *   stages = {
+ *     "alter_items" = 0,
  *     "pre_index_save" = 0,
  *     "preprocess_index" = -10,
  *     "preprocess_query" = -10,
@@ -205,37 +206,40 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
       }
 
       if ($this->indicatorId && $dataset_entity_localized) {
-        switch ($field->getFieldIdentifier()) {
-          case 'rendered_item':
-            $this->processRenderedItemField($field, $dataset_entity_localized);
-            break;
+        if (method_exists($field, 'getFieldIdentifier')) {
+          switch ($field->getFieldIdentifier()) {
+            case 'rendered_item':
+              $this->processRenderedItemField($field, $dataset_entity_localized);
+              break;
 
-          case 'title':
-            if ($this->langcode && !empty($this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode])) {
-              $new_field_values[] = new TextValue($this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode]);
-              $field->setValues($new_field_values);
-            }
-            break;
-
-          case 'field_topics':
-            $topics = [];
-            foreach ($dataset_entity_localized->field_topics->referencedEntities() as $referencedEntity) {
-              if ($referencedEntity->hasTranslation($this->langcode)) {
-                $topics[] = $referencedEntity->getTranslation($this->langcode)->id();
+            case 'title':
+              if ($this->langcode && !empty($this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode])) {
+                $new_field_values[] = new TextValue($this->loadedIndicators[$this->datasetUrn][$this->indicatorId]['names'][$this->langcode]);
+                $field->setValues($new_field_values);
               }
-            }
-            $field->setValues($topics);
-            break;
+              break;
 
-          case 'topics_name':
-            $topic_names = [];
-            foreach ($dataset_entity_localized->field_topics->referencedEntities() as $referencedEntity) {
-              if ($referencedEntity->hasTranslation($this->langcode)) {
-                $topic_names[] = new TextValue($referencedEntity->getTranslation($this->langcode)->name->getString());
+            case 'field_topics':
+              $topics = [];
+              foreach ($dataset_entity_localized->field_topics->referencedEntities() as $referencedEntity) {
+                if ($referencedEntity->hasTranslation($this->langcode)) {
+                  $topics[] = $referencedEntity->getTranslation($this->langcode)
+                    ->id();
+                }
               }
-            }
-            $field->setValues($topic_names);
-            break;
+              $field->setValues($topics);
+              break;
+
+            case 'topics_name':
+              $topic_names = [];
+              foreach ($dataset_entity_localized->field_topics->referencedEntities() as $referencedEntity) {
+                if ($referencedEntity->hasTranslation($this->langcode)) {
+                  $topic_names[] = new TextValue($referencedEntity->getTranslation($this->langcode)->name->getString());
+                }
+              }
+              $field->setValues($topic_names);
+              break;
+          }
         }
       }
     }
@@ -382,6 +386,36 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
           $indicator_dimension_ids[$dataset_urn],
           $dataset_indicators
         );
+      }
+    }
+  }
+
+  /**
+   * Need to remove items with not existed indicators, on indexing.
+   */
+  public function alterIndexedItems(array &$items) {
+    parent::alterIndexedItems($items);
+    $this->loadIndicators($items);
+
+    foreach ($items as $key => $item) {
+      $entity = $item->getOriginalObject()->getValue();
+
+      if ($entity->getType() == 'indicator') {
+        $dataset_urn = $entity
+          ->field_dataset
+          ->first()
+          ->get('entity')
+          ->getTarget()
+          ->getValue()
+          ->field_quanthub_urn
+          ->getString();
+
+        if (
+          empty($this->loadedIndicators) ||
+          empty($this->loadedIndicators[$dataset_urn][$item->getExtraData('indicator_id')])
+        ) {
+          unset($items[$key]);
+        }
       }
     }
   }

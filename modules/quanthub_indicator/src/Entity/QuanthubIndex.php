@@ -292,8 +292,13 @@ class QuanthubIndex extends Index {
     if ($this->hasValidTracker() && $this->status()) {
       $item_ids = [];
       foreach ($ids as $id) {
-        if (str_contains($id, 'entity:node')) {
-          $item_ids[] = $id;
+        if (str_contains($id, 'indicator')) {
+          if (!str_contains($id, 'entity:node')) {
+            $item_ids[] = 'entity:node/' . $id;
+          }
+          else {
+            $item_ids[] = $id;
+          }
         }
         else {
           $item_ids[] = Utility::createCombinedId($datasource_id, $id);
