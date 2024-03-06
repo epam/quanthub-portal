@@ -24,7 +24,7 @@ class FilterTableStyleToClass extends FilterBase {
   public function process($text, $langcode) {
     if (!empty($text) && (is_array($text) || is_string($text))) {
       $dom = new \DOMDocument();
-      $dom->loadHTML(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+      $dom->loadHTML(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'));
 
       $xpath = new \DOMXPath($dom);
       // Handle each table with special inline styles.
