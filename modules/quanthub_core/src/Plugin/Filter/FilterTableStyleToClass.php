@@ -22,9 +22,15 @@ class FilterTableStyleToClass extends FilterBase {
    * {@inheritdoc}
    */
   public function process($text, $langcode) {
-    if (!empty($text) && (is_array($text) || is_string($text))) {
+    if (!empty($text) && (is_string($text) || $text instanceof FilterProcessResult)) {
       $dom = new \DOMDocument();
-      $dom->loadHTML(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'));
+
+      if (is_string($text)) {
+        $dom->loadHTML(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'));
+      }
+      if ($text instanceof FilterProcessResult) {
+        $dom->loadHTML(mb_convert_encoding($text->getProcessedText(), 'HTML-ENTITIES', 'UTF-8'));
+      }
 
       $xpath = new \DOMXPath($dom);
       // Handle each table with special inline styles.
