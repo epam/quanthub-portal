@@ -46,19 +46,12 @@ function updateToken($, context) {
   });
 }
 
-function powerbi_embed_customizeReport($, context, width = 0, height = 0, title = '', name = '') {
+function powerbi_embed_customizeReport($, context, title = '', name = '') {
   const iframes = $(`#${context.selector} iframe`);
   for (let i = 0; i < iframes.length; i++) {
     iframes[i].frameBorder = 0;
-    if (iframes[i].attributes.getNamedItem('style')) {
-      iframes[i].attributes.removeNamedItem('style');
-    }
     iframes[i].title = title.length > 0 ? title : 'PowerBI Embed';
     iframes[i].name = name.length > 0 ? name : title.length > 0 ? title : 'PowerBI Embed';
-    const iw = width <= 0 ? '100%' : width + 'px';
-    const ih = height <= 0 ? iw * (19 / 32) : height;
-    iframes[i].width = iw;
-    iframes[i].height = ih + 'px';
   }
 
   checkTokenAndUpdate($, context);
