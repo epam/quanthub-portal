@@ -120,10 +120,51 @@ class PowerBIEmbedConfigs {
   }
 
   /**
+   * Get PowerBI dataset details.
+   */
+  public function getPowerBiDataset($token, $datasetId) {
+    $powerbiAPIURL = 'https://api.powerbi.com/v1.0/myorg/groups/' . $this->getWorkspaceID() . '/datasets/' . $datasetId;
+
+    try {
+      $request = $this->httpClient->request(
+        'GET',
+        $powerbiAPIURL,
+        [
+          'headers' => [
+            'Authorization' => 'Bearer ' . $token,
+            'Cache-Control' => 'no-cache',
+          ],
+          'connect_timeout' => 30,
+          'allow_redirects' => [
+            'max' => 10,
+          ],
+        ]
+      );
+    }
+    catch (\Exception $e) {
+      $this->loggerFactory->error('getPowerBiDataset: ' . $e->getMessage());
+      return NULL;
+    }
+
+    $datasetResponse = json_decode($request->getBody(), TRUE);
+    return $datasetResponse;
+  }
+
+  /**
    * Get PowerBI Embed Token.
    */
   public function getPowerBiEmbedToken($token, $reportId, $datasetIds) {
     $powerbiAPIURL = 'https://api.powerbi.com/v1.0/myorg/GenerateToken';
+    $powerbiUser = getenv('POWERBI_PUBLIC_USER');
+    $powerbiRole = getenv('POWERBI_PUBLIC_ROLE');
+
+    $entitledDatasets = [];
+    foreach ($datasetIds as $datasetId) {
+      $response = $this->getPowerBiDataset($token, $datasetId);
+      if ($response['isEffectiveIdentityRequired'] && $response['isEffectiveIdentityRolesRequired']) {
+        $entitledDatasets[] = $datasetId;
+      }
+    }
 
     $datasets = [];
     foreach ($datasetIds as $datasetId) {
@@ -131,14 +172,18 @@ class PowerBIEmbedConfigs {
         'id' => $datasetId,
         'xmlaPermissions' => 'ReadOnly',
       ];
-
     }
 
     $payload = [
+      'accessLevel' => 'View',
       'datasets' => $datasets,
       'reports' => [['id' => $reportId]],
       'targetWorkspaces' => [['id' => $this->getWorkspaceID()]],
     ];
+
+    if (count($entitledDatasets) > 0) {
+      $payload['identities'] = [['username' => $powerbiUser, 'roles' => [$powerbiRole], 'datasets' => $entitledDatasets]];
+    }
 
     $payload_json = json_encode($payload);
 
