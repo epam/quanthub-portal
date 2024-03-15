@@ -187,7 +187,7 @@ class PowerBIEmbedConfigs {
           'username' => $powerbiUser,
           'roles' => [$powerbiRole],
           'datasets' => $entitledDatasets,
-        ]
+        ],
       ];
     }
 
