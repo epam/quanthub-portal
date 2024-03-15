@@ -182,7 +182,11 @@ class PowerBIEmbedConfigs {
     ];
 
     if (count($entitledDatasets) > 0) {
-      $payload['identities'] = [['username' => $powerbiUser, 'roles' => [$powerbiRole], 'datasets' => $entitledDatasets]];
+      $payload['identities'] = [[
+        'username' => $powerbiUser, 
+        'roles' => [$powerbiRole],
+        'datasets' => $entitledDatasets
+      ]];
     }
 
     $payload_json = json_encode($payload);
