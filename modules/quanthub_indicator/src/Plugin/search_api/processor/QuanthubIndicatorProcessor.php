@@ -205,7 +205,7 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
         $dataset_entity_localized = $dataset_entity->getTranslation($this->langcode);
       }
 
-      if ($this->indicatorId && $dataset_entity_localized) {
+      if ($this->indicatorId && !empty($dataset_entity_localized)) {
         if (method_exists($field, 'getFieldIdentifier')) {
           switch ($field->getFieldIdentifier()) {
             case 'rendered_item':
