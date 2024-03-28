@@ -5,3 +5,12 @@ powerbi_embed_config:
     _controller: '\Drupal\quanthub_core\Controller\PowerBIEmbedController::postData'
   requirements:
     _permission: 'access content'
+
+quanthub_core.calendar_update:
+  path: '/quanthub_core/ajax-update'
+  arguments: ['@database']
+  defaults:
+    _controller: '\Drupal\quanthub_core\Controller\QuanthubCalendarController::ajaxUpdate'
+    _title: 'Calendar update ajax'
+  requirements:
+    _permission: 'access content'
