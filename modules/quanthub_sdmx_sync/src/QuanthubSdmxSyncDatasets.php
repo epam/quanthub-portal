@@ -81,11 +81,7 @@ class QuanthubSdmxSyncDatasets {
   public function syncDatasetsUpdateDate() {
     foreach ($this->getDatasetUrns() as $dataset_nid => $dataset_urn) {
       $update_dates = $this->getDatasetUpdateDates($dataset_urn);
-      if (
-        !empty($update_dates) &&
-        !empty($update_dates['UPDATED']) &&
-        !empty($update_dates['NEXT_UPDATE'])
-      ) {
+      if (!empty($update_dates)) {
         $last_update_date = strtotime($update_dates['UPDATED']);
 
         $dataset_entity = $this->datasetsStorage->load($dataset_nid);
@@ -98,10 +94,16 @@ class QuanthubSdmxSyncDatasets {
             $metadata_value = $dataset_entity->get('field_metadata')
               ->getValue();
             foreach ($metadata_value as $delta => $item) {
-              if ($item['key'] == $this->translation->getStringTranslation($dataset_entity->language()->getId(), 'Updated', '')) {
+              if (
+                !empty($update_dates['UPDATED']) &&
+                $item['key'] == $this->translation->getStringTranslation($dataset_entity->language()->getId(), 'Updated', '')
+              ) {
                 $metadata_value[$delta]['value'] = $update_dates['UPDATED'];
               }
-              if ($item['key'] == $this->translation->getStringTranslation($dataset_entity->language()->getId(), 'Next Update', '')) {
+              if (
+                !empty($update_dates['NEXT_UPDATE']) &&
+                $item['key'] == $this->translation->getStringTranslation($dataset_entity->language()->getId(), 'Next Update', '')
+              ) {
                 $metadata_value[$delta]['value'] = $update_dates['NEXT_UPDATE'];
               }
             }
