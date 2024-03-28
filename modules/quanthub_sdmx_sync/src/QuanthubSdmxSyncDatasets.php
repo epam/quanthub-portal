@@ -5,6 +5,7 @@ namespace Drupal\quanthub_sdmx_sync;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
  * Sdmx Sync Datasets service.
@@ -57,13 +58,21 @@ class QuanthubSdmxSyncDatasets {
   private $datasetsStorage;
 
   /**
+   * The translation manager service.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
+   */
+  protected $translation;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(QuanthubSdmxClient $sdmx_client, EntityTypeManager $entity_type_manager, Connection $database) {
+  public function __construct(QuanthubSdmxClient $sdmx_client, EntityTypeManager $entity_type_manager, Connection $database, TranslationInterface $translation) {
     $this->sdmxClient = $sdmx_client;
     $this->entityTypeManager = $entity_type_manager;
     $this->datasetsStorage = $this->entityTypeManager->getStorage(self::DATASET_ENTITY_TYPE);
     $this->database = $database;
+    $this->translation = $translation;
   }
 
   /**
@@ -71,13 +80,37 @@ class QuanthubSdmxSyncDatasets {
    */
   public function syncDatasetsUpdateDate() {
     foreach ($this->getDatasetUrns() as $dataset_nid => $dataset_urn) {
-      if ($last_update_date = $this->getDatasetUpdateDate($dataset_urn)) {
-        $last_update_date = strtotime($last_update_date);
+      $update_dates = $this->getDatasetUpdateDates($dataset_urn);
+      if (
+        !empty($update_dates) &&
+        !empty($update_dates['UPDATED']) &&
+        !empty($update_dates['NEXT_UPDATE'])
+      ) {
+        $last_update_date = strtotime($update_dates['UPDATED']);
+
         $dataset_entity = $this->datasetsStorage->load($dataset_nid);
+
         if ($dataset_entity instanceof EntityInterface) {
-          $dataset_entity
-            ->set('changed', $last_update_date)
-            ->save();
+          $dataset_entity_languages = $dataset_entity->getTranslationLanguages();
+
+          foreach ($dataset_entity_languages as $id => $language) {
+            $dataset_entity_translation = $dataset_entity->getTranslation($id);
+            $metadata_value = $dataset_entity->get('field_metadata')
+              ->getValue();
+            foreach ($metadata_value as $delta => $item) {
+              if ($item['key'] == $this->translation->getStringTranslation($dataset_entity->language()->getId(), 'Updated', '')) {
+                $metadata_value[$delta]['value'] = $update_dates['UPDATED'];
+              }
+              if ($item['key'] == $this->translation->getStringTranslation($dataset_entity->language()->getId(), 'Next Update', '')) {
+                $metadata_value[$delta]['value'] = $update_dates['NEXT_UPDATE'];
+              }
+            }
+
+            $dataset_entity_translation
+              ->set('field_metadata', $metadata_value)
+              ->set('created', $last_update_date)
+              ->save(FALSE);
+          }
         }
       }
     }
@@ -86,21 +119,27 @@ class QuanthubSdmxSyncDatasets {
   /**
    * Get last update date from sdmx for dataset by dataset urn.
    */
-  public function getDatasetUpdateDate($dataset_urn) {
-    $dataset_structure = $this->sdmxClient->getDasetStructure($dataset_urn);
-
-    if (!empty($dataset_structure['data']['dataflows'])) {
-      $dataflow_data = $dataset_structure['data']['dataflows'];
-      foreach ($dataflow_data as $value) {
-        foreach ($value['annotations'] as $annotation) {
-          if ($annotation['id'] == self::LAST_UPDATE_ANNOTATION) {
-            return $annotation['value'];
-          }
-        }
+  public function getDatasetUpdateDates($dataset_urn) {
+    $filtered_data = $this->sdmxClient->getDatasetFilteredData($dataset_urn, 'limit=1');
+    $dataset_attributes = $filtered_data['data']['structures'][0]['attributes']['dataSet'];
+    foreach ($dataset_attributes as $dataset_attribute_key => $dataset_attribute) {
+      if ($dataset_attribute['id'] == 'UPDATED') {
+        $updated_dataset_attr_index = $dataset_attribute_key;
+      }
+      if ($dataset_attribute['id'] == 'NEXT_UPDATE') {
+        $next_update_dataset_attr_index = $dataset_attribute_key;
       }
     }
 
-    return NULL;
+    $data = [];
+    if (!empty($updated_dataset_attr_index)) {
+      $data['UPDATED'] = $filtered_data['data']['dataSets'][0]['attributes'][$updated_dataset_attr_index][0];
+    }
+    if (!empty($next_update_dataset_attr_index)) {
+      $data['NEXT_UPDATE'] = $filtered_data['data']['dataSets'][0]['attributes'][$next_update_dataset_attr_index][0];
+    }
+
+    return $data;
   }
 
   /**
