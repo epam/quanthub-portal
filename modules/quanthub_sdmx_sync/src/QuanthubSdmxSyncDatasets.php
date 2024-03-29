@@ -101,7 +101,7 @@ class QuanthubSdmxSyncDatasets {
           $this->logger->info("For urn: $dataset_urn cannot parse date:" . $update_dates['UPDATED']);
         }
         else {
-          $last_update_date = strtotime($update_dates['UPDATED']);
+          $last_update_date = strtotime(trim($update_dates['UPDATED']));
 
           $dataset_entity = $this->datasetsStorage->load($dataset_nid);
 
