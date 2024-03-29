@@ -145,22 +145,25 @@ class QuanthubSdmxSyncDatasets {
    */
   public function getDatasetUpdateDates($dataset_urn) {
     $filtered_data = $this->sdmxClient->getDatasetFilteredData($dataset_urn, 'limit=1');
-    $dataset_attributes = $filtered_data['data']['structures'][0]['attributes']['dataSet'];
-    foreach ($dataset_attributes as $dataset_attribute_key => $dataset_attribute) {
-      if ($dataset_attribute['id'] == 'UPDATED') {
-        $updated_dataset_attr_index = $dataset_attribute_key;
-      }
-      if ($dataset_attribute['id'] == 'NEXT_UPDATE') {
-        $next_update_dataset_attr_index = $dataset_attribute_key;
-      }
-    }
-
     $data = [];
-    if (!empty($updated_dataset_attr_index) && $filtered_data['data']['dataSets'][0]['attributes'][$updated_dataset_attr_index][0]) {
-      $data['UPDATED'] = $filtered_data['data']['dataSets'][0]['attributes'][$updated_dataset_attr_index][0];
-    }
-    if (!empty($next_update_dataset_attr_index) && !empty($filtered_data['data']['dataSets'][0]['attributes'][$next_update_dataset_attr_index][0])) {
-      $data['NEXT_UPDATE'] = $filtered_data['data']['dataSets'][0]['attributes'][$next_update_dataset_attr_index][0];
+
+    if (!empty($filtered_data['data']['structures'][0]['attributes']['dataSet'])) {
+      $dataset_attributes = $filtered_data['data']['structures'][0]['attributes']['dataSet'];
+      foreach ($dataset_attributes as $dataset_attribute_key => $dataset_attribute) {
+        if ($dataset_attribute['id'] == 'UPDATED') {
+          $updated_dataset_attr_index = $dataset_attribute_key;
+        }
+        if ($dataset_attribute['id'] == 'NEXT_UPDATE') {
+          $next_update_dataset_attr_index = $dataset_attribute_key;
+        }
+      }
+
+      if (!empty($updated_dataset_attr_index) && !empty($filtered_data['data']['dataSets'][0]['attributes'][$updated_dataset_attr_index][0])) {
+        $data['UPDATED'] = $filtered_data['data']['dataSets'][0]['attributes'][$updated_dataset_attr_index][0];
+      }
+      if (!empty($next_update_dataset_attr_index) && !empty($filtered_data['data']['dataSets'][0]['attributes'][$next_update_dataset_attr_index][0])) {
+        $data['NEXT_UPDATE'] = $filtered_data['data']['dataSets'][0]['attributes'][$next_update_dataset_attr_index][0];
+      }
     }
 
     $this->logger->info("For $dataset_urn found dates:" . '<pre>' . print_r($data, 1) . '</pre>');
