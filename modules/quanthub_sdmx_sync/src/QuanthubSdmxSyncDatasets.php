@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Sdmx Sync Datasets service.
@@ -65,14 +66,28 @@ class QuanthubSdmxSyncDatasets {
   protected $translation;
 
   /**
+   * The logger service.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(QuanthubSdmxClient $sdmx_client, EntityTypeManager $entity_type_manager, Connection $database, TranslationInterface $translation) {
+  public function __construct(
+    QuanthubSdmxClient $sdmx_client,
+    EntityTypeManager $entity_type_manager,
+    Connection $database,
+    TranslationInterface $translation,
+    LoggerInterface $logger
+  ) {
     $this->sdmxClient = $sdmx_client;
     $this->entityTypeManager = $entity_type_manager;
     $this->datasetsStorage = $this->entityTypeManager->getStorage(self::DATASET_ENTITY_TYPE);
     $this->database = $database;
     $this->translation = $translation;
+    $this->logger = $logger;
   }
 
   /**
@@ -134,12 +149,14 @@ class QuanthubSdmxSyncDatasets {
     }
 
     $data = [];
-    if (!empty($updated_dataset_attr_index)) {
+    if (!empty($updated_dataset_attr_index) && $filtered_data['data']['dataSets'][0]['attributes'][$updated_dataset_attr_index][0]) {
       $data['UPDATED'] = $filtered_data['data']['dataSets'][0]['attributes'][$updated_dataset_attr_index][0];
     }
-    if (!empty($next_update_dataset_attr_index)) {
+    if (!empty($next_update_dataset_attr_index) && !empty($filtered_data['data']['dataSets'][0]['attributes'][$next_update_dataset_attr_index][0])) {
       $data['NEXT_UPDATE'] = $filtered_data['data']['dataSets'][0]['attributes'][$next_update_dataset_attr_index][0];
     }
+
+    $this->logger->info("For $dataset_urn found dates:" . '<pre>' . print_r($data, 1) . '</pre>');
 
     return $data;
   }
