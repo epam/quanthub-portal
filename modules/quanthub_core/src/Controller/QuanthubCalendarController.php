@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,13 +25,23 @@ class QuanthubCalendarController extends ControllerBase {
   protected $database;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a new YourController object.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
+   *   The language manager service.
    */
-  public function __construct(Connection $database) {
+  public function __construct(Connection $database, LanguageManagerInterface $languageManager) {
     $this->database = $database;
+    $this->languageManager = $languageManager;
   }
 
   /**
@@ -40,7 +51,8 @@ class QuanthubCalendarController extends ControllerBase {
     // Instantiates this controller.
     return new static(
     // Load the service required to construct this class.
-      $container->get('database')
+      $container->get('database'),
+      $container->get('language_manager')
     );
   }
 
@@ -49,6 +61,7 @@ class QuanthubCalendarController extends ControllerBase {
    */
   public function ajaxUpdate(Request $request) {
     $queryArgs = $request->query->all();
+    $langcode = $this->languageManager->getCurrentLanguage()->getId();
 
     // Get query parameters from the request.
     $start = $request->query->get('start');
@@ -74,21 +87,24 @@ class QuanthubCalendarController extends ControllerBase {
         ->select('node_field_data', 'n')
         ->fields('n', ['title']);
 
-      $query->join('node__field_release_date', 'nfrd', 'nfrd.entity_id = n.nid');
-      $query->join('node__field_rich_brief_descr', 'nrbd', 'nrbd.entity_id = n.nid');
-      $query->join('node__field_release_type', 'nfrt', 'nfrt.entity_id = n.nid');
+      $query->join('node__field_release_date', 'nfrd', 'nfrd.entity_id = n.nid AND nfrd.langcode = :langcode', [':langcode' => $langcode]);
+      $query->join('node__field_rich_brief_descr', 'nrbd', 'nrbd.entity_id = n.nid AND nfrd.langcode = :langcode', [':langcode' => $langcode]);
+      $query->join('path_alias', 'pa', 'pa.id = n.nid AND nfrd.langcode = :langcode', [':langcode' => $langcode]);
+      $query->leftJoin('node__field_release_type', 'nfrt', 'nfrt.entity_id = n.nid AND nfrd.langcode = :langcode', [':langcode' => $langcode]);
 
       $query->condition('n.type', 'release');
-      $query->condition('nfrd.field_release_date_value', $start_formatted, '>');
-      $query->condition('nfrd.field_release_date_end_value', $end_formatted, '<');
+      $query->condition('n.langcode', $langcode);
+      $query->condition('n.status', TRUE);
+      $query->condition('nfrd.field_release_date_value', $start_formatted, '>=');
+      $query->condition('nfrd.field_release_date_end_value', $end_formatted, '<=');
 
       $query->addField('n', 'nid', 'eid');
       $query->addField('n', 'nid', 'id');
+      $query->addField('pa', 'alias', 'url');
       $query->addField('nrbd', 'field_rich_brief_descr_value', 'des');
       $query->addExpression("TO_CHAR(to_timestamp(nfrd.field_release_date_value) AT TIME ZONE :timezone, 'YYYY-MM-DD\"T\"HH24:MI:SS')", 'start', [':timezone' => $timezone]);
       $query->addExpression("TO_CHAR(to_timestamp(nfrd.field_release_date_end_value) AT TIME ZONE :timezone, 'YYYY-MM-DD\"T\"HH24:MI:SS')", 'end', [':timezone' => $timezone]);
       $query->addExpression("FALSE", 'eventDurationEditable');
-      $query->addExpression("CONCAT('/node/', n.nid)", 'url');
       $query->addExpression("CASE nfrt.field_release_type_value
         WHEN 'dataset' THEN '#0B8043'
         WHEN 'press_release' THEN '#3F51B5'
@@ -104,8 +120,6 @@ class QuanthubCalendarController extends ControllerBase {
         'allDay',
         [':timezone' => $timezone]
       );
-      // @todo need to add alias.
-      $query->range(0, 10);
       $data = $query->execute()->fetchAll();
 
       // Fullcalendar.js need this value as bool.
@@ -128,6 +142,7 @@ class QuanthubCalendarController extends ControllerBase {
           'url.query_args:start',
           'url.query_args:end',
           'url.query_args:timeZone',
+          'languages:language_interface',
         ]);
         $cacheableMetadata->addCacheTags(['node_list:release']);
         $response->addCacheableDependency($cacheableMetadata);
