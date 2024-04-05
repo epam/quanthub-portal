@@ -102,37 +102,49 @@ class QuanthubSdmxSyncDatasets {
         }
         else {
           $last_update_date = strtotime(trim($update_dates['UPDATED']));
-
           $dataset_entity = $this->datasetsStorage->load($dataset_nid);
 
-          if ($dataset_entity instanceof EntityInterface) {
+          if (
+            $dataset_entity instanceof EntityInterface &&
+            $last_update_date != $dataset_entity->getCreatedTime()
+          ) {
             $dataset_entity_languages = $dataset_entity->getTranslationLanguages();
+            foreach ($dataset_entity_languages as $langcode => $language) {
+              $dataset_entity_translation = $dataset_entity->getTranslation($langcode);
 
-            foreach ($dataset_entity_languages as $id => $language) {
-              $dataset_entity_translation = $dataset_entity->getTranslation($id);
-              $metadata_value = $dataset_entity->get('field_metadata')
+              // Updated only if updated date in sdmx changed.
+              $metadata_value = $dataset_entity_translation->get('field_metadata')
                 ->getValue();
               foreach ($metadata_value as $delta => $item) {
-                if (
-                  !empty($update_dates['UPDATED']) &&
-                  $item['key'] == $this->translation->getStringTranslation($dataset_entity->language()
-                    ->getId(), 'Updated', '')
-                ) {
-                  $metadata_value[$delta]['value'] = $update_dates['UPDATED'];
+                if (!empty($update_dates['UPDATED'])) {
+                  // Compare string translation to key in key/value field.
+                  if ($item['key'] == $this->translation->getStringTranslation($langcode, 'Updated', '')) {
+                    $metadata_value[$delta]['value'] = $update_dates['UPDATED'];
+                  }
+                  elseif ($langcode == 'en') {
+                    // Get string translation return false for english
+                    // and we don't need translation here.
+                    $metadata_value[$delta]['value'] = $update_dates['UPDATED'];
+                  }
                 }
-                if (
-                  !empty($update_dates['NEXT_UPDATE']) &&
-                  $item['key'] == $this->translation->getStringTranslation($dataset_entity->language()
-                    ->getId(), 'Next Update', '')
-                ) {
-                  $metadata_value[$delta]['value'] = $update_dates['NEXT_UPDATE'];
+                if (!empty($update_dates['NEXT_UPDATE'])) {
+                  // Compare string translation to key in key/value field.
+                  if ($item['key'] == $this->translation->getStringTranslation($langcode, 'Next Update', '')) {
+                    $metadata_value[$delta]['value'] = $update_dates['NEXT_UPDATE'];
+                  }
+                  elseif ($langcode == 'en') {
+                    // Get string translation return false for english
+                    // and we don't need translation here.
+                    $metadata_value[$delta]['value'] = $update_dates['NEXT_UPDATE'];
+                  }
                 }
               }
 
               $dataset_entity_translation
                 ->set('field_metadata', $metadata_value)
                 ->set('created', $last_update_date)
-                ->save(FALSE);
+                ->setSyncing(TRUE)
+                ->save();
             }
           }
         }

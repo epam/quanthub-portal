@@ -142,10 +142,16 @@ class QuanthubSdmxSyncGauges {
   public function updateGauge(int $nid, string $period, string $value) {
     $entity = $this->entityTypeManager->getStorage('node')->load($nid);
 
-    $entity->set('field_gauge_period', $period);
-    $entity->set('field_gauge_value', $value);
-
-    $entity->save();
+    if (
+      (!empty($value) && $entity->field_gauge_value->getString() != $value) ||
+      (!empty($period) && $entity->field_gauge_period->getString() != $period)
+    ) {
+      $entity
+        ->set('field_gauge_period', $period)
+        ->set('field_gauge_value', $value)
+        ->setSyncing(TRUE)
+        ->save();
+    }
   }
 
 }
