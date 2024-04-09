@@ -85,7 +85,7 @@
     <div class='gauge-main'>
       <span class='gauge-value'>
         {% if node.field_gauge_value is not empty %}
-          {% if node.field_gauge_scale is empty %}
+          {% if node.field_gauge_scale is empty or node.field_gauge_scale.value == 0 %}
             {% if node.field_gauge_round_number is empty or node.field_gauge_round_number.value == 0 %}
               {% if node.langcode.langcode == 'uk' %}
                 {{ node.field_gauge_value.value|round|number_format(0, ',', ' ') }}
