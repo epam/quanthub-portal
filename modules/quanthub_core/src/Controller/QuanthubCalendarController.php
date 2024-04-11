@@ -89,7 +89,7 @@ class QuanthubCalendarController extends ControllerBase {
 
       $query->join('node__field_release_date', 'nfrd', 'nfrd.entity_id = n.nid AND nfrd.langcode = :langcode', [':langcode' => $langcode]);
       $query->join('node__field_rich_brief_descr', 'nrbd', 'nrbd.entity_id = n.nid AND nfrd.langcode = :langcode', [':langcode' => $langcode]);
-      $query->join('path_alias', 'pa', 'pa.id = n.nid AND nfrd.langcode = :langcode', [':langcode' => $langcode]);
+      $query->join('path_alias', 'pa', "pa.path = CONCAT('/node/', n.nid) AND nfrd.langcode = :langcode", [':langcode' => $langcode]);
       $query->leftJoin('node__field_release_type', 'nfrt', 'nfrt.entity_id = n.nid AND nfrd.langcode = :langcode', [':langcode' => $langcode]);
 
       $query->condition('n.type', 'release');
