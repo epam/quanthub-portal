@@ -108,7 +108,8 @@ class QuanthubCalendarController extends ControllerBase {
       $query->addExpression("CASE nfrt.field_release_type_value
         WHEN 'dataset' THEN '#0B8043'
         WHEN 'press_release' THEN '#3F51B5'
-        WHEN 'report_submission' THEN '#CC2E4F'
+        WHEN 'announcement' THEN '#CC2E4F'
+        WHEN 'report_submission' THEN '#83226D'
         WHEN 'other' THEN '#616161'
         ELSE '#616161' END",
         'backgroundColor'
