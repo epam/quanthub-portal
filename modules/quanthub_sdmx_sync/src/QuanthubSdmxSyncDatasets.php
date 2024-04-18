@@ -134,7 +134,7 @@ class QuanthubSdmxSyncDatasets {
                     }
                   }
                   // Compare string translation to key in key/value field.
-                  else if ($item['key'] == $this->translation->getStringTranslation($langcode, 'Next Update', '')) {
+                  elseif ($item['key'] == $this->translation->getStringTranslation($langcode, 'Next Update', '')) {
                     $metadata_value[$delta]['value'] = $update_dates['NEXT_UPDATE'];
                   }
                 }
