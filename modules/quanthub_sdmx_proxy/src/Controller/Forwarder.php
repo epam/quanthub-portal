@@ -77,7 +77,7 @@ final class Forwarder extends ControllerBase {
     HttpFoundationFactoryInterface $foundation_factory,
     LoggerChannelFactoryInterface $logger_factory,
     ConfigFactory $config_factory,
-    UserInfo $user_info
+    UserInfo $user_info,
   ) {
     $this->client = $client;
     $this->foundationFactory = $foundation_factory;

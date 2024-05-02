@@ -57,7 +57,7 @@ class PowerBIEmbedConfigs {
     ConfigFactoryInterface $configFactory,
     KeyRepositoryInterface $repository,
     LoggerChannelFactoryInterface $loggerFactory,
-    ClientInterface $httpClient
+    ClientInterface $httpClient,
   ) {
     $this->configFactory = $configFactory;
     $this->repository = $repository;
