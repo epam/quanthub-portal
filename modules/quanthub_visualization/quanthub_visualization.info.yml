@@ -1,0 +1,8 @@
+name: 'Quanthub Visualization'
+type: module
+description: 'Quanthub Visualization'
+package: 'Epam Quanthub'
+core_version_requirement: ^10
+
+dependencies:
+  - json_field
