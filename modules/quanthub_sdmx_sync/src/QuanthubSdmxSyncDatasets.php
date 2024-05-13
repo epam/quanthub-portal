@@ -80,7 +80,7 @@ class QuanthubSdmxSyncDatasets {
     EntityTypeManager $entity_type_manager,
     Connection $database,
     TranslationInterface $translation,
-    LoggerInterface $logger
+    LoggerInterface $logger,
   ) {
     $this->sdmxClient = $sdmx_client;
     $this->entityTypeManager = $entity_type_manager;

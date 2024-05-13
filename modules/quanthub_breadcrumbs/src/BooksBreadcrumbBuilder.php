@@ -40,7 +40,7 @@ class BooksBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function __construct(
     EntityTypeManager $entity_type_manager,
-    LanguageManagerInterface $language_manager
+    LanguageManagerInterface $language_manager,
   ) {
     $this->entityTypeManager = $entity_type_manager->getStorage('node');
     $this->languageManager = $language_manager;

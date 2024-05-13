@@ -49,7 +49,7 @@ class QuanthubIndicatorContentEntityTrackingManager extends ContentEntityTrackin
     LanguageManagerInterface $languageManager,
     TaskManagerInterface $taskManager,
     QuanthubSdmxClient $sdmxClient,
-    Connection $database
+    Connection $database,
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->languageManager = $languageManager;

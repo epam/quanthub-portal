@@ -314,7 +314,7 @@ function quanthub_core_css_alter(&$css, AttachedAssetsInterface $assets) {
 function quanthub_core_editor_xss_filter_alter(
   &$editor_xss_filter_class,
   FilterFormatInterface $format,
-  FilterFormatInterface $original_format = NULL
+  FilterFormatInterface $original_format = NULL,
 ) {
   if ($format->getOriginalId() == 'basic_html') {
     $editor_xss_filter_class = '\\Drupal\\quanthub_core\\EditorXssFilter\\StandardWithStyles';
