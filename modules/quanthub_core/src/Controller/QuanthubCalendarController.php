@@ -100,9 +100,9 @@ class QuanthubCalendarController extends ControllerBase {
 
       $query->addField('n', 'nid', 'eid');
       $query->addField('n', 'nid', 'id');
-      $query->addField('pa', 'alias', 'url');
       $query->addField('nrbd', 'field_rich_brief_descr_value', 'des');
       $query->addExpression("TO_CHAR(to_timestamp(nfrd.field_release_date_value) AT TIME ZONE :timezone, 'YYYY-MM-DD\"T\"HH24:MI:SS')", 'start', [':timezone' => $timezone]);
+      $query->addExpression("CONCAT('/', pa.langcode, pa.alias)", 'url');
       $query->addExpression("TO_CHAR(to_timestamp(nfrd.field_release_date_end_value) AT TIME ZONE :timezone, 'YYYY-MM-DD\"T\"HH24:MI:SS')", 'end', [':timezone' => $timezone]);
       $query->addExpression("FALSE", 'eventDurationEditable');
       $query->addExpression("CASE nfrt.field_release_type_value

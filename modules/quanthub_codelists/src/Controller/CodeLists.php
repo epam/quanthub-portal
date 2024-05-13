@@ -60,7 +60,7 @@ final class CodeLists extends ControllerBase {
     BlockManager $plugin_manager_block,
     AccountProxy $current_user,
     EntityTypeManagerInterface $entity_type_manager,
-    LanguageManagerInterface $language_manager
+    LanguageManagerInterface $language_manager,
   ) {
     $this->pluginManagerBlock = $plugin_manager_block;
     $this->currentUser = $current_user;
