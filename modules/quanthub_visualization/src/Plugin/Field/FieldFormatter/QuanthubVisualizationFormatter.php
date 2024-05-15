@@ -26,12 +26,25 @@ class QuanthubVisualizationFormatter extends FormatterBase {
   public function viewElements(FieldItemListInterface $items, $langcode): array {
     $elements = [];
 
-    $media_id = $items->getEntity()->id();
+    $entity = $items->getEntity();
+    $media_id = $entity->id();
+    $dataSourceConfig = $entity->field_qh_visualization_filters->value;
+
+    $referencedDataset = $entity
+      ->get('field_qh_visualization_dataset')
+      ->first()
+      ->get('entity')
+      ->getTarget()
+      ->getValue();
+
+    $datasetUrn = $referencedDataset->field_quanthub_urn->value;
 
     $elements['#attached']['library'][] = 'quanthub_visualization/dafna';
 
     foreach ($items as $delta => $item) {
-      $elements['#attached']['drupalSettings']['quanthubVisualization']['media'][$media_id] = json_decode($item->value);
+      $elements['#attached']['drupalSettings']['quanthubVisualization']['media'][$media_id]['visualizationConfig'] = json_decode($item->value);
+      $elements['#attached']['drupalSettings']['quanthubVisualization']['media'][$media_id]['dataSourceConfig'] = json_decode($dataSourceConfig);
+      $elements['#attached']['drupalSettings']['quanthubVisualization']['media'][$media_id]['dataSource'] = $datasetUrn;
 
       $elements[$delta] = [
         [
@@ -39,7 +52,7 @@ class QuanthubVisualizationFormatter extends FormatterBase {
           '#tag' => 'div',
           '#attributes' => [
             'class' => 'vega-visualization',
-            'data-media-id' => $media_id
+            'data-media-id' => $media_id,
           ],
         ],
       ];
