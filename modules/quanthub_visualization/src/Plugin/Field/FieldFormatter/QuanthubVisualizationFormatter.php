@@ -52,7 +52,7 @@ class QuanthubVisualizationFormatter extends FormatterBase {
           '#tag' => 'div',
           '#attributes' => [
             'class' => 'vega-visualization',
-            'data-media-id' => $media_id
+            'data-media-id' => $media_id,
           ],
         ],
       ];
