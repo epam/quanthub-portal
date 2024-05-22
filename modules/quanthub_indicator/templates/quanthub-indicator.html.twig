@@ -20,6 +20,7 @@
 	</div>
 	{% if indicator_topics is not empty %}
 		<div class="field--name-field-topics">
+      <div class="field__label">{{ 'Topics'|t }}:</div>
 			{% for item in indicator_topics %}
 				<span class="field__item">
 					{{ item }}
