@@ -6,11 +6,11 @@
   padding: 8px 0;
   white-space: nowrap;
 
-  .field__item:first-child::before {
-    display: none;
+  .field__label {
+    font-weight: normal;
   }
 
-  .field__label {
+  .field__item:first-child::before {
     display: none;
   }
 
