@@ -29,11 +29,11 @@ class QuanthubVisualizationWidget extends StringTextareaWidget {
 
     $element['#attached']['library'][] = 'quanthub_visualization/dafna-config-editor';
 
-    $element['config_editor'] = [
+    $element['qh_json_editor'] = [
       '#type' => 'html_tag',
       '#tag' => 'div',
       '#attributes' => [
-        'id' => 'config-editor',
+        'class' => ['qh-json-editor-container'],
       ],
     ];
 
