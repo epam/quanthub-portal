@@ -42,9 +42,14 @@ class QuanthubVisualizationFormatter extends FormatterBase {
     $elements['#attached']['library'][] = 'quanthub_visualization/dafna';
 
     foreach ($items as $delta => $item) {
-      $elements['#attached']['drupalSettings']['quanthubVisualization']['media'][$media_id]['visualizationConfig'] = json_decode($item->value);
-      $elements['#attached']['drupalSettings']['quanthubVisualization']['media'][$media_id]['dataSourceConfig'] = json_decode($dataSourceConfig);
-      $elements['#attached']['drupalSettings']['quanthubVisualization']['media'][$media_id]['dataSource'] = $datasetUrn;
+      $visualization_data = [
+        'visualizationTitle' => $entity->getName(),
+        'visualizationConfig' => json_decode($item->value),
+        'dataSourceConfig' => json_decode($dataSourceConfig),
+        'dataSource' => $datasetUrn,
+      ];
+
+      $elements['#attached']['drupalSettings']['quanthubVisualization']['media'][$media_id] = $visualization_data;
 
       $elements[$delta] = [
         [
