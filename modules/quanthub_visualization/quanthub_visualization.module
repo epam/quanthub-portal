@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Quanthub Visualization module.
+ */
+
+use Drupal\quanthub_visualization\Form\QuanthubVisualizationForm;
+
+/**
+ * Implements hook_media_source_info_alter().
+ */
+function quanthub_visualization_media_source_info_alter(array &$sources) {
+  if (empty($sources['qh_visualization']['forms']['media_library_add'])) {
+    $sources['qh_visualization']['forms']['media_library_add'] = QuanthubVisualizationForm::class;
+  }
+}
