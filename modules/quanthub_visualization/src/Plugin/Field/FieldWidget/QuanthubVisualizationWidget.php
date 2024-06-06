@@ -35,6 +35,11 @@ class QuanthubVisualizationWidget extends StringTextareaWidget {
     $element['#attached']['library'][] = 'quanthub_visualization/dafna';
     $element['#attached']['library'][] = 'quanthub_visualization/dafna_rebuild';
 
+    $element['value']['#type'] = 'hidden';
+    $element['title'] = [
+      '#type' => 'item',
+      '#title' => $this->t('Visualization Config'),
+    ];
     $element['qh_json_editor'] = [
       '#type' => 'html_tag',
       '#tag' => 'div',
