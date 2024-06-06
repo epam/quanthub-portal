@@ -4,6 +4,7 @@ namespace Drupal\quanthub_visualization\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextareaWidget;
 use Drupal\Core\Form\FormStateInterface;
@@ -32,6 +33,7 @@ class QuanthubVisualizationWidget extends StringTextareaWidget {
 
     $element['#attached']['library'][] = 'quanthub_visualization/dafna-config-editor';
     $element['#attached']['library'][] = 'quanthub_visualization/dafna';
+    $element['#attached']['library'][] = 'quanthub_visualization/dafna_rebuild';
 
     $element['qh_json_editor'] = [
       '#type' => 'html_tag',
@@ -104,6 +106,7 @@ class QuanthubVisualizationWidget extends StringTextareaWidget {
 
     $response = new AjaxResponse();
     $response->addCommand(new HtmlCommand('.visualization-preview-container', $preview_data, []));
+    $response->addCommand(new InvokeCommand('html', 'quanthubVisualizationPreview', [0]));
     return $response;
   }
 
