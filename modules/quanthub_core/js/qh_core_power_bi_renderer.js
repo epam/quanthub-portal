@@ -56,9 +56,10 @@
             settings: settings
           });
           context.report.off("rendered");
-          context.report.on("rendered", function() {
+          context.report.on('rendered', function() {
             applyLocaleBookmark(context);
-            context.report.off("rendered");
+            updateReportSize($, context);
+            context.report.off('rendered');
           });
 
           context.report.iframe.onload = () => {

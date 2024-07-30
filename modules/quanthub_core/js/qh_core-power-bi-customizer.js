@@ -67,3 +67,20 @@ function powerbi_embed_customizeReport($, context, title = '', name = '') {
     }
   });
 }
+
+function updateReportSize($, context) {
+  Promise.all([context.report.getActivePage(), context.report.getZoom()])
+    .then(([activePage, zoomLevel]) => {
+      const { defaultSize } = activePage;
+      const zoom = zoomLevel === 0 ? 1 : zoomLevel;
+      const scaledWidth = Math.round(defaultSize.width * zoom);
+      const scaledHeight = Math.round(defaultSize.height * zoom);
+
+      $(`#${context.selector}`)
+        .css('height', scaledHeight)
+        .css('max-width', scaledWidth);
+    })
+    .catch(error => {
+      console.error('Failed to resize report:', error);
+    });
+}
