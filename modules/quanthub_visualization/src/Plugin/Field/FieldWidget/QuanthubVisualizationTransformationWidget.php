@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\multivalue_form_element\Element\MultiValue;
 
 /**
- * Plugin implementation of the 'quanthub_visualization_transformation_json' widget.
+ * Implementation of the 'quanthub_visualization_transformation_json' widget.
  *
  * @FieldWidget(
  *   id = "quanthub_visualization_transformation_json",
