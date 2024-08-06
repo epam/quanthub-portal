@@ -8,11 +8,11 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\multivalue_form_element\Element\MultiValue;
 
 /**
- * Plugin implementation of the 'quanthub_visualization_filters_json' widget.
+ * Plugin implementation of the 'quanthub_visualization_transformation_json' widget.
  *
  * @FieldWidget(
- *   id = "quanthub_visualization_filters_json",
- *   label = @Translation("Quanthub Visualization Filters Widget"),
+ *   id = "quanthub_visualization_transformation_json",
+ *   label = @Translation("Quanthub Visualization Data Transformation Widget"),
  *   field_types = {
  *     "json",
  *     "json_native",
@@ -20,23 +20,7 @@ use Drupal\multivalue_form_element\Element\MultiValue;
  *   }
  * )
  */
-class QuanthubVisualizationFiltersWidget extends WidgetBase {
-
-  /**
-   * Options for operator.
-   */
-  const OPTIONS = [
-    'EQUALS' => 'eq',
-    'NOT_EQUALS' => 'ne',
-    'LESS' => 'lt',
-    'LESS_OR_EQUAL' => 'le',
-    'GREATER' => 'gt',
-    'GREATER_OR_EQUAL' => 'ge',
-    'CONTAINS' => 'co',
-    'NOT_CONTAINS' => 'nc',
-    'STARTS' => 'sw',
-    'ENDS' => 'ew',
-  ];
+class QuanthubVisualizationTransformationWidget extends WidgetBase {
 
   /**
    * {@inheritdoc}
@@ -47,22 +31,16 @@ class QuanthubVisualizationFiltersWidget extends WidgetBase {
     // @todo add remove button.
     $element['value'] = [
       '#type' => 'multivalue',
-      '#title' => $this->t('Filters'),
+      '#title' => $this->t('Data Transformation Config'),
       '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
-      '#default_value' => !empty($json_value['filters']) ? $json_value['filters'] : [],
-      'componentCode' => [
+      '#default_value' => !empty($json_value['display']) ? $json_value['display'] : [],
+      'dimensionId' => [
         '#type' => 'textfield',
-        '#title' => $this->t('Parameter'),
+        '#title' => $this->t('Dimension ID'),
       ],
-      'operator' => [
-        '#type' => 'select',
-        '#title' => $this->t('Operator'),
-        '#options' => array_flip(self::OPTIONS),
-        '#empty_option' => $this->t('- None -'),
-      ],
-      'value' => [
+      'field' => [
         '#type' => 'textfield',
-        '#title' => $this->t('Value'),
+        '#title' => $this->t('Field'),
       ],
       '#element_validate' => [
         [$this, 'validate'],
@@ -84,7 +62,7 @@ class QuanthubVisualizationFiltersWidget extends WidgetBase {
     $value = $element['#value'];
 
     $value = array_filter($value, function ($item) {
-      if (empty($item['componentCode']) && empty($item['operator']) && empty($item['value'])) {
+      if (empty($item['dimensionId']) && empty($item['field'])) {
         return FALSE;
       }
       else {
@@ -92,7 +70,7 @@ class QuanthubVisualizationFiltersWidget extends WidgetBase {
       }
     });
 
-    $value = json_encode(['filters' => $value]);
+    $value = json_encode(['display' => $value]);
     $form_state->setValueForElement($element, $value);
   }
 
