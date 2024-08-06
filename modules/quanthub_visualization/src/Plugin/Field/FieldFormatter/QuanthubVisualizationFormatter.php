@@ -29,6 +29,8 @@ class QuanthubVisualizationFormatter extends FormatterBase {
     $entity = $items->getEntity();
     $media_id = $entity->id();
     $dataSourceConfig = $entity->field_qh_visualization_filters->value;
+    $displayConfig = $entity->field_qh_visualization_transform->value;
+    $dafnaType = $entity->field_qh_visualization_type->value;
 
     $referencedDataset = $entity
       ->get('field_qh_visualization_dataset')
@@ -46,6 +48,8 @@ class QuanthubVisualizationFormatter extends FormatterBase {
         'visualizationTitle' => $entity->getName(),
         'visualizationConfig' => json_decode($item->value),
         'dataSourceConfig' => json_decode($dataSourceConfig),
+        'dataTransformationsConfig' => json_decode($displayConfig),
+        'dafnaType' => $dafnaType,
         'dataSource' => $datasetUrn,
       ];
 
