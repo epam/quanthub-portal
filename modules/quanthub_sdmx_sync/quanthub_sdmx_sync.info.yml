@@ -3,3 +3,6 @@ type: module
 description: 'Quanthub SDMX Sync for syncing data'
 core_version_requirement: ^9.5.2 || ^10
 package: 'Epam Quanthub'
+dependencies:
+  - quanthub_core
+  - ultimate_cron
