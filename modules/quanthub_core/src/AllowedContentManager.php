@@ -3,6 +3,7 @@
 namespace Drupal\quanthub_core;
 
 use Drupal\Component\Datetime\Time;
+use Drupal\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\LanguageManager;
@@ -27,11 +28,18 @@ class AllowedContentManager implements QuanthubCoreInterface {
   const CACHE_TIME = 900;
 
   /**
-   * SDMX client.
+  * The (lazy loaded) dependency injection (DI) container.
+  *
+  * @var ?\Drupal\Component\DependencyInjection\ContainerInterface
+  */
+  protected ?ContainerInterface $container;
+
+  /**
+   * The (lazy loaded) SDMX client.
    *
-   * @var \Drupal\quanthub_sdmx_sync\QuanthubSdmxClient
+   * @var ?\Drupal\quanthub_sdmx_sync\QuanthubSdmxClient
    */
-  protected $quanthubSdmxClient;
+  protected ?QuanthubSdmxClient $quanthubSdmxClient;
 
   /**
    * The time service.
@@ -72,13 +80,11 @@ class AllowedContentManager implements QuanthubCoreInterface {
    * {@inheritDoc}
    */
   public function __construct(
-    QuanthubSdmxClient $quanthubSdmxClient,
     AccountProxy $current_user,
     CacheBackendInterface $cache,
     LanguageManager $language_manager,
     Time $time,
   ) {
-    $this->quanthubSdmxClient = $quanthubSdmxClient;
     $this->currentUser = $current_user;
     $this->cache = $cache;
     $this->languageManager = $language_manager;
@@ -142,7 +148,32 @@ class AllowedContentManager implements QuanthubCoreInterface {
    * Get User's Dataset List.
    */
   public function getUserDatasetList() {
-    return $this->quanthubSdmxClient->getDatasetList();
+    return $this->quanthubSdmxClient()->getDatasetList();
+  }
+
+  /**
+   * Get Dependency Injection container.
+   *
+   * @return \Drupal\Component\DependencyInjection\ContainerInterface
+   *   Current Dependency Injection container.
+   */
+  protected function getContainer(): ContainerInterface {
+    if (!isset($this->container)) {
+      $this->container = \Drupal::getContainer();
+    }
+    return $this->container;
+  }
+
+  /**
+   * Get lazy-loaded quanthub_sdmx_sync service.
+   *
+   * @return QuanthubSdmxClient
+   */
+  protected function quanthubSdmxClient(): QuanthubSdmxClient {
+    if (!isset($this->quanthubSdmxClient)) {
+      $this->quanthubSdmxClient = $this->getContainer()->get('quanthubSdmxClient');
+    }
+    return $this->quanthubSdmxClient;
   }
 
 }

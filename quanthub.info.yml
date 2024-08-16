@@ -11,7 +11,7 @@ install:
   - block
   - block_content
   - breakpoint
-  - ckeditor
+  - ckeditor5
   - ckeditor_details
   - colorbutton
   - comment
@@ -76,6 +76,7 @@ install:
   - quanthub_metadata_button
   - quanthub_pivot
   - quanthub_sdmx_proxy
+  - quanthub_sdmx_sync
   - quanthub_statgpt
   - rabbit_hole
   - rh_taxonomy
