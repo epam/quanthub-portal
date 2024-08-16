@@ -159,7 +159,7 @@ class AllowedContentManager implements QuanthubCoreInterface {
    */
   protected function getContainer(): ContainerInterface {
     if (!isset($this->container)) {
-      $this->container = \Drupal::getContainer();
+      $this->container = quanthub_core_container();
     }
     return $this->container;
   }

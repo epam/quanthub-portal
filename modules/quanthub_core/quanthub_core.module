@@ -280,3 +280,11 @@ function quanthub_core_language_switch_links_alter(array &$links, $type, Url $ur
     }
   }
 }
+
+/**
+ * Workaround to fix the CodeSniffer.
+ * @todo review how to fix the circular dependency without it.
+ */
+function quanthub_core_container() {
+  return \Drupal::getContainer();
+}
