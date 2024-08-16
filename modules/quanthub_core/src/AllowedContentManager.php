@@ -28,10 +28,10 @@ class AllowedContentManager implements QuanthubCoreInterface {
   const CACHE_TIME = 900;
 
   /**
-  * The (lazy loaded) dependency injection (DI) container.
-  *
-  * @var ?\Drupal\Component\DependencyInjection\ContainerInterface
-  */
+   * The (lazy loaded) dependency injection (DI) container.
+   *
+   * @var ?\Drupal\Component\DependencyInjection\ContainerInterface
+   */
   protected ?ContainerInterface $container;
 
   /**
@@ -167,7 +167,8 @@ class AllowedContentManager implements QuanthubCoreInterface {
   /**
    * Get lazy-loaded quanthub_sdmx_sync service.
    *
-   * @return QuanthubSdmxClient
+   * @return \Drupal\quanthub_sdmx_sync\QuanthubSdmxClient
+   *   QuanthubSdmxClient service.
    */
   protected function quanthubSdmxClient(): QuanthubSdmxClient {
     if (!isset($this->quanthubSdmxClient)) {
