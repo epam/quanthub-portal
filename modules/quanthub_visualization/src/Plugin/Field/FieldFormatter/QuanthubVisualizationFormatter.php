@@ -31,6 +31,7 @@ class QuanthubVisualizationFormatter extends FormatterBase {
     $dataSourceConfig = $entity->field_qh_visualization_filters->value;
     $displayConfig = $entity->field_qh_visualization_transform->value;
     $dafnaType = $entity->field_qh_visualization_type->value;
+    $dataFilters = $entity->field_visualization_filters->value;
 
     $referencedDataset = $entity
       ->get('field_qh_visualization_dataset')
@@ -50,6 +51,7 @@ class QuanthubVisualizationFormatter extends FormatterBase {
         'dataSourceConfig' => json_decode($dataSourceConfig),
         'dataTransformationsConfig' => json_decode($displayConfig),
         'dafnaType' => $dafnaType,
+        'dataFilters' => $dataFilters,
         'dataSource' => $datasetUrn,
       ];
 
