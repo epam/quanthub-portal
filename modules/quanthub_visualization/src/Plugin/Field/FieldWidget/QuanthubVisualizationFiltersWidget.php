@@ -47,13 +47,9 @@ class QuanthubVisualizationFiltersWidget extends WidgetBase {
     // @todo add remove button.
     $element['value'] = [
       '#type' => 'multivalue',
-      '#title' => $this->t('Filters'),
+      '#title' => $this->t('Time Filters'),
       '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
       '#default_value' => !empty($json_value['filters']) ? $json_value['filters'] : [],
-      'componentCode' => [
-        '#type' => 'textfield',
-        '#title' => $this->t('Parameter'),
-      ],
       'operator' => [
         '#type' => 'select',
         '#title' => $this->t('Operator'),
@@ -84,7 +80,7 @@ class QuanthubVisualizationFiltersWidget extends WidgetBase {
     $value = $element['#value'];
 
     $value = array_filter($value, function ($item) {
-      if (empty($item['componentCode']) && empty($item['operator']) && empty($item['value'])) {
+      if (empty($item['operator']) && empty($item['value'])) {
         return FALSE;
       }
       else {
@@ -92,7 +88,7 @@ class QuanthubVisualizationFiltersWidget extends WidgetBase {
       }
     });
 
-    $value = json_encode(['filters' => $value]);
+    $value = json_encode(['timeFilters' => $value]);
     $form_state->setValueForElement($element, $value);
   }
 
