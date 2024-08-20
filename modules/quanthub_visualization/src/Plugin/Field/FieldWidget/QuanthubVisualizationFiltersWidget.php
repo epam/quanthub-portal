@@ -49,7 +49,7 @@ class QuanthubVisualizationFiltersWidget extends WidgetBase {
       '#type' => 'multivalue',
       '#title' => $this->t('Time Filters'),
       '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
-      '#default_value' => !empty($json_value['filters']) ? $json_value['filters'] : [],
+      '#default_value' => !empty($json_value['timeFilters']) ? $json_value['timeFilters'] : [],
       'operator' => [
         '#type' => 'select',
         '#title' => $this->t('Operator'),
