@@ -172,7 +172,7 @@ class AllowedContentManager implements QuanthubCoreInterface {
    */
   protected function quanthubSdmxClient(): QuanthubSdmxClient {
     if (!isset($this->quanthubSdmxClient)) {
-      $this->quanthubSdmxClient = $this->getContainer()->get('quanthubSdmxClient');
+      $this->quanthubSdmxClient = $this->getContainer()->get('sdmx_client');
     }
     return $this->quanthubSdmxClient;
   }
