@@ -1,0 +1,7 @@
+quanthub_analytical_studio.analytical_studio:
+  path: '/analytical-studio'
+  defaults:
+    _controller: '\Drupal\quanthub_analytical_studio\Controller\AnalyticalStudio:analyticalStudio'
+    _title_callback: '\Drupal\quanthub_analytical_studio\Controller\QuanthubAnalyticalStudioBlock::getTitle'
+  requirements:
+    _permission: 'access content'
