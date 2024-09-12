@@ -1,0 +1,5 @@
+name: 'Quanthub Analytical Studio'
+type: module
+description: 'Quanthub custom component Analytical Studio.'
+core_version_requirement: ^9.5.2 || ^10
+package: 'Epam Quanthub'
