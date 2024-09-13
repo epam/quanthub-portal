@@ -20,9 +20,13 @@ class QuanthubAnalyticalStudioBlock extends BlockBase {
   public function build() {
     $build = [];
     $build['quanthub_analytical_studio_block'] = [
-      '#markup' => '<div id="analytical_studio"></div>',
+      '#markup' => '<div id="analytical-studio">
+      <div class="spinner spinner--explorer">
+      <div class="spinner__bg">
+      <div class="spinner__circle"></div>
+      </div></div></div>',
       '#attached' => [
-        'library' => 'quanthub_analytical_studio/analytical-studio',
+        'library' => 'quanthub_datasetexplorer/dataset-explorer',
         'drupalSettings' => [],
       ],
     ];

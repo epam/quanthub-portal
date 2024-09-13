@@ -1,8 +1,8 @@
 analytical-studio:
   js:
-    /libraries/quanthub-drupal-react/quanthub_analytical_studio/dist/index.js: { preprocess: false }
+    /libraries/quanthub-drupal-react/quanthub_datasetexplorer/dist/index.js: { preprocess: false }
   css:
     base:
-      /libraries/quanthub-drupal-react/quanthub_analytical_studio/dist/styles.css: {}
+      /libraries/quanthub-drupal-react/quanthub_datasetexplorer/dist/styles.css: {}
   dependencies:
     - core/drupal
