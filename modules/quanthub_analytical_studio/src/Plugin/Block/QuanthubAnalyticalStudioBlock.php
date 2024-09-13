@@ -26,7 +26,7 @@ class QuanthubAnalyticalStudioBlock extends BlockBase {
       <div class="spinner__circle"></div>
       </div></div></div>',
       '#attached' => [
-        'library' => 'quanthub_datasetexplorer/dataset-explorer',
+        'library' => 'quanthub_analytical_studio/analytical-studio',
         'drupalSettings' => [],
       ],
     ];
