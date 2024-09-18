@@ -95,7 +95,7 @@ class QuanthubVisualizationWidget extends StringTextareaWidget
         'class' => ['datasetexplorer-preview-container'],
       ],
     ];
-
+    $element['#attached']['drupalSettings']['workspaceId'] = getenv('SDMX_WORKSPACE_ID');
     return $element;
   }
 
