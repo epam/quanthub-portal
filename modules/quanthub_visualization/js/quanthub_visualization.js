@@ -1,6 +1,6 @@
-(function($) {
+(function ($) {
   // Argument passed from InvokeCommand.
-  $.fn.quanthubVisualizationPreview = function(argument) {
+  $.fn.quanthubVisualizationPreview = function (argument) {
     window.dispatchEvent(
       new CustomEvent(
         'RERENDER_DAFNA_VISUALIZATION', {

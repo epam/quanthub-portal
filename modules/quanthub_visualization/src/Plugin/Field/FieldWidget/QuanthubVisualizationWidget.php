@@ -23,14 +23,12 @@ use Drupal\node\Entity\Node;
  *   }
  * )
  */
-class QuanthubVisualizationWidget extends StringTextareaWidget
-{
+class QuanthubVisualizationWidget extends StringTextareaWidget {
 
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state)
-  {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $element['#attached']['library'][] = 'quanthub_visualization/dafna-config-editor';
@@ -95,21 +93,25 @@ class QuanthubVisualizationWidget extends StringTextareaWidget
         'class' => ['datasetexplorer-preview-container'],
       ],
     ];
+    // WorkspaceID always relevant.
     $element['#attached']['drupalSettings']['workspaceId'] = getenv('SDMX_WORKSPACE_ID');
     return $element;
   }
 
   /**
-   * Ajax callback for preparing visualization data for preview.
+   * Collect all necessary data for previews.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   *
+   * @return array
+   *   Prepared form.
    */
-  public function preview(array &$form, FormStateInterface $form_state): AjaxResponse
-  {
+  protected function provideDrupalSettingsData(FormStateInterface $form_state) {
     $datasetUrn = Node::load($form_state->getValue('field_qh_visualization_dataset')[0]['target_id'])->get('field_quanthub_urn')->getString();
-//    $form_state->getFormObject()->media->get('field_qh_visualization_dataset')->get(0)->getValue()['target_id']
 
-//    $datasetUrn = $form_state->getFormObject()->media->get('field_qh_visualization_dataset')->get(0)->get('target_id')->getValue();
     $filters = $form_state->getValue('field_qh_visualization_filters')[0]['value'];
-//    $filters = reset($form_state->getValue('media'))['fields']['field_qh_visualization_filters'][0]['value'];
+
     unset($filters['add_more']);
     foreach ($filters as &$filter) {
       unset($filter['_weight']);
@@ -118,13 +120,15 @@ class QuanthubVisualizationWidget extends StringTextareaWidget
     $filters = array_filter($filters, function ($item) {
       if (empty($item['componentCode']) && empty($item['operator']) && empty($item['value'])) {
         return FALSE;
-      } else {
+      }
+      else {
         return TRUE;
       }
     });
-//    $displayConfig = reset($form_state->getValue('media'))['fields']['field_qh_visualization_transform'][0]['value'];
+
     $displayConfig = $form_state->getValue('field_qh_visualization_transform')[0]['value'];
     $dataTransformationsConfig['display'] = [];
+
     // Build dataTransformationsConfig.
     foreach ($displayConfig as $item) {
       if (is_array($item) && !empty($item['dimensionId'])) {
@@ -134,21 +138,29 @@ class QuanthubVisualizationWidget extends StringTextareaWidget
         ];
       }
     }
-//    $visualizationConfig = reset($form_state->getValue('media'))['fields']['field_media_qh_visualization'][0]['value'];
-//    $data = \Drupal::service('quanthub_visualization.media_config')->extractMediaConfig($form_state);
+
     $visualizationConfig = $form_state->getValue('field_media_qh_visualization')[0]['value'];
     $dafnaType = $form_state->getValue('field_qh_visualization_type')[0]['value'];
     $dataFilters = $form_state->getValue('field_visualization_filters')[0]['value'];
-    $preview_data['#attached']['drupalSettings']['workspaceId'] = getenv('SDMX_WORKSPACE_ID');
+
     $preview_data['#attached']['drupalSettings']['quanthubVisualization']['media'][0] = [
       'dafnaType' => $dafnaType,
-      'dataFilters' => empty($dataFilters) ? null : $dataFilters,
+      'dataFilters' => empty($dataFilters) ? NULL : $dataFilters,
       'visualizationTitle' => $form_state->getValue('name')[0]['value'],
       'visualizationConfig' => json_decode($visualizationConfig),
       'dataTransformationsConfig' => $dataTransformationsConfig,
-      'dataSourceConfig' => ['timeFilters' => $filters], //filters
+      'dataSourceConfig' => ['timeFilters' => $filters],
       'dataSource' => $datasetUrn,
     ];
+
+    return $preview_data;
+  }
+
+  /**
+   * Ajax callback for preparing visualization data for preview.
+   */
+  public function preview(array &$form, FormStateInterface $form_state): AjaxResponse {
+    $preview_data = $this->provideDrupalSettingsData($form_state);
 
     $preview_data['qh_visualization_preview'] = [
       '#type' => 'html_tag',
@@ -160,7 +172,7 @@ class QuanthubVisualizationWidget extends StringTextareaWidget
     ];
 
     $response = new AjaxResponse();
-
+    $response->addCommand(new HtmlCommand('.datasetexplorer-preview-container', []));
     $response->addCommand(new HtmlCommand('.visualization-preview-container', $preview_data, []));
     $response->addCommand(new InvokeCommand('html', 'quanthubVisualizationPreview', [0]));
 
@@ -168,57 +180,15 @@ class QuanthubVisualizationWidget extends StringTextareaWidget
   }
 
   /**
+   * Dataset explorer preview.
+   *
    * @param array $form
-   * @param FormStateInterface $form_state
-   * @return AjaxResponse
+   *   Form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
    */
-  public function datasetExplorerPreview(array &$form, FormStateInterface $form_state): AjaxResponse
-  {
-    $datasetUrn = Node::load($form_state->getValue('field_qh_visualization_dataset')[0]['target_id'])->get('field_quanthub_urn')->getString();
-//    $form_state->getFormObject()->media->get('field_qh_visualization_dataset')->get(0)->getValue()['target_id']
-
-//    $datasetUrn = $form_state->getFormObject()->media->get('field_qh_visualization_dataset')->get(0)->get('target_id')->getValue();
-    $filters = $form_state->getValue('field_qh_visualization_filters')[0]['value'];
-//    $filters = reset($form_state->getValue('media'))['fields']['field_qh_visualization_filters'][0]['value'];
-    unset($filters['add_more']);
-    foreach ($filters as &$filter) {
-      unset($filter['_weight']);
-    }
-
-    $filters = array_filter($filters, function ($item) {
-      if (empty($item['componentCode']) && empty($item['operator']) && empty($item['value'])) {
-        return FALSE;
-      } else {
-        return TRUE;
-      }
-    });
-//    $displayConfig = reset($form_state->getValue('media'))['fields']['field_qh_visualization_transform'][0]['value'];
-    $displayConfig = $form_state->getValue('field_qh_visualization_transform')[0]['value'];
-    $dataTransformationsConfig['display'] = [];
-    // Build dataTransformationsConfig.
-    foreach ($displayConfig as $item) {
-      if (is_array($item) && !empty($item['dimensionId'])) {
-        $dataTransformationsConfig['display'][] = [
-          'dimensionId' => $item['dimensionId'],
-          'field' => $item['field'],
-        ];
-      }
-    }
-//    $visualizationConfig = reset($form_state->getValue('media'))['fields']['field_media_qh_visualization'][0]['value'];
-//    $data = \Drupal::service('quanthub_visualization.media_config')->extractMediaConfig($form_state);
-    $visualizationConfig = $form_state->getValue('field_media_qh_visualization')[0]['value'];
-    $dafnaType = $form_state->getValue('field_qh_visualization_type')[0]['value'];
-    $dataFilters = $form_state->getValue('field_visualization_filters')[0]['value'];
-    $preview_data['#attached']['drupalSettings']['workspaceId'] = getenv('SDMX_WORKSPACE_ID');
-    $preview_data['#attached']['drupalSettings']['quanthubVisualization']['media'][0] = [
-      'dafnaType' => $dafnaType,
-      'dataFilters' => empty($dataFilters) ? null : $dataFilters,
-      'visualizationTitle' => $form_state->getValue('name')[0]['value'],
-      'visualizationConfig' => json_decode($visualizationConfig),
-      'dataTransformationsConfig' => $dataTransformationsConfig,
-      'dataSourceConfig' => ['timeFilters' => $filters], //filters
-      'dataSource' => $datasetUrn,
-    ];
+  public function datasetExplorerPreview(array &$form, FormStateInterface $form_state): AjaxResponse {
+    $preview_data = $this->provideDrupalSettingsData($form_state);
 
     $preview_data['qh_datasetexplorer_preview'] = [
       '#type' => 'html_tag',
@@ -231,7 +201,7 @@ class QuanthubVisualizationWidget extends StringTextareaWidget
     ];
 
     $response = new AjaxResponse();
-
+    $response->addCommand(new HtmlCommand('.visualization-preview-container', []));
     $response->addCommand(new HtmlCommand('.datasetexplorer-preview-container', $preview_data, []));
     $response->addCommand(new InvokeCommand('html', 'quanthubDatasetExplorerPreview', [0]));
     return $response;
