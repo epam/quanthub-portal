@@ -15,3 +15,14 @@ dafna-config-editor:
 dafna_rebuild:
   js:
     js/quanthub_visualization.js: {}
+
+quanthub-dataset-explorer:
+  js:
+    /libraries/quanthub-drupal-react/quanthub_datasetexplorer/dist/index.js: {}
+  css:
+    base:
+      /libraries/quanthub-drupal-react/quanthub_datasetexplorer/dist/styles.css: {}
+
+quanthub-dataset-rebuild:
+  js:
+    js/quanthub_dataset_explorer.js: {}
