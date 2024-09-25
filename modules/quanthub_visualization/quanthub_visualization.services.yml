@@ -1,0 +1,3 @@
+services:
+  quanthub_visualization.preview_helper:
+    class: Drupal\quanthub_visualization\Service\PreviewHelper
