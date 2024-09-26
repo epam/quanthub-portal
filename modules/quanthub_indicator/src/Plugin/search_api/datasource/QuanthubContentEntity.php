@@ -48,7 +48,7 @@ class QuanthubContentEntity extends ContentEntity {
   /**
    * {@inheritdoc}
    */
-  public function getPartialItemIds($page = NULL, array $bundles = NULL, array $languages = NULL) {
+  public function getPartialItemIds($page = NULL, ?array $bundles = NULL, ?array $languages = NULL) {
     // These would be pretty pointless calls, but for the sake of completeness
     // we should check for them and return early. (Otherwise makes the rest of
     // the code more complicated.)

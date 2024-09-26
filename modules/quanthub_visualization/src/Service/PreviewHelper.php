@@ -2,13 +2,22 @@
 
 namespace Drupal\quanthub_visualization\Service;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\node\Entity\Node;
 
 /**
  * Visualization preview helper service.
  */
 class PreviewHelper {
+
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   Entity type manager.
+   */
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager) {
+  }
 
   /**
    * Collect all necessary data for previews.
@@ -20,7 +29,8 @@ class PreviewHelper {
    *   Prepared form.
    */
   public function provideDrupalSettingsData(FormStateInterface $form_state) {
-    $datasetUrn = Node::load($form_state->getValue('field_qh_visualization_dataset')[0]['target_id'])->get('field_quanthub_urn')->getString();
+    $nodeStorage = $this->entityTypeManager->getStorage('node');
+    $datasetUrn = $nodeStorage->load($form_state->getValue('field_qh_visualization_dataset')[0]['target_id'])->get('field_quanthub_urn')->getString();
 
     $filters = $form_state->getValue('field_qh_visualization_filters')[0]['value'];
 

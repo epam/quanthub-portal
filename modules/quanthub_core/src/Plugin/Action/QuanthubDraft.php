@@ -23,7 +23,7 @@ class QuanthubDraft extends ViewsBulkOperationsActionBase {
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($object instanceof Node) {
       $can_update = $object->access('update', $account, TRUE);
       $can_edit = $object->access('edit', $account, TRUE);
@@ -39,7 +39,7 @@ class QuanthubDraft extends ViewsBulkOperationsActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute(ContentEntityInterface $entity = NULL) {
+  public function execute(?ContentEntityInterface $entity = NULL) {
     if (!$state = $entity->get('moderation_state')->getString()) {
       return $this->t(":title  - can't change state",
         [
