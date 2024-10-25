@@ -86,16 +86,20 @@ class UserInfo implements UserInfoInterface {
   public function getToken() {
     // For anonymous and admin we will use anonymous token.
     if ($this->currentUser->isAnonymous() || $this->currentUser->id() == 1) {
-      if (!$this->cache->get(self::ANONYMOUS_TOKEN_CID)) {
-        $this->updateAnonymousToken();
-      }
-      $token = $this->cache->get(self::ANONYMOUS_TOKEN_CID)->data;
-    }
-    else {
-      $token = $this->openidConnectSession->getJsonWebTokens()->getAccessToken()->getValue();
+      return $this->getAnonymousToken();
     }
 
-    return $token;
+    return $this->openidConnectSession->getJsonWebTokens()->getAccessToken()->getValue();
+  }
+
+  /**
+   * Get token for anonymous from cache.
+   */
+  public function getAnonymousToken() {
+    if (!$this->cache->get(self::ANONYMOUS_TOKEN_CID)) {
+      $this->updateAnonymousToken();
+    }
+    return $this->cache->get(self::ANONYMOUS_TOKEN_CID)->data;
   }
 
   /**

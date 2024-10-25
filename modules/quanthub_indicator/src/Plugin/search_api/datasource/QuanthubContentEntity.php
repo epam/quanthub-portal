@@ -4,7 +4,7 @@ namespace Drupal\quanthub_indicator\Plugin\search_api\datasource;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\quanthub_sdmx_sync\QuanthubSdmxClient;
+use Drupal\quanthub_core\QuanthubSdmxClient;
 use Drupal\search_api\Plugin\search_api\datasource\ContentEntity;
 use Drupal\search_api\Utility\Utility;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,7 +22,7 @@ class QuanthubContentEntity extends ContentEntity {
   /**
    * The SDMX client.
    *
-   * @var \Drupal\quanthub_sdmx_sync\QuanthubSdmxClient
+   * @var \Drupal\quanthub_core\QuanthubSdmxClient
    */
   protected $sdmxClient;
 

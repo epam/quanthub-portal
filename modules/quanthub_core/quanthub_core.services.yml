@@ -55,3 +55,11 @@ services:
     arguments: ['@current_user', '@user.data']
     tags:
       - { name: cache.context}
+
+  # Client for calls to SDMX API.
+  logger.channel.sdmx_api:
+    parent: logger.channel_base
+    arguments: [ 'sdmx_api' ]
+  sdmx_client:
+    class: Drupal\quanthub_core\QuanthubSdmxClient
+    arguments: [ '@http_client_factory', '@user_info', '@logger.channel.sdmx_api' ]

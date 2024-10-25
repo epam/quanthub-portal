@@ -1,9 +1,8 @@
 <?php
 
-namespace Drupal\quanthub_sdmx_sync;
+namespace Drupal\quanthub_core;
 
 use Drupal\Core\Http\ClientFactory;
-use Drupal\quanthub_core\UserInfo;
 use GuzzleHttp\RequestOptions;
 use Psr\Log\LoggerInterface;
 
