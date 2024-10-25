@@ -8,7 +8,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Session\AccountProxy;
-use Drupal\quanthub_sdmx_sync\QuanthubSdmxClient;
 
 /**
  * The Manager for allowed content.
@@ -37,7 +36,7 @@ class AllowedContentManager implements QuanthubCoreInterface {
   /**
    * The (lazy loaded) SDMX client.
    *
-   * @var ?\Drupal\quanthub_sdmx_sync\QuanthubSdmxClient
+   * @var ?\Drupal\quanthub_core\QuanthubSdmxClient
    */
   protected ?QuanthubSdmxClient $quanthubSdmxClient;
 
@@ -167,7 +166,7 @@ class AllowedContentManager implements QuanthubCoreInterface {
   /**
    * Get lazy-loaded quanthub_sdmx_sync service.
    *
-   * @return \Drupal\quanthub_sdmx_sync\QuanthubSdmxClient
+   * @return \Drupal\quanthub_core\QuanthubSdmxClient
    *   QuanthubSdmxClient service.
    */
   protected function quanthubSdmxClient(): QuanthubSdmxClient {

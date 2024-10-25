@@ -8,7 +8,7 @@ use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
-use Drupal\quanthub_sdmx_sync\QuanthubSdmxClient;
+use Drupal\quanthub_core\QuanthubSdmxClient;
 use Drupal\search_api\Item\FieldInterface;
 use Drupal\search_api\Plugin\search_api\data_type\value\TextValue;
 use Drupal\search_api\Processor\FieldsProcessorPluginBase;
@@ -38,7 +38,7 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
   /**
    * The SDMX client.
    *
-   * @var \Drupal\quanthub_sdmx_sync\QuanthubSdmxClient
+   * @var \Drupal\quanthub_core\QuanthubSdmxClient
    */
   protected $sdmxClient;
 
@@ -122,7 +122,7 @@ class QuanthubIndicatorProcessor extends FieldsProcessorPluginBase {
   /**
    * Method DI.
    *
-   * @param \Drupal\quanthub_sdmx_sync\QuanthubSdmxClient $sdmx_client
+   * @param \Drupal\quanthub_core\QuanthubSdmxClient $sdmx_client
    *   The SDMX client.
    */
   protected function setSdmxClient(QuanthubSdmxClient $sdmx_client) {

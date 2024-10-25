@@ -7,7 +7,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\quanthub_sdmx_sync\QuanthubSdmxClient;
+use Drupal\quanthub_core\QuanthubSdmxClient;
 use Drupal\search_api\Plugin\search_api\datasource\ContentEntityTrackingManager;
 use Drupal\search_api\Task\TaskManagerInterface;
 
@@ -19,7 +19,7 @@ class QuanthubIndicatorContentEntityTrackingManager extends ContentEntityTrackin
   /**
    * The SDMX client.
    *
-   * @var \Drupal\quanthub_sdmx_sync\QuanthubSdmxClient
+   * @var \Drupal\quanthub_core\QuanthubSdmxClient
    */
   protected $sdmxClient;
 
@@ -39,7 +39,7 @@ class QuanthubIndicatorContentEntityTrackingManager extends ContentEntityTrackin
    *   The language manager.
    * @param \Drupal\search_api\Task\TaskManagerInterface $taskManager
    *   The task manager.
-   * @param \Drupal\quanthub_sdmx_sync\QuanthubSdmxClient $sdmxClient
+   * @param \Drupal\quanthub_core\QuanthubSdmxClient $sdmxClient
    *   The SDMX client.
    * @param \Drupal\Core\Database\Connection $database
    *   The database service.
