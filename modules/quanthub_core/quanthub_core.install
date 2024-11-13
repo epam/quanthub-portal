@@ -6,9 +6,30 @@
  */
 
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Implements hook_install().
+ *
+ * @see media_install()
+ */
+function quanthub_core_install() {
+  $file_system = \Drupal::service('file_system');
+  $source = \Drupal::service('extension.list.module')->getPath('quanthub_core') . '/images/icons';
+  $destination = \Drupal::config('media.settings')->get('icon_base_uri');
+
+  if (!file_exists($destination . '/power_bi.png')) {
+    try {
+      $file_system->copy($source . '/power_bi.png', $destination, FileExists::Error);
+    }
+    catch (FileException $e) {
+      // Ignore and continue.
+    }
+  }
+}
 
 /**
  * Change field type for field_powerbi_report.
@@ -257,4 +278,23 @@ function quanthub_core_update_8005() {
   }
 
   return t('Moved all terms from old vocabularies to Topics. Old vocabularies have been deleted.');
+}
+
+/**
+ * Copy PowerBI icon to icons folder.
+ */
+function quanthub_core_update_10101() {
+  \Drupal::moduleHandler()->loadInclude("media", "install");
+
+  media_install();
+
+  $destination = \Drupal::config('media.settings')->get('icon_base_uri');
+  if (!is_dir($destination)) {
+    throw new FileException("The directory $destination does not exist.");
+  }
+  if (!is_writable($destination)) {
+    throw new FileException("The directory $destination is not writable.");
+  }
+
+  quanthub_core_install();
 }

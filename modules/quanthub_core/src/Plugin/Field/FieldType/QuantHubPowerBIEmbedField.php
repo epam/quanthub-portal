@@ -18,17 +18,33 @@ use Drupal\powerbi_embed\Plugin\Field\FieldType\PowerBIEmbedField;
  *   default_widget = "quanthub_powerbi_embed_widget",
  *   default_formatter = "quanthub_powerbi_embed_formatter",
  *   column_groups = {
+ *     "report_id" = {
+ *        "label" = @Translation("Report ID"),
+ *        "translatable" = TRUE
+ *      },
+ *      "report_width" = {
+ *        "label" = @Translation("Report width"),
+ *        "translatable" = FALSE
+ *      },
+ *      "report_height" = {
+ *        "label" = @Translation("Report height"),
+ *        "translatable" = FALSE
+ *      },
+ *      "report_title" = {
+ *        "label" = @Translation("Report title"),
+ *        "translatable" = FALSE
+ *      },
  *     "report_extra_datasets" = {
  *       "label" = @Translation("Report extra datasets"),
- *       "translatable" = TRUE
+ *       "translatable" = FALSE
  *     },
  *     "report_page" = {
  *       "label" = @Translation("Report page"),
- *       "translatable" = TRUE
+ *       "translatable" = FALSE
  *     },
  *     "report_visual" = {
  *       "label" = @Translation("Report visual"),
- *       "translatable" = TRUE
+ *       "translatable" = FALSE
  *     },
  *   },
  * )
@@ -80,6 +96,13 @@ class QuantHubPowerBIEmbedField extends PowerBIEmbedField {
     $schema['columns'] += $columns;
 
     return $schema;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public static function mainPropertyName() {
+    return 'report_id';
   }
 
 }
