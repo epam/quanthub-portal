@@ -73,8 +73,8 @@ function updateReportSize($, context) {
     .then(([activePage, zoomLevel]) => {
       const { defaultSize } = activePage;
       const zoom = zoomLevel === 0 ? 1 : zoomLevel;
-      const scaledWidth = Math.round(defaultSize.width * zoom);
-      const scaledHeight = Math.round(defaultSize.height * zoom);
+      const scaledWidth = Math.ceil(defaultSize.width * zoom);
+      const scaledHeight = Math.ceil(defaultSize.height * zoom);
 
       $(`#${context.selector}`)
         .css('height', scaledHeight)
