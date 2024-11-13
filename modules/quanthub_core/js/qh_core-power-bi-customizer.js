@@ -28,21 +28,21 @@ function checkTokenAndUpdate($, context) {
 function updateToken($, context) {
   console.log('updating embed token');
   $.ajax({
-      type: "POST",
-      dataType: "json",
-      contentType: "application/json",
-      processData: false,
-      url: `/powerbi/embedconfig/${context.reportId}`,
-      data: JSON.stringify({ extraDatasets: context.extraDatasets }),
-      headers: {'Content-Type': 'application/json'},
-      error: (request, error) => {
-        console.error(error);
-        context.tokenExpiration = null;
-      },
-      success: async (response) => {
-        context.tokenExpiration = response.embed_token.expiration;
-        await context.report.setAccessToken(response.embed_token.token)
-      }
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json",
+    processData: false,
+    url: `/powerbi/embedconfig/${context.reportId}`,
+    data: JSON.stringify({ extraDatasets: context.extraDatasets }),
+    headers: { 'Content-Type': 'application/json' },
+    error: (request, error) => {
+      console.error(error);
+      context.tokenExpiration = null;
+    },
+    success: async (response) => {
+      context.tokenExpiration = response.embed_token.expiration;
+      await context.report.setAccessToken(response.embed_token.token)
+    }
   });
 }
 
@@ -56,8 +56,8 @@ function powerbi_embed_customizeReport($, context, title = '', name = '') {
 
   checkTokenAndUpdate($, context);
   setInterval(() => {
-      checkTokenAndUpdate($, context);
-    },
+    checkTokenAndUpdate($, context);
+  },
     INTERVAL_TIME
   );
 
@@ -73,8 +73,8 @@ function updateReportSize($, context) {
     .then(([activePage, zoomLevel]) => {
       const { defaultSize } = activePage;
       const zoom = zoomLevel === 0 ? 1 : zoomLevel;
-      const scaledWidth = Math.round(defaultSize.width * zoom);
-      const scaledHeight = Math.round(defaultSize.height * zoom);
+      const scaledWidth = Math.ceil(defaultSize.width * zoom);
+      const scaledHeight = Math.ceil(defaultSize.height * zoom);
 
       $(`#${context.selector}`)
         .css('height', scaledHeight)
