@@ -46,80 +46,6 @@ final class DatasetExplorer extends ControllerBase {
   }
 
   /**
-   * Build Slices block.
-   */
-  public function slices(Request $request) {
-    $block_manager = $this->pluginManagerBlock;
-
-    // You can hard code configuration or you load from settings.
-    $config = [];
-    $plugin_block = $block_manager->createInstance('quanthub_datasetexplorer_block', $config);
-
-    // Some blocks might implement access check.
-    $access_result = $plugin_block->access($this->currentUser);
-
-    // Return empty render array if user doesn't have access.
-    // $access_result can be boolean or an AccessResult class.
-    if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
-      // You might need to add some cache tags/contexts.
-      return [];
-    }
-
-    $build = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => ['datasetexplorer'],
-      ],
-      'element-content' => $plugin_block->build(),
-      '#weight' => 0,
-      '#cache' => [
-        'max-age' => 0,
-      ],
-    ];
-
-    $build['element-content']['#attached']['drupalSettings']['mode'] = 'slices';
-    $build['element-content']['#attached']['drupalSettings']['query'] = $request->query->all();
-    return $build;
-  }
-
-  /**
-   * Build pivot block.
-   */
-  public function pivot(Request $request) {
-    $block_manager = $this->pluginManagerBlock;
-
-    // You can hard code configuration or you load from settings.
-    $config = [];
-    $plugin_block = $block_manager->createInstance('quanthub_datasetexplorer_block', $config);
-
-    // Some blocks might implement access check.
-    $access_result = $plugin_block->access($this->currentUser);
-
-    // Return empty render array if user doesn't have access.
-    // $access_result can be boolean or an AccessResult class.
-    if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
-      // You might need to add some cache tags/contexts.
-      return [];
-    }
-
-    $build = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => ['datasetexplorer'],
-      ],
-      'element-content' => $plugin_block->build(),
-      '#weight' => 0,
-      '#cache' => [
-        'max-age' => 0,
-      ],
-    ];
-
-    $build['element-content']['#attached']['drupalSettings']['mode'] = 'pivot';
-    $build['element-content']['#attached']['drupalSettings']['query'] = $request->query->all();
-    return $build;
-  }
-
-  /**
    * Build explorer block.
    */
   public function explorer(Request $request) {
@@ -141,9 +67,6 @@ final class DatasetExplorer extends ControllerBase {
 
     $build = [
       '#type' => 'container',
-      '#attributes' => [
-        'class' => ['datasetexplorer'],
-      ],
       'element-content' => $plugin_block->build(),
       '#weight' => 0,
       '#cache' => [

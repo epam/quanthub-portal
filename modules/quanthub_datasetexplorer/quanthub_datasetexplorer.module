@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function quanthub_datasetexplorer_theme() {
+  return [
+    'datasetexplorer_block' => [
+      'template' => 'datasetexplorer-block',
+      'variables' => [],
+    ],
+  ];
+}
