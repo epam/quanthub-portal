@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Quanthub Chat Overlay module.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function quanthub_chat_overlay_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'quanthub_chat_overlay/chat-overlay';
+}

@@ -1,0 +1,5 @@
+name: 'Quanthub Chat Overlay'
+type: module
+description: 'Quanthub custom component Chat Overlay.'
+core_version_requirement: ^10 || ^11
+package: 'Epam Quanthub'
