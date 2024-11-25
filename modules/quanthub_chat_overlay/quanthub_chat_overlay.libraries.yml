@@ -1,5 +1,5 @@
 chat-overlay:
   js:
-    /libraries/quanthub-drupal-react/quanthub-libs/dist/chat-overlay/index.mjs: { attributes: { type: module } }
+    /libraries/quanthub-drupal-react/quanthub-libs/dist/chat-overlay/index.iife.js: {}
   dependencies:
     - core/drupal
