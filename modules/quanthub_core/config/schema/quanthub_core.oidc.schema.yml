@@ -1,0 +1,19 @@
+oidc.realm.quanthub_b2c_realm:
+  type: oidc.realm.generic.*
+  label: Quanthub B2C Realm configuration
+  mapping:
+    aud:
+      type: string
+      label: Audience data
+    user_info_endpoint:
+      type: uri
+      label: URL of user info token endpoint
+    user_info_endpoint_refresh:
+      type: uri
+      label: URL of user info token refresh endpoint
+    user_info_endpoint_anonymous:
+      type: uri
+      label: URL of anonymous user token endpoint
+    user_info_attributes_endpoint:
+      type: uri
+      label: URL of user info attributes endpoint

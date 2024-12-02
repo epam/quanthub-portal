@@ -5,4 +5,3 @@ quanthub_statgpt:
     _controller: '\Drupal\quanthub_statgpt\Controller\StatGPTController::build'
   requirements:
     _permission: 'access content'
-
