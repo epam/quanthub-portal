@@ -22,7 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @OpenidConnectRealm(
  *   id = "quanthub_b2c_realm",
  *   name = @Translation("Quanthub B2C Realm"),
- *   deriver = "Drupal\oidc\Plugin\Derivative\GenericOpenidConnectRealmDeriver"
  * )
  */
 class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements OpenidConnectRealmConfigurableInterface, UserInfoInterface {
@@ -42,7 +41,7 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
         'scope' => $this->getScopeParameter(),
         'client_id' => $this->getClientId(),
         'state' => $state,
-        'redirect_uri' => $redirect_url->setAbsolute()->toString(TRUE)->getGeneratedUrl(),
+        'redirect_uri' => $this->getRedirectUrl($redirect_url),
         'ui_locales' => $this->languageManager->getCurrentLanguage()->getId(),
       ],
     ]);
@@ -212,6 +211,7 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
         'json' => [
           'scopes' => $this->configuration['scopes'],
           'authString' => $code,
+          'redirectUri' => $this->getRedirectUrl(),
         ],
       ]);
 
@@ -244,6 +244,7 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
         'json' => [
           'scopes' => $this->configuration['scopes'],
           'authString' => $refresh_token->getValue(),
+          'redirectUri' => $this->getRedirectUrl(),
         ],
       ]);
 
@@ -262,6 +263,17 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
     $tokens = $this->getJsonWebTokensUserInfo($user_info_data, FALSE);
 
     return $tokens;
+  }
+
+  /**
+   * Helper to get redirect URL.
+   *
+   * @return string
+   *   The external URL string.
+   */
+  protected function getRedirectUrl(?Url $url = NULL) {
+    $url = $url ?? Url::fromRoute('oidc.openid_connect.login_redirect');
+    return $url->setAbsolute()->toString();
   }
 
 }

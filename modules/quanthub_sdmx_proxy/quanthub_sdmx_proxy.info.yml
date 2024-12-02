@@ -3,5 +3,3 @@ type: module
 description: 'Quanthub SDMX Proxy.'
 core_version_requirement: ^9.5.2 || ^10
 package: 'Epam Quanthub'
-
-

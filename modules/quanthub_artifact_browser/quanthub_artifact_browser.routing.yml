@@ -7,4 +7,3 @@ quanthub_artifact_browser:
     artifact_urn: NULL
   requirements:
     _permission: 'access content'
-

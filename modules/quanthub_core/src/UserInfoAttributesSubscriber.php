@@ -67,13 +67,8 @@ class UserInfoAttributesSubscriber implements EventSubscriberInterface, UserInfo
    * Get user info attributes and save to user data.
    */
   public function getUserInfoAttributes(ExternalAuthLoginEvent $event) {
-    // Oidc plugin id is dynamic hash, we firstly get id from oidc settings.
-    $generic_realms = $this->configFactory->get('oidc.settings')->get('generic_realms');
-    if (count($generic_realms) == 0) {
-      return;
-    }
-    $oidc_plugin_id = array_shift($generic_realms);
-    $oidc_plugin = $this->configFactory->get('oidc.realm.quanthub_b2c_realm.' . $oidc_plugin_id);
+    // @todo get configuration from plugin via 'plugin.manager.openid_connect_realm'.
+    $oidc_plugin = $this->configFactory->get('oidc.realm.quanthub_b2c_realm');
     if (!isset($oidc_plugin)) {
       return;
     }
