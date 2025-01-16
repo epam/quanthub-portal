@@ -49,13 +49,6 @@ services:
     class: Drupal\quanthub_core\PowerBIEmbedConfigs
     arguments: ['@config.factory', '@key.repository', '@logger.factory', '@http_client']
 
-  # User Info Cache Context based on User Info Role for anonymous and User Id for others.
-  cache_context.user_info_attributes:
-    class: Drupal\quanthub_core\Cache\Context\UserInfoAttributesCacheContext
-    arguments: ['@current_user', '@user.data']
-    tags:
-      - { name: cache.context}
-
   # Client for calls to SDMX API.
   logger.channel.sdmx_api:
     parent: logger.channel_base
