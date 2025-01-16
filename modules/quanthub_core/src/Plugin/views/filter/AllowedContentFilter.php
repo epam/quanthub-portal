@@ -2,6 +2,8 @@
 
 namespace Drupal\quanthub_core\Plugin\views\filter;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\quanthub_core\AllowedContentManager;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Psr\Container\ContainerInterface;
@@ -45,50 +47,71 @@ class AllowedContentFilter extends FilterPluginBase {
   /**
    * {@inheritdoc}
    */
+  public function adminSummary() {}
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function operatorForm(&$form, FormStateInterface $form_state) {}
+
+  /**
+   * {@inheritdoc}
+   */
+  public function canExpose() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
-    $datasets = [];
+    $account = $this->view->getUser();
+    if (
+      getenv('WSO_IGNORE') === 'TRUE' ||
+      $account->hasPermission('bypass dataset access')
+    ) {
+      return;
+    }
 
     $this->ensureMyTable();
-    if (getenv('WSO_IGNORE') !== 'TRUE') {
-      $datasets = $this->allowedContentManager->getAllowedDatasetList();
+
+    $field = "$this->tableAlias.$this->realField";
+    /** @var \Drupal\Core\Database\Query\ConditionInterface $conditions */
+    $conditions = $this->query->getConnection()->condition('OR');
+    $conditions->isNull($field);
+
+    if ($datasets = $this->allowedContentManager->getAllowedDatasetList()) {
+      $conditions->condition($field, $datasets, 'IN');
     }
 
-    $field = "$this->tableAlias.{$this->realField}_value";
+    $this->query->addWhere($this->options['group'], $conditions);
+  }
 
-    /** @var \Drupal\views\Plugin\views\query\Sql $query */
-    $query = $this->query;
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    $account = $this->view->getUser();
+    return Cache::mergeTags(
+      parent::getCacheTags(),
+      ['allowed_content_tag:' . $account->id()]
+    );
+  }
 
-    // Added filter in view SQL for filtering according to user allowed content
-    // in user data provided by xacml.
-    if (!empty($datasets)) {
-      if (count($datasets) > 1) {
-        $or_conditions = $this->query->getConnection()->condition('OR');
-        foreach ($datasets as $dataset) {
-          if (str_ends_with($dataset, ')')) {
-            $or_conditions->condition($field, $dataset);
-          }
-          else {
-            $or_conditions->condition($field, $dataset . '%', 'LIKE');
-          }
-        }
-
-        $query->addWhere($this->options['group'], $or_conditions);
-      }
-      elseif (count($datasets) == 1) {
-        $dataset = reset($datasets);
-        if (str_ends_with($dataset, ')')) {
-          $query->addWhere($this->options['group'], $field);
-        }
-        else {
-          $query->addWhere(
-            $this->options['group'],
-            $field,
-            $dataset . '%',
-            'LIKE'
-          );
-        }
-      }
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $account = $this->view->getUser();
+    $contexts = ['user.permissions', 'user.roles:anonymous'];
+    // Cache per user if we filter by individual user's datasets.
+    if (!$account->hasPermission('bypass dataset access') && $account->isAuthenticated()) {
+      $contexts[] = 'user';
     }
+    return Cache::mergeContexts(
+      parent::getCacheContexts(),
+      $contexts
+    );
   }
 
 }

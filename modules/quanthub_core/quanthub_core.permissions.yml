@@ -1,0 +1,4 @@
+bypass dataset access:
+  title: 'Bypass dataset access'
+  description: 'View all datasets and related content regardless of permission restrictions.'
+  restrict access: true

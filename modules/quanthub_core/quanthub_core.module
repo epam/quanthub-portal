@@ -7,90 +7,85 @@
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
 use Drupal\quanthub_core\Form\PowerBIMediaForm;
 
 /**
  * Implements hook_ENTITY_TYPE_access().
  */
-function quanthub_core_node_access(EntityInterface $entity, $operation, AccountInterface $account) {
-  if ($operation == 'view') {
-    if ($entity->bundle() == 'dataset') {
-      // @todo remove when entitlement will be released.
-      if (
-        in_array('editor', $account->getRoles()) ||
-        in_array('publisher', $account->getRoles())
-      ) {
-        return AccessResult::allowed();
-      }
-      if (getenv('WSO_IGNORE') !== 'TRUE') {
-        $allowed_datasets = \Drupal::service('allowed_content_manager')
-          ->getAllowedDatasetList();
-      }
-      if (!empty($allowed_datasets)) {
-        $node_dataset = $entity->field_quanthub_urn->getString();
-        // @todo need to change and handle version of dataset urn.
-        foreach ($allowed_datasets as $allowed_dataset) {
-          if (str_contains($node_dataset, $allowed_dataset)) {
-            return AccessResult::allowed();
-          }
-        }
-        return AccessResult::forbidden();
-      }
-    }
-    if ($entity->bundle() == 'publication') {
-      // @todo remove when entitlement will be released.
-      if (
-        in_array('editor', $account->getRoles()) ||
-        in_array('publisher', $account->getRoles())
-      ) {
-        return AccessResult::allowed();
-      }
-      // @todo rewrite in db_select.
-      $node_dataset = $entity->get('field_dataset')?->first()?->get('entity')?->getTarget()?->getValue()?->get('field_quanthub_urn')?->getString();
-      if (getenv('WSO_IGNORE') !== 'TRUE') {
-        $allowed_datasets = \Drupal::service('allowed_content_manager')
-          ->getAllowedDatasetList();
-      }
-      if (!empty($allowed_datasets)) {
-        // @todo need to change and handle version of dataset urn.
-        foreach ($allowed_datasets as $allowed_dataset) {
-          if (str_contains($node_dataset, $allowed_dataset)) {
-            return AccessResult::allowed();
-          }
-        }
-        return AccessResult::forbidden();
-      }
-    }
+function quanthub_core_node_access(NodeInterface $node, $operation, AccountInterface $account) {
+  if (
+    $operation !== 'view' ||
+    \Drupal::currentUser()->id() !== $account->id()  ||
+    !$node->hasField('field_quanthub_urn') ||
+    getenv('WSO_IGNORE') === 'TRUE'
+  ) {
+    return AccessResult::neutral();
   }
+  if ($account->hasPermission('bypass dataset access')) {
+    return AccessResult::neutral()->cachePerPermissions();
+  }
+
+  $cacheable_metadata = (new CacheableMetadata())
+    ->addCacheContexts(['user.roles:anonymous', 'user.permissions'])
+    ->addCacheContexts($account->isAuthenticated() ? ['user'] : [])
+    ->addCacheTags(['allowed_content_tag:' . $account->id()]);
+  $allowed_datasets = \Drupal::service('allowed_content_manager')
+    ->getAllowedDatasetList();
+  $node_datasets = [];
+  $field = $node->get('field_quanthub_urn');
+  if ($field instanceof CacheableDependencyInterface) {
+    $cacheable_metadata->addCacheableDependency($field);
+  }
+  foreach ($field as $item) {
+    if ($item instanceof CacheableDependencyInterface) {
+      $cacheable_metadata->addCacheableDependency($item);
+    }
+    $node_datasets[] = $item->value;
+  }
+  if (!array_intersect($allowed_datasets, $node_datasets)) {
+    return AccessResult::forbidden('The dataset access is not allowed for the user.')
+      ->addCacheableDependency($cacheable_metadata);
+  }
+
+  return AccessResult::neutral()->addCacheableDependency($cacheable_metadata);
 }
 
 /**
  * Implements hook_views_data_alter().
  */
 function quanthub_core_views_data_alter(array &$data) {
-  $data['node__field_quanthub_urn']['allowed_content_filter'] = [
+  $base = [
     'title' => t('Allowed Content Filter'),
+    'help' => t('Content Filter By Dataset Urn'),
+    'group' => t('Quanthub'),
     'filter' => [
       'title' => t('Allowed Content Filter'),
-      'help' => t('Content Filter By Dataset Urn'),
-      'group' => t('Quanthub'),
-      'field' => 'field_quanthub_urn',
-      'id' => 'allowed_content_filter',
+      'allow empty' => FALSE,
     ],
   ];
 
-  $data['views']['quanthub_views_bulk_operations_bulk_form'] = [
-    'title' => t('Quanthub Views bulk operations'),
-    'help' => t("Process entities returned by the view with Views Bulk Operations' actions."),
-    'field' => [
-      'id' => 'quanthub_views_bulk_operations_bulk_form',
-    ],
-  ];
+  if (!empty($data['node__field_quanthub_urn']['field_quanthub_urn_value'])) {
+    $table = 'node__field_quanthub_urn';
+    $data[$table]['allowed_content_filter'] = $base;
+    $data[$table]['allowed_content_filter']['filter']['id'] = 'allowed_content_filter';
+    $data[$table]['allowed_content_filter']['filter'] += $data[$table]['field_quanthub_urn_value']['filter'];
+  }
 
+  foreach (array_keys($data) as $table) {
+    if (!str_starts_with($table, 'search_api_index') || empty($data[$table]['field_quanthub_urn'])) {
+      continue;
+    }
+    $data[$table]['allowed_content_filter'] = $base;
+    $data[$table]['allowed_content_filter']['real field'] = 'field_quanthub_urn';
+    $data[$table]['allowed_content_filter']['filter']['id'] = 'allowed_content_filter_search_api';
+    $data[$table]['allowed_content_filter']['filter'] += $data[$table]['field_quanthub_urn']['filter'];
+  }
 }
 
 /**
