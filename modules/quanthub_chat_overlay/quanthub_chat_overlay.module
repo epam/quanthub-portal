@@ -9,5 +9,8 @@
  * Implements hook_page_attachments().
  */
 function quanthub_chat_overlay_page_attachments(array &$attachments) {
-  $attachments['#attached']['library'][] = 'quanthub_chat_overlay/chat-overlay';
+  if (\Drupal::currentUser()->hasPermission('access ai')) {
+    $attachments['#attached']['library'][] = 'quanthub_chat_overlay/chat-overlay';
+  }
+  $attachments['#cache']['contexts'][] = 'user.permissions';
 }

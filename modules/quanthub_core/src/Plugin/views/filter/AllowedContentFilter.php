@@ -90,23 +90,12 @@ class AllowedContentFilter extends FilterPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getCacheTags() {
-    $account = $this->view->getUser();
-    return Cache::mergeTags(
-      parent::getCacheTags(),
-      ['allowed_content_tag:' . $account->id()]
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCacheContexts() {
     $account = $this->view->getUser();
     $contexts = ['user.permissions', 'user.roles:anonymous'];
     // Cache per user if we filter by individual user's datasets.
     if (!$account->hasPermission('bypass dataset access') && $account->isAuthenticated()) {
-      $contexts[] = 'user';
+      $contexts[] = 'user.datasets';
     }
     return Cache::mergeContexts(
       parent::getCacheContexts(),
