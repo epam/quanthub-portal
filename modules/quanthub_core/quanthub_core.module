@@ -33,8 +33,7 @@ function quanthub_core_node_access(NodeInterface $node, $operation, AccountInter
 
   $cacheable_metadata = (new CacheableMetadata())
     ->addCacheContexts(['user.roles:anonymous', 'user.permissions'])
-    ->addCacheContexts($account->isAuthenticated() ? ['user'] : [])
-    ->addCacheTags(['allowed_content_tag:' . $account->id()]);
+    ->addCacheContexts($account->isAuthenticated() ? ['user.datasets'] : []);
   $allowed_datasets = \Drupal::service('allowed_content_manager')
     ->getAllowedDatasetList();
   $node_datasets = [];

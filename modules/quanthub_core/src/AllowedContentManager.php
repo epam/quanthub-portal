@@ -4,7 +4,6 @@ namespace Drupal\quanthub_core;
 
 use Drupal\Component\Datetime\Time;
 use Drupal\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Session\AccountProxy;
@@ -121,10 +120,6 @@ class AllowedContentManager implements QuanthubCoreInterface {
         $this->datasets,
         $this->time->getCurrentTime() + $this::CACHE_TIME
       );
-
-      // Invalidating cache tags for updating views
-      // with datasets and publications.
-      Cache::invalidateTags(['allowed_content_tag:' . $this->currentUser->id()]);
     }
 
     return $this->datasets;

@@ -49,6 +49,12 @@ services:
     class: Drupal\quanthub_core\PowerBIEmbedConfigs
     arguments: ['@config.factory', '@key.repository', '@logger.factory', '@http_client']
 
+  cache_context.user.datasets:
+    class: Drupal\quanthub_core\Cache\AllowedDatasetsCacheContext
+    arguments: ['@current_user', '@allowed_content_manager']
+    tags:
+      - { name: cache.context }
+
   # Client for calls to SDMX API.
   logger.channel.sdmx_api:
     parent: logger.channel_base
@@ -61,3 +67,9 @@ services:
     class: Drupal\quanthub_core\EventSubscriber\KernelEventsSubscriber
     arguments: [ '@current_route_match', '@entity_type.manager' ]
     tags: [ 'event_subscriber' ]
+
+  quanthub_core.oidc_subscriber:
+    class: Drupal\quanthub_core\EventSubscriber\OidcEventsSubscriber
+    arguments: [ '@oidc.openid_connect_session' ]
+    tags:
+      - { name: event_subscriber }
