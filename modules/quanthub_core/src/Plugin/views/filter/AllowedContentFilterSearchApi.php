@@ -30,7 +30,7 @@ class AllowedContentFilterSearchApi extends AllowedContentFilter {
     $this->ensureMyTable();
 
     $conditions = $this->getQuery()->createConditionGroup('OR');
-    $conditions->addCondition($this->realField, NULL, '=');
+    $conditions->addCondition($this->realField, NULL);
 
     if ($datasets = $this->allowedContentManager->getAllowedDatasetList()) {
       $conditions->addCondition($this->realField, $datasets, 'IN');
