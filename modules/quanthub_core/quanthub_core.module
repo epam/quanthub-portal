@@ -47,7 +47,8 @@ function quanthub_core_node_access(NodeInterface $node, $operation, AccountInter
     }
     $node_datasets[] = $item->value;
   }
-  if (!array_intersect($allowed_datasets, $node_datasets)) {
+
+  if ($node_datasets && !array_intersect($allowed_datasets, $node_datasets)) {
     return AccessResult::forbidden('The dataset access is not allowed for the user.')
       ->addCacheableDependency($cacheable_metadata);
   }
