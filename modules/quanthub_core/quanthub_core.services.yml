@@ -26,13 +26,6 @@ services:
     class: '\Drupal\quanthub_core\AllowedContentManager'
     arguments: ['@current_user', '@cache.default', '@language_manager', '@datetime.time']
 
-  # Event subscriber for getting and string user info token and attributes for anonymous user.
-  anonymous_user_info_token_subscriber:
-    class: '\Drupal\quanthub_core\AnonymousUserInfoTokenSubscriber'
-    tags:
-      - { name: event_subscriber }
-    arguments: ['@user_info']
-
   # Event subscriber for getting and storing user info attributes for authenticated user.
   user_info_attributes_subscriber:
     class: '\Drupal\quanthub_core\UserInfoAttributesSubscriber'

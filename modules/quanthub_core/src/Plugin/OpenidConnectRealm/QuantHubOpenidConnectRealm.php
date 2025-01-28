@@ -158,14 +158,12 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
 
     // Create the tokens object.
     $expires = strtotime($response['expiresOn']);
-    $id_token = new Token($response['tokenId'], strtotime('+1 day', $expires));
+    $id_token = new Token($response['idToken'] ?? $response['tokenId'], $expires);
+    $refresh_token = new Token($response['tokenId'], strtotime('+1 day', $expires));
     $access_token = new Token($response['token'], $expires);
 
     $tokens = new JsonWebTokens('user_info_token', $id_token, $access_token);
-
-    if (isset($response['tokenId'], $response['expiresOn'])) {
-      $tokens->setRefreshToken($id_token);
-    }
+    $tokens->setRefreshToken($refresh_token);
 
     if ($claim_data) {
       // Parse the ID token.

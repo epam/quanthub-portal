@@ -67,7 +67,12 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
       return;
     }
 
+    $account = $event->getAccount();
     $roles = [];
+    // Keep administrators, they don't controlled by SSO.
+    if ($account->hasRole('administrator')) {
+      $roles[] = 'administrator';
+    }
     if (is_array($roles_claim)) {
       foreach ($roles_claim as $role) {
         if (empty(self::ROLES[$role])) {
@@ -83,9 +88,10 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
       $roles[] = $plugin->getDefaultRoleId();
     }
 
-    $event->getAccount()
-      ->set('roles', array_unique($roles))
-      ->save();
+    // Check do we need an update.
+    if (array_diff($roles, $account->getRoles())) {
+      $account->set('roles', array_unique($roles))->save();
+    }
   }
 
 }
