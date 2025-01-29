@@ -33,20 +33,14 @@ function quanthub_tailwindcss_get_active_theme() {
  * Implements hook_preprocess_HOOK().
  */
 function quanthub_tailwindcss_preprocess_page(array &$variables) {
-  $workspaceId = getenv('SDMX_WORKSPACE_ID');
-  $defaultDataset = getenv('SDMX_DEFAULT_DATASET');
-  $defaultCategorySchemeUrn = getenv('SDMX_DEFAULT_CATEGORY_SCHEME_URN');
-  $dataAttributeId = getenv('DATASET_EXPLORER_DATA_ATTRIBUTE_ID');
-  $unitsOfMeasureId = getenv('UNITS_OF_MEASURE_ATTRIBUTE_ID');
-  $facetsLoadHierarchies = getenv('FACETS_LOAD_HIERARCHIES');
-  $dialChartUrl = getenv('DIAL_CHART_URL');
-  $variables['#attached']['drupalSettings']['workspaceId'] = $workspaceId;
-  $variables['#attached']['drupalSettings']['defaultDataset'] = $defaultDataset;
-  $variables['#attached']['drupalSettings']['defaultCategorySchemeUrn'] = $defaultCategorySchemeUrn;
-  $variables['#attached']['drupalSettings']['dataAttributeId'] = $dataAttributeId;
-  $variables['#attached']['drupalSettings']['unitsOfMeasureId'] = $unitsOfMeasureId;
-  $variables['#attached']['drupalSettings']['facetsLoadHierarchies'] = $facetsLoadHierarchies;
-  $variables['#attached']['drupalSettings']['dialChartUrl'] = $dialChartUrl;
+  $variables['#attached']['drupalSettings']['workspaceId'] = getenv('SDMX_WORKSPACE_ID');
+  $variables['#attached']['drupalSettings']['defaultDataset'] = getenv('SDMX_DEFAULT_DATASET');
+  $variables['#attached']['drupalSettings']['defaultCategorySchemeUrn'] = getenv('SDMX_DEFAULT_CATEGORY_SCHEME_URN');
+  $variables['#attached']['drupalSettings']['dataAttributeId'] = getenv('DATASET_EXPLORER_DATA_ATTRIBUTE_ID');
+  $variables['#attached']['drupalSettings']['unitsOfMeasureId'] = getenv('UNITS_OF_MEASURE_ATTRIBUTE_ID');
+  $variables['#attached']['drupalSettings']['facetsLoadHierarchies'] = getenv('FACETS_LOAD_HIERARCHIES');
+  $variables['#attached']['drupalSettings']['dialChartUrl'] = getenv('DIAL_CHART_URL');
+  $variables['#attached']['drupalSettings']['dialDefaultModel'] = getenv('DIAL_DEFAULT_MODEL');
 }
 
 /**
