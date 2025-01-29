@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
+use Drupal\quanthub_core\Form\PowerBiMediaDirectoriesForm;
 use Drupal\quanthub_core\Form\PowerBIMediaForm;
 
 /**
@@ -204,8 +205,9 @@ function quanthub_core_form_powerbi_embed_settings_submit(array $form, FormState
  * Implements hook_media_source_info_alter().
  */
 function quanthub_core_media_source_info_alter(array &$sources) {
-  if (empty($sources['power_bi']['forms']['media_library_add'])) {
+  if (isset($sources['power_bi'])) {
     $sources['power_bi']['forms']['media_library_add'] = PowerBIMediaForm::class;
+    $sources['power_bi']['forms']['media_directories_add'] = PowerBiMediaDirectoriesForm::class;
   }
 }
 
