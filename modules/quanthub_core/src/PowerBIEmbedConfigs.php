@@ -114,7 +114,7 @@ class PowerBIEmbedConfigs {
     );
 
     $oidc->providerConfigParam(['token_endpoint' => 'https://login.microsoftonline.com/' . $this->getClientID() . '/oauth2/v2.0/token']);
-    $oidc->addScope('https://analysis.windows.net/powerbi/api/.default');
+    $oidc->addScope(['https://analysis.windows.net/powerbi/api/.default']);
     $oidc_response = $oidc->requestClientCredentialsToken();
     return $oidc_response->access_token;
   }

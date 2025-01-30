@@ -1,0 +1,5 @@
+services:
+  twig_inline_css.cssinliner:
+    class: Twig\Extra\CssInliner\CssInlinerExtension
+    tags:
+      - { name: twig.extension }
