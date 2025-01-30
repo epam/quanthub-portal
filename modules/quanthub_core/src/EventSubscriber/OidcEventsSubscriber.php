@@ -89,7 +89,8 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
     }
 
     // Check do we need an update.
-    if (array_diff($roles, $account->getRoles())) {
+    $current_roles = $account->getRoles(TRUE);
+    if (array_diff($roles, $current_roles) || array_diff($current_roles, $roles)) {
       $account->set('roles', array_unique($roles))->save();
     }
   }
