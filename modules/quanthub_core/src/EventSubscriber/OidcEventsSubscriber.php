@@ -22,7 +22,6 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
     'DataPlatformBasic' => '',
     'DataPlatformEnhanced' => '',
     'DataPlatformMedia' => 'media',
-    'PortalContentEditor' => 'content_editor',
     'AiAssistant' => 'ai',
   ];
 
@@ -68,30 +67,28 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
     }
 
     $account = $event->getAccount();
-    $roles = [];
-    // Keep administrators, they don't controlled by SSO.
-    if ($account->hasRole('administrator')) {
-      $roles[] = 'administrator';
-    }
+    $user_roles = $account->getRoles(TRUE);
+    // Keep roles we don't track with SSO provider.
+    $oidc_roles = array_diff($user_roles, array_filter(self::ROLES));
+
     if (is_array($roles_claim)) {
       foreach ($roles_claim as $role) {
         if (empty(self::ROLES[$role])) {
           continue;
         }
-        $roles[] = self::ROLES[$role];
+        $oidc_roles[] = self::ROLES[$role];
       }
     }
 
     // Only generic realms support this.
     $plugin = $this->session->getRealmPlugin();
     if ($plugin instanceof GenericOpenidConnectRealm && $plugin->getDefaultRoleId()) {
-      $roles[] = $plugin->getDefaultRoleId();
+      $oidc_roles[] = $plugin->getDefaultRoleId();
     }
 
     // Check do we need an update.
-    $current_roles = $account->getRoles(TRUE);
-    if (array_diff($roles, $current_roles) || array_diff($current_roles, $roles)) {
-      $account->set('roles', array_unique($roles))->save();
+    if (array_diff($oidc_roles, $user_roles) || array_diff($user_roles, $oidc_roles)) {
+      $account->set('roles', array_unique($oidc_roles))->save();
     }
   }
 
