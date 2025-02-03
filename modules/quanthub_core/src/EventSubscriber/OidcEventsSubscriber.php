@@ -19,10 +19,10 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
    * @todo make configurable.
    */
   const ROLES = [
-    'DataPlatformBasic' => '',
-    'DataPlatformEnhanced' => '',
-    'DataPlatformMedia' => 'media',
-    'AiAssistant' => 'ai',
+    'Quanthub.DataPlatformBasic' => '',
+    'Quanthub.DataPlatformEnhanced' => '',
+    'Quanthub.DataPlatformMedia' => 'media',
+    'Quanthub.AiAssistant' => 'ai',
   ];
 
   /**
