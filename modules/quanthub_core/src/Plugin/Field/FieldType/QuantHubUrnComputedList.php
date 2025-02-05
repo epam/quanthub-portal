@@ -8,6 +8,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\TypedData\ComputedItemListTrait;
+use Drupal\quanthub_core\AllowedContentManager;
 
 /**
  * Computed field to proxy QuantHub URN from references.
@@ -37,14 +38,14 @@ class QuantHubUrnComputedList extends FieldItemList implements CacheableDependen
     foreach ($references->referencedEntities() as $referencedEntity) {
       if (
         !$referencedEntity instanceof FieldableEntityInterface ||
-        !$referencedEntity->hasField('field_quanthub_urn')
+        !$referencedEntity->hasField(AllowedContentManager::URN_FIELD)
       ) {
         continue;
       }
 
       $this->addCacheableDependency($referencedEntity);
 
-      $field = $referencedEntity->get('field_quanthub_urn');
+      $field = $referencedEntity->get(AllowedContentManager::URN_FIELD);
       if ($field instanceof CacheableDependencyInterface) {
         $this->addCacheableDependency($field);
       }

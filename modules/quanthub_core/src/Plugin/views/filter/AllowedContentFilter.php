@@ -165,17 +165,18 @@ class AllowedContentFilter extends FilterPluginBase {
     /** @var \Drupal\Core\Entity\Sql\TableMappingInterface $table_mapping */
     $table_mapping = $this->entityTypeManager->getStorage('node')->getTableMapping();
     $bundles = $this->entityFieldManager->getFieldMap()['node']['nid']['bundles'];
+    $field_name = $this->definition['field_name'] ?? $this->allowedContentManager::URN_FIELD;
 
     foreach ($bundles as $bundle) {
       $definitions = $this->entityFieldManager->getFieldDefinitions('node', $bundle);
-      if (empty($definitions['field_quanthub_urn'])) {
+      if (empty($definitions[$field_name])) {
         continue;
       }
-      if (!$definitions['field_quanthub_urn']->isComputed()) {
+      if (!$definitions[$field_name]->isComputed()) {
         $mapping['_root']['bundles'][$bundle] = $bundle;
         continue;
       }
-      $base_field = $definitions['field_quanthub_urn']->getSetting('field_reference_name');
+      $base_field = $definitions[$field_name]->getSetting('field_reference_name');
       if ($base_field && $definitions[$base_field]->getFieldStorageDefinition()->getMainPropertyName() === 'target_id') {
         $mapping[$base_field]['table'] = $table_mapping->getFieldTableName($base_field);
         $mapping[$base_field]['data_table'] = $table_mapping->getDataTable() ?? $table_mapping->getBaseTable();

@@ -3,8 +3,8 @@
 namespace Drupal\quanthub_core;
 
 use Drupal\Component\Datetime\Time;
-use Drupal\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Session\AccountProxy;
 
@@ -16,28 +16,14 @@ use Drupal\Core\Session\AccountProxy;
 class AllowedContentManager implements QuanthubCoreInterface {
 
   /**
-   * Name of user data argument for datasets.
+   * Dataset URN field name.
    */
-  const USER_DATA_DATASETS = 'allowed_datasets';
+  const URN_FIELD = 'field_quanthub_urn';
 
   /**
    * The 15 minutes cache time.
    */
   const CACHE_TIME = 900;
-
-  /**
-   * The (lazy loaded) dependency injection (DI) container.
-   *
-   * @var ?\Drupal\Component\DependencyInjection\ContainerInterface
-   */
-  protected ?ContainerInterface $container;
-
-  /**
-   * The (lazy loaded) SDMX client.
-   *
-   * @var ?\Drupal\quanthub_core\QuanthubSdmxClient
-   */
-  protected ?QuanthubSdmxClient $quanthubSdmxClient;
 
   /**
    * The time service.
@@ -68,11 +54,18 @@ class AllowedContentManager implements QuanthubCoreInterface {
   protected $languageManager;
 
   /**
-   * Dataset List.
+   * The node storage.
+   *
+   * @var \Drupal\node\NodeStorageInterface
+   */
+  protected $nodeStorage;
+
+  /**
+   * The prohibited datasets cache.
    *
    * @var array
    */
-  protected $datasets = [];
+  private $datasets = [];
 
   /**
    * {@inheritDoc}
@@ -82,11 +75,13 @@ class AllowedContentManager implements QuanthubCoreInterface {
     CacheBackendInterface $cache,
     LanguageManager $language_manager,
     Time $time,
+    EntityTypeManagerInterface $entity_type_manager,
   ) {
     $this->currentUser = $current_user;
     $this->cache = $cache;
     $this->languageManager = $language_manager;
     $this->time = $time;
+    $this->nodeStorage = $entity_type_manager->getStorage('node');
   }
 
   /**
@@ -97,32 +92,59 @@ class AllowedContentManager implements QuanthubCoreInterface {
     // Check that dataset list is not already saved to cache.
     if ($cache = $this->cache->get($this->getCacheCid())) {
       if (!empty($cache->data)) {
-        $this->datasets = $cache->data;
+        $datasets = $cache->data;
       }
       else {
-        $this->datasets = [];
+        $datasets = [];
       }
     }
     else {
-      $this->datasets = $this->getUserDatasetList();
+      $datasets = $this->getUserDatasetList();
 
       // Support latest version.
-      foreach ($this->datasets as $dataset) {
+      foreach ($datasets as $dataset) {
         $latest_dataset = preg_replace('/\(.+\)$/', '(~)', $dataset);
         if ($latest_dataset !== $dataset) {
-          $this->datasets[] = $latest_dataset;
+          $datasets[] = $latest_dataset;
         }
       }
 
       // Update datasets in cache.
       $this->cache->set(
         $this->getCacheCid(),
-        $this->datasets,
+        $datasets,
         $this->time->getCurrentTime() + $this::CACHE_TIME
       );
     }
 
-    return $this->datasets;
+    return $datasets;
+  }
+
+  /**
+   * Gets prohibited datasets list.
+   *
+   * The list is calculated from DB data based on URN default field
+   *   or user specified one.
+   */
+  public function getProhibitedDatasetList($field_name = self::URN_FIELD) {
+    if (!isset($this->datasets[$field_name])) {
+      $datasets = [];
+      $result = $this->nodeStorage->getAggregateQuery()
+        ->accessCheck(FALSE)
+        ->condition('status', 1)
+        ->exists($field_name)
+        ->groupby($field_name)
+        ->execute();
+      foreach ($result as $item) {
+        if (!empty($item[$field_name])) {
+          $datasets[] = $item[$field_name];
+        }
+      }
+
+      $this->datasets[$field_name] = array_diff($datasets, $this->getAllowedDatasetList());
+    }
+
+    return $this->datasets[$field_name];
   }
 
   /**
@@ -139,20 +161,7 @@ class AllowedContentManager implements QuanthubCoreInterface {
    * Get User's Dataset List.
    */
   public function getUserDatasetList() {
-    return $this->quanthubSdmxClient()->getDatasetList();
-  }
-
-  /**
-   * Get Dependency Injection container.
-   *
-   * @return \Drupal\Component\DependencyInjection\ContainerInterface
-   *   Current Dependency Injection container.
-   */
-  protected function getContainer(): ContainerInterface {
-    if (!isset($this->container)) {
-      $this->container = quanthub_core_container();
-    }
-    return $this->container;
+    return self::quanthubSdmxClient()->getDatasetList();
   }
 
   /**
@@ -161,11 +170,8 @@ class AllowedContentManager implements QuanthubCoreInterface {
    * @return \Drupal\quanthub_core\QuanthubSdmxClient
    *   QuanthubSdmxClient service.
    */
-  protected function quanthubSdmxClient(): QuanthubSdmxClient {
-    if (!isset($this->quanthubSdmxClient)) {
-      $this->quanthubSdmxClient = $this->getContainer()->get('sdmx_client');
-    }
-    return $this->quanthubSdmxClient;
+  protected static function quanthubSdmxClient(): QuanthubSdmxClient {
+    return \Drupal::service('sdmx_client');
   }
 
 }

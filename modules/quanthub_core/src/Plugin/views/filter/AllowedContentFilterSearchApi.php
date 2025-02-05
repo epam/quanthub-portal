@@ -29,14 +29,13 @@ class AllowedContentFilterSearchApi extends AllowedContentFilter {
 
     $this->ensureMyTable();
 
-    $conditions = $this->getQuery()->createConditionGroup('OR');
-    $conditions->addCondition($this->realField, NULL);
-
-    if ($datasets = $this->allowedContentManager->getAllowedDatasetList()) {
-      $conditions->addCondition($this->realField, $datasets, 'IN');
+    if ($this->allowedContentManager->getAllowedDatasetList()) {
+      $datasets = $this->allowedContentManager->getProhibitedDatasetList();
+      $this->query->addWhere($this->options['group'], $this->realField, $datasets, 'NOT IN');
     }
-
-    $this->query->addConditionGroup($conditions, $this->options['group']);
+    else {
+      $this->query->addWhere($this->options['group'], $this->realField, NULL, 'IS NULL');
+    }
   }
 
 }
