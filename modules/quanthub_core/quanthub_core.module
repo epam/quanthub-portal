@@ -33,8 +33,7 @@ function quanthub_core_node_access(NodeInterface $node, $operation, AccountInter
   }
 
   $cacheable_metadata = (new CacheableMetadata())
-    ->addCacheContexts(['user.roles:anonymous', 'user.permissions'])
-    ->addCacheContexts($account->isAuthenticated() ? ['user.datasets'] : []);
+    ->addCacheContexts(['user.datasets', 'user.permissions']);
   $allowed_datasets = \Drupal::service('allowed_content_manager')
     ->getAllowedDatasetList();
   $node_datasets = [];
@@ -49,7 +48,8 @@ function quanthub_core_node_access(NodeInterface $node, $operation, AccountInter
     $node_datasets[] = $item->value;
   }
 
-  if ($node_datasets && !array_intersect($allowed_datasets, $node_datasets)) {
+  // Check if content has more datasets that allowed.
+  if ($node_datasets && array_diff($node_datasets, $allowed_datasets)) {
     return AccessResult::forbidden('The dataset access is not allowed for the user.')
       ->addCacheableDependency($cacheable_metadata);
   }

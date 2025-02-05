@@ -3,6 +3,8 @@
 namespace Drupal\quanthub_core\Plugin\views\filter;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\quanthub_core\AllowedContentManager;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
@@ -18,6 +20,20 @@ use Psr\Container\ContainerInterface;
 class AllowedContentFilter extends FilterPluginBase {
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * The Allowed Content Manager service.
    *
    * @var \Drupal\quanthub_core\AllowedContentManager
@@ -27,8 +43,17 @@ class AllowedContentFilter extends FilterPluginBase {
   /**
    * {@inheritDoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, AllowedContentManager $allowed_content_manager) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
+    EntityFieldManagerInterface $entity_field_manager,
+    AllowedContentManager $allowed_content_manager,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityTypeManager = $entity_type_manager;
+    $this->entityFieldManager = $entity_field_manager;
     $this->allowedContentManager = $allowed_content_manager;
   }
 
@@ -40,7 +65,9 @@ class AllowedContentFilter extends FilterPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('allowed_content_manager')
+      $container->get('entity_type.manager'),
+      $container->get('entity_field.manager'),
+      $container->get('allowed_content_manager'),
     );
   }
 
@@ -73,34 +100,94 @@ class AllowedContentFilter extends FilterPluginBase {
       return;
     }
 
-    $this->ensureMyTable();
-
-    $field = "$this->tableAlias.$this->realField";
-    /** @var \Drupal\Core\Database\Query\ConditionInterface $conditions */
-    $conditions = $this->query->getConnection()->condition('OR');
-    $conditions->isNull($field);
-
-    if ($datasets = $this->allowedContentManager->getAllowedDatasetList()) {
-      $conditions->condition($field, $datasets, 'IN');
+    $datasets = $this->allowedContentManager->getAllowedDatasetList();
+    if (!$datasets) {
+      $this->ensureMyTable();
+      $this->query->addWhere($this->options['group'], "$this->tableAlias.$this->realField", NULL, 'IS NULL');
     }
+    else {
+      /** @var \Drupal\Core\Database\Query\ConditionInterface $conditions */
+      $conditions = $this->query->getConnection()->condition('AND');
+      $base_table = $this->relationship ?: $this->view->storage->get('base_table');
 
-    $this->query->addWhere($this->options['group'], $conditions);
+      foreach ($this->getNodeTypesMapping() as $field => $info) {
+        $alias = "subquery_$field";
+
+        /** @var \Drupal\Core\Database\Query\ConditionInterface $condition */
+        $condition = $this->query->getConnection()->condition('OR');
+        $condition->condition("$base_table.type", $info['bundles'], 'NOT IN');
+        $conditions->condition($condition);
+
+        if ($field === '_root') {
+          /** @var \Drupal\Core\Database\Query\SelectInterface $subquery */
+          $subquery = $this->query->getConnection()
+            ->select($this->table, $alias)
+            ->fields($alias, [$this->realField])
+            ->condition("$alias.$this->realField", $datasets, 'NOT IN')
+            ->where("$alias.entity_id = $base_table.nid AND $alias.deleted = 0");
+          $condition->notExists($subquery);
+          continue;
+        }
+
+        $data_alias = $alias . '_data';
+        $ref_alias = $alias . '_reference';
+        /** @var \Drupal\Core\Database\Query\SelectInterface $subquery */
+        $subquery = $this->query->getConnection()
+          ->select($info['table'], $ref_alias)
+          ->fields($alias, [$this->realField])
+          ->condition("$alias.$this->realField", $datasets, 'NOT IN')
+          ->where("$base_table.nid = $ref_alias.entity_id");
+        $subquery->innerJoin($info['data_table'], $data_alias, "$data_alias.nid = $ref_alias.{$info['column']} AND $data_alias.status = 1");
+        $subquery->leftJoin($this->table, $alias, "$alias.entity_id = $data_alias.nid AND $alias.deleted = 0");
+        $condition->notExists($subquery);
+      }
+      $this->query->addWhere($this->options['group'], $conditions);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    $account = $this->view->getUser();
-    $contexts = ['user.permissions', 'user.roles:anonymous'];
-    // Cache per user if we filter by individual user's datasets.
-    if (!$account->hasPermission('bypass dataset access') && $account->isAuthenticated()) {
-      $contexts[] = 'user.datasets';
-    }
+    $contexts = ['user.permissions', 'user.datasets'];
     return Cache::mergeContexts(
       parent::getCacheContexts(),
       $contexts
     );
+  }
+
+  /**
+   * Helper function to collect node bundles fields.
+   */
+  protected function getNodeTypesMapping() {
+    $mapping = [];
+
+    /** @var \Drupal\Core\Entity\Sql\TableMappingInterface $table_mapping */
+    $table_mapping = $this->entityTypeManager->getStorage('node')->getTableMapping();
+    $bundles = $this->entityFieldManager->getFieldMap()['node']['nid']['bundles'];
+
+    foreach ($bundles as $bundle) {
+      $definitions = $this->entityFieldManager->getFieldDefinitions('node', $bundle);
+      if (empty($definitions['field_quanthub_urn'])) {
+        continue;
+      }
+      if (!$definitions['field_quanthub_urn']->isComputed()) {
+        $mapping['_root']['bundles'][$bundle] = $bundle;
+        continue;
+      }
+      $base_field = $definitions['field_quanthub_urn']->getSetting('field_reference_name');
+      if ($base_field && $definitions[$base_field]->getFieldStorageDefinition()->getMainPropertyName() === 'target_id') {
+        $mapping[$base_field]['table'] = $table_mapping->getFieldTableName($base_field);
+        $mapping[$base_field]['data_table'] = $table_mapping->getDataTable() ?? $table_mapping->getBaseTable();
+        $mapping[$base_field]['column'] = "{$base_field}_target_id";
+        $mapping[$base_field]['bundles'][$bundle] = $bundle;
+      }
+    }
+
+    // Sort just for more readable SQL, root case first.
+    ksort($mapping);
+
+    return $mapping;
   }
 
 }

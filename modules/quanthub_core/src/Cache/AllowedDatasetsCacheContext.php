@@ -43,7 +43,7 @@ class AllowedDatasetsCacheContext extends UserCacheContextBase implements CacheC
    */
   public function getContext() {
     $datasets = NULL;
-    if (getenv('WSO_IGNORE') !== 'TRUE') {
+    if (getenv('WSO_IGNORE') !== 'TRUE' && !$this->user->hasPermission('bypass dataset access')) {
       $datasets = $this->allowedContentManager->getAllowedDatasetList();
       sort($datasets);
     }
@@ -55,7 +55,7 @@ class AllowedDatasetsCacheContext extends UserCacheContextBase implements CacheC
    * {@inheritdoc}
    */
   public function getCacheableMetadata() {
-    return (new CacheableMetadata())->setCacheTags(['user:' . $this->user->id()]);
+    return (new CacheableMetadata())->setCacheTags(['user:' . $this->user->id(), 'config:user_role_list']);
   }
 
 }
