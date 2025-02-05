@@ -24,7 +24,7 @@ services:
   # Managing allowed content in user data. Work sdmx_client.
   allowed_content_manager:
     class: '\Drupal\quanthub_core\AllowedContentManager'
-    arguments: ['@current_user', '@cache.default', '@language_manager', '@datetime.time']
+    arguments: ['@current_user', '@cache.default', '@language_manager', '@datetime.time', '@entity_type.manager']
 
   # Event subscriber for getting and storing user info attributes for authenticated user.
   user_info_attributes_subscriber:

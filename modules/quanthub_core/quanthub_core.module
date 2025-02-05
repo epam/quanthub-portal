@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
+use Drupal\quanthub_core\AllowedContentManager;
 use Drupal\quanthub_core\Form\PowerBiMediaDirectoriesForm;
 use Drupal\quanthub_core\Form\PowerBIMediaForm;
 
@@ -23,7 +24,7 @@ function quanthub_core_node_access(NodeInterface $node, $operation, AccountInter
   if (
     $operation !== 'view' ||
     \Drupal::currentUser()->id() !== $account->id()  ||
-    !$node->hasField('field_quanthub_urn') ||
+    !$node->hasField(AllowedContentManager::URN_FIELD) ||
     getenv('WSO_IGNORE') === 'TRUE'
   ) {
     return AccessResult::neutral();
@@ -37,7 +38,7 @@ function quanthub_core_node_access(NodeInterface $node, $operation, AccountInter
   $allowed_datasets = \Drupal::service('allowed_content_manager')
     ->getAllowedDatasetList();
   $node_datasets = [];
-  $field = $node->get('field_quanthub_urn');
+  $field = $node->get(AllowedContentManager::URN_FIELD);
   if ($field instanceof CacheableDependencyInterface) {
     $cacheable_metadata->addCacheableDependency($field);
   }
@@ -61,6 +62,7 @@ function quanthub_core_node_access(NodeInterface $node, $operation, AccountInter
  * Implements hook_views_data_alter().
  */
 function quanthub_core_views_data_alter(array &$data) {
+  $field_name = AllowedContentManager::URN_FIELD;
   $base = [
     'title' => t('Allowed Content Filter'),
     'help' => t('Content Filter By Dataset Urn'),
@@ -71,21 +73,21 @@ function quanthub_core_views_data_alter(array &$data) {
     ],
   ];
 
-  if (!empty($data['node__field_quanthub_urn']['field_quanthub_urn_value'])) {
-    $table = 'node__field_quanthub_urn';
+  if (!empty($data["node__$field_name"]["{$field_name}_value"])) {
+    $table = "node__$field_name";
     $data[$table]['allowed_content_filter'] = $base;
     $data[$table]['allowed_content_filter']['filter']['id'] = 'allowed_content_filter';
-    $data[$table]['allowed_content_filter']['filter'] += $data[$table]['field_quanthub_urn_value']['filter'];
+    $data[$table]['allowed_content_filter']['filter'] += $data[$table]["{$field_name}_value"]['filter'];
   }
 
   foreach (array_keys($data) as $table) {
-    if (!str_starts_with($table, 'search_api_index') || empty($data[$table]['field_quanthub_urn'])) {
+    if (!str_starts_with($table, 'search_api_index') || empty($data[$table][$field_name])) {
       continue;
     }
     $data[$table]['allowed_content_filter'] = $base;
-    $data[$table]['allowed_content_filter']['real field'] = 'field_quanthub_urn';
+    $data[$table]['allowed_content_filter']['real field'] = $field_name;
     $data[$table]['allowed_content_filter']['filter']['id'] = 'allowed_content_filter_search_api';
-    $data[$table]['allowed_content_filter']['filter'] += $data[$table]['field_quanthub_urn']['filter'];
+    $data[$table]['allowed_content_filter']['filter'] += $data[$table][$field_name]['filter'];
   }
 }
 
@@ -276,13 +278,4 @@ function quanthub_core_language_switch_links_alter(array &$links, $type, Url $ur
         $link['title'] = t('Ukr', [], ['langcode' => 'uk']);
     }
   }
-}
-
-/**
- * Workaround to fix the CodeSniffer.
- *
- * @todo review how to fix the circular dependency without it.
- */
-function quanthub_core_container() {
-  return \Drupal::getContainer();
 }
