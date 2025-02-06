@@ -14,16 +14,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class OidcEventsSubscriber implements EventSubscriberInterface {
 
   /**
-   * Roles mapping.
-   *
-   * @todo make configurable.
+   * Extra roles mapping.
    */
-  const ROLES = [
-    'Quanthub.DataPlatformBasic' => '',
-    'Quanthub.DataPlatformEnhanced' => '',
-    'Quanthub.DataPlatformMedia' => 'media',
-    'Quanthub.AiAssistant' => 'ai',
-  ];
+  const DEFAULT_ROLES = [];
 
   /**
    * The OpenID Connect session service.
@@ -31,6 +24,13 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
    * @var \Drupal\oidc\OpenidConnectSessionInterface
    */
   protected $session;
+
+  /**
+   * The roles cache.
+   *
+   * @var array|null
+   */
+  private static $roles;
 
   /**
    * {@inheritdoc}
@@ -60,6 +60,7 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
     $plugin_id = $this->session->getRealmPluginId();
     $provider = 'oidc:' . $this->session->getRealmPluginId();
     $roles_claim = $this->session->getJsonWebTokens()->getClaim('roles');
+    $roles_map = self::getRolesMap();
 
     // The provider must match the realm and provide the claim.
     if (!$plugin_id || $provider !== $event->getProvider() || $roles_claim === NULL) {
@@ -69,14 +70,14 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
     $account = $event->getAccount();
     $user_roles = $account->getRoles(TRUE);
     // Keep roles we don't track with SSO provider.
-    $oidc_roles = array_diff($user_roles, array_filter(self::ROLES));
+    $oidc_roles = array_diff($user_roles, array_filter($roles_map));
 
     if (is_array($roles_claim)) {
       foreach ($roles_claim as $role) {
-        if (empty(self::ROLES[$role])) {
+        if (empty($roles_map[$role])) {
           continue;
         }
-        $oidc_roles[] = self::ROLES[$role];
+        $oidc_roles[] = $roles_map[$role];
       }
     }
 
@@ -90,6 +91,17 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
     if (array_diff($oidc_roles, $user_roles) || array_diff($user_roles, $oidc_roles)) {
       $account->set('roles', array_unique($oidc_roles))->save();
     }
+  }
+
+  /**
+   * Helper to get roles.
+   */
+  protected static function getRolesMap() {
+    if (!isset(self::$roles)) {
+      $roles = \Drupal::moduleHandler()->invokeAll('quanthub_core_roles');
+      self::$roles = $roles + self::DEFAULT_ROLES;
+    }
+    return self::$roles;
   }
 
 }
