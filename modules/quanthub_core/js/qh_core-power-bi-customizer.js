@@ -55,10 +55,18 @@ function powerbi_embed_customizeReport($, context, width = 0, height = 0, title 
     }
     iframes[i].title = title.length > 0 ? title : 'PowerBI Embed';
     iframes[i].name = name.length > 0 ? name : title.length > 0 ? title : 'PowerBI Embed';
+    const containerWidth = iframes[i].parentNode.offsetWidth;
     const iw = width <= 0 ? '100%' : width + 'px';
-    const ih = height <= 0 ? iw * (19 / 32) : height;
+    const ih = (height <= 0 || width <= 0? containerWidth * (19 / 32) : height) + 'px';
+
     iframes[i].width = iw;
-    iframes[i].height = ih + 'px';
+    iframes[i].height = ih ;
+
+    new ResizeObserver((function() {
+      setTimeout(() => {
+        iframes[i].height = iframes[i].parentNode.offsetWidth * (19 / 32) + 'px';
+      }, 500)
+    })).observe(iframes[i].parentNode);
   }
 
   checkTokenAndUpdate($, context);
