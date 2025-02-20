@@ -16,7 +16,9 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
   /**
    * Extra roles mapping.
    */
-  const DEFAULT_ROLES = [];
+  const DEFAULT_ROLES = [
+    'Quanthub.PortalContentEditor' => 'content_editor',
+  ];
 
   /**
    * The OpenID Connect session service.
