@@ -12,6 +12,7 @@ quanthub_core.export_to_file:
     _controller: '\Drupal\quanthub_core\Controller\PowerBiApiController::proxyPowerBiRequest'
   requirements:
     _permission: 'access content'
+    _method: 'POST'
 
 quanthub_core.get_export_status:
   path: '/powerbi/reports/{reportId}/exports/{exportId}'
@@ -19,6 +20,7 @@ quanthub_core.get_export_status:
     _controller: '\Drupal\quanthub_core\Controller\PowerBiApiController::proxyPowerBiRequest'
   requirements:
     _permission: 'access content'
+    _method: 'GET'
 
 quanthub_core.get_export_file:
   path: '/powerbi/reports/{reportId}/exports/{exportId}/file'
@@ -26,3 +28,4 @@ quanthub_core.get_export_file:
     _controller: '\Drupal\quanthub_core\Controller\PowerBiApiController::proxyPowerBiRequest'
   requirements:
     _permission: 'access content'
+    _method: 'GET'
