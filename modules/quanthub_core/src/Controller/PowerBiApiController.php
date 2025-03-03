@@ -129,7 +129,7 @@ class PowerBiApiController extends ControllerBase {
    *
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function proxyPowerBIRequest(Request $request, string $reportId): Response {
+  public function proxyPowerBiRequest(Request $request, string $reportId): Response {
     $headers = [];
     foreach ($request->headers->keys() as $key) {
       if (($key == 'content-type') || str_starts_with($key, 'accept')) {
