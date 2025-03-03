@@ -9,20 +9,20 @@ powerbi_embed_config:
 quanthub_core.export_to_file:
   path: '/powerbi/reports/{reportId}/exportTo'
   defaults:
-    _controller: '\Drupal\quanthub_core\Controller\PowerBIAPIController::proxyPowerBIRequest'
+    _controller: '\Drupal\quanthub_core\Controller\PowerBiApiController::proxyPowerBIRequest'
   requirements:
     _permission: 'access content'
 
 quanthub_core.get_export_status:
   path: '/powerbi/reports/{reportId}/exports/{exportId}'
   defaults:
-    _controller: '\Drupal\quanthub_core\Controller\PowerBIAPIController::proxyPowerBIRequest'
+    _controller: '\Drupal\quanthub_core\Controller\PowerBiApiController::proxyPowerBIRequest'
   requirements:
     _permission: 'access content'
 
 quanthub_core.get_export_file:
   path: '/powerbi/reports/{reportId}/exports/{exportId}/file'
   defaults:
-    _controller: '\Drupal\quanthub_core\Controller\PowerBIAPIController::proxyPowerBIRequest'
+    _controller: '\Drupal\quanthub_core\Controller\PowerBiApiController::proxyPowerBIRequest'
   requirements:
     _permission: 'access content'

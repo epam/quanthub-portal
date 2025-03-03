@@ -14,7 +14,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PowerBIAPIController extends ControllerBase {
+/**
+ * Power BI API controller.
+ */
+class PowerBiApiController extends ControllerBase {
 
   /**
    * The http foundation factory service.
@@ -70,7 +73,7 @@ class PowerBIAPIController extends ControllerBase {
     ClientInterface $httpClient,
     PowerBIEmbedConfigs $powerBIEmbedConfigs,
     ConfigFactory $configFactory,
-    LoggerInterface $logger
+    LoggerInterface $logger,
   ) {
     $this->foundationFactory = $foundation_factory;
     $this->httpClient = $httpClient;
@@ -161,7 +164,7 @@ class PowerBIAPIController extends ControllerBase {
         $response_info = $response->getBody()->getContents();
         $message = new FormattableMarkup(
           'API connection error. Error details are as follows:<pre>@response</pre>', [
-            '@response' => print_r(json_decode($response_info), TRUE)
+            '@response' => print_r(json_decode($response_info), TRUE),
           ]);
         $this->logger->error($message);
 
