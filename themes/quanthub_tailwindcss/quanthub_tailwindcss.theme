@@ -39,8 +39,10 @@ function quanthub_tailwindcss_preprocess_page(array &$variables) {
   $variables['#attached']['drupalSettings']['dataAttributeId'] = getenv('DATASET_EXPLORER_DATA_ATTRIBUTE_ID');
   $variables['#attached']['drupalSettings']['unitsOfMeasureId'] = getenv('UNITS_OF_MEASURE_ATTRIBUTE_ID');
   $variables['#attached']['drupalSettings']['facetsLoadHierarchies'] = getenv('FACETS_LOAD_HIERARCHIES');
-  $variables['#attached']['drupalSettings']['dialChartUrl'] = getenv('DIAL_CHART_URL');
+  $variables['#attached']['drupalSettings']['dialChatUrl'] = getenv('DIAL_CHAT_URL');
   $variables['#attached']['drupalSettings']['dialDefaultModel'] = getenv('DIAL_DEFAULT_MODEL');
+  $variables['#attached']['drupalSettings']['dialSignInProvider'] = getenv('DIAL_SIGN_IN_PROVIDER');
+  $variables['#attached']['drupalSettings']['dialEnabledFeatures'] = getenv('DIAL_ENABLED_FEATURES');
 }
 
 /**
