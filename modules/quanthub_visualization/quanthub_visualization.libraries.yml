@@ -1,17 +1,16 @@
 dafna:
   js:
-    /libraries/quanthub-drupal-react/dafna-visualizations/dist/vega-visualization-wrapper/index.iife.js: {}
+    /libraries/quanthub-drupal-react/quanthub-libs/dist/vega-visualization-wrapper/index.iife.js: {}
   css:
     base:
-      /libraries/quanthub-drupal-react/dafna-visualizations/dist/vega-visualization-wrapper/style.css: {}
+      /libraries/quanthub-drupal-react/quanthub-libs/dist/vega-visualization-wrapper/style.css: {}
 
 dafna-config-editor:
   js:
-    /libraries/quanthub-drupal-react/dafna-visualizations/dist/config-editor-wrapper/index.iife.js: {}
+    /libraries/quanthub-drupal-react/quanthub-libs/dist/config-editor-wrapper/index.iife.js: {}
   css:
     base:
-      /libraries/quanthub-drupal-react/dafna-visualizations/dist/config-editor-wrapper/style.css: {}
-
+      /libraries/quanthub-drupal-react/quanthub-libs/dist/config-editor-wrapper/style.css: {}
 dafna_rebuild:
   js:
     js/quanthub_visualization.js: {}
