@@ -16,6 +16,10 @@ services:
     class: '\Drupal\quanthub_core\WsoToken'
     arguments: ['@http_client', '@logger.channel.quanthub_core', '@current_user', '@quanthub_tempstore.private']
 
+  # AzureWorkloadIdentityTokenProvider. Handles Azure Workload Identity token acquisition and management.
+  azure_workload_identity_token_provider:
+    class: '\Drupal\quanthub_core\AzureWorkloadIdentityTokenProvider'
+
   # Soap client for getting allowed content according to XACML policies.
   xacml_soap_client:
     class: '\Drupal\quanthub_core\XacmlSoapClient'
