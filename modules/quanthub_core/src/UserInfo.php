@@ -68,9 +68,16 @@ class UserInfo implements UserInfoInterface {
   protected $configFactory;
 
   /**
+   * The Azure WorkloadIdentity token provider.
+   *
+   * @var \Drupal\quanthub_core\AzureWorkloadIdentityTokenProvider
+   */
+  protected $azureWorkloadIdentityTokenProvider;
+
+  /**
    * Constructs an AnonymousUserInfoTokenSubscriber object.
    */
-  public function __construct(AccountInterface $current_user, CacheBackendInterface $cache, OpenidConnectSessionInterface $openid_connect_session, UserDataInterface $user_data, ClientInterface $http_client, LoggerInterface $logger, ConfigFactoryInterface $configFactory) {
+  public function __construct(AccountInterface $current_user, CacheBackendInterface $cache, OpenidConnectSessionInterface $openid_connect_session, UserDataInterface $user_data, ClientInterface $http_client, LoggerInterface $logger, ConfigFactoryInterface $configFactory, AzureWorkloadIdentityTokenProvider azure_workload_identity_token_provider) {
     $this->currentUser = $current_user;
     $this->cache = $cache;
     $this->openidConnectSession = $openid_connect_session;
@@ -78,17 +85,24 @@ class UserInfo implements UserInfoInterface {
     $this->httpClient = $http_client;
     $this->logger = $logger;
     $this->configFactory = $configFactory;
+    $this->azureWorkloadIdentityTokenProvider = $azure_workload_identity_token_provider;
   }
 
   /**
    * Get token for anonymous from cache and authenticated user from oidc plugin.
    */
   public function getToken() {
-    // For anonymous and admin we will use anonymous token.
+    // For anonymous and admin we will use anonymous or workloadIdentity token.
     if ($this->currentUser->isAnonymous() || $this->currentUser->id() == 1) {
-      return $this->getAnonymousToken();
+      $useWorkloadIdentity = getenv('USE_WORKLOAD_IDENTITY');
+      $scope = getenv('SDMX_WORKLOAD_IDENTITY_SCOPE');
+      if ($useWorkloadIdentity && strtolower($useWorkloadIdentity) === 'true') {
+        return $this->azureWorkloadIdentityTokenProvider->getToken($scope, 'qh_sdmx_token_file');
+      }
+      else {
+        return $this->getAnonymousToken();
+      }
     }
-
     return $this->openidConnectSession->getJsonWebTokens()->getAccessToken()->getValue();
   }
 
