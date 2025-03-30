@@ -94,14 +94,7 @@ class UserInfo implements UserInfoInterface {
   public function getToken() {
     // For anonymous and admin we will use anonymous or workloadIdentity token.
     if ($this->currentUser->isAnonymous() || $this->currentUser->id() == 1) {
-      $useWorkloadIdentity = getenv('USE_WORKLOAD_IDENTITY');
-      $scope = getenv('SDMX_WORKLOAD_IDENTITY_SCOPE');
-      if ($useWorkloadIdentity && strtolower($useWorkloadIdentity) === 'true') {
-        return $this->azureWorkloadIdentityTokenProvider->getToken($scope, 'qh_sdmx_token_file');
-      }
-      else {
-        return $this->getAnonymousToken();
-      }
+      return $this->getAnonymousToken();
     }
     return $this->openidConnectSession->getJsonWebTokens()->getAccessToken()->getValue();
   }
@@ -111,9 +104,29 @@ class UserInfo implements UserInfoInterface {
    */
   public function getAnonymousToken() {
     if (!$this->cache->get(self::ANONYMOUS_TOKEN_CID)) {
-      $this->updateAnonymousToken();
+      $useWorkloadIdentity = getenv('USE_WORKLOAD_IDENTITY');
+      $scope = getenv('SDMX_WORKLOAD_IDENTITY_SCOPE');
+      if ($useWorkloadIdentity && strtolower($useWorkloadIdentity) === 'true') {
+        $this->updateWorkloadIdentityToken($scope);
+      }
+      else {
+        $this->updateAnonymousToken();
+      }
     }
     return $this->cache->get(self::ANONYMOUS_TOKEN_CID)->data;
+  }
+
+  /**
+   * Update workload identity token and save to the cache.
+   *
+   * As this token for anonymous user no sense to store this more secure.
+   *
+   * @param string $scope
+   *   Azure scope for the token.
+   */
+  public function updateWorkloadIdentityToken(string $scope) {
+    $tokenData = $this->azureWorkloadIdentityTokenProvider->getToken($scope, 'qh_sdmx_token_file');
+    $this->cache->set(self::ANONYMOUS_TOKEN_CID, $tokenData['access_token'], intval($tokenData['expires_in']));
   }
 
   /**
