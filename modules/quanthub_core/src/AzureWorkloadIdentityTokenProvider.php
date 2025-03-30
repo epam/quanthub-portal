@@ -126,7 +126,7 @@ class AzureWorkloadIdentityTokenProvider {
     }
 
     if ((intval($tokenData['expires_in']) - self::EXPIRES_BEFORE_SEC) > time()) {
-      return $tokenData['access_token'] ?? NULL;
+      return $tokenData ?? NULL;
     }
 
     return NULL;
@@ -158,15 +158,14 @@ class AzureWorkloadIdentityTokenProvider {
       'scope' => $scope,
     ]);
 
-    $cachedTokenFile = $this->getCachedTokenFullPath($cachedTokenFileName);
-    $tokenData['expires_in'] = time() + intval($tokenData['expires_in']);
-    file_put_contents($cachedTokenFile, json_encode($tokenData));
-
     if (!isset($tokenData['access_token'])) {
       throw new RuntimeException('Workload Identity token exchange failed: Invalid response.');
     }
 
-    return $tokenData['access_token'];
+    $cachedTokenFile = $this->getCachedTokenFullPath($cachedTokenFileName);
+    $tokenData['expires_in'] = time() + intval($tokenData['expires_in']);
+    file_put_contents($cachedTokenFile, json_encode($tokenData));
+    return $tokenData;
   }
 
   /**
