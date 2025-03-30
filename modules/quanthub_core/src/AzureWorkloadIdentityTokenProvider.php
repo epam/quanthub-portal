@@ -106,7 +106,7 @@ class AzureWorkloadIdentityTokenProvider {
    *   Cache filename to check.
    *
    * @return string|null
-   *   Valid access token or null if not available/expired.
+   *   Valid access token data or null if not available/expired.
    */
   private function getCachedToken(string $cachedTokenFileName): ?string {
     $cachedTokenFile = $this->getCachedTokenFullPath($cachedTokenFileName);
