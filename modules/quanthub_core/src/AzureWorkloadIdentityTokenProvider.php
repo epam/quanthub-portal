@@ -67,20 +67,20 @@ class AzureWorkloadIdentityTokenProvider {
   }
 
   /**
-   * Retrieve access token, using cached version if available and valid.
+   * Retrieve token data, using cached version if available and valid.
    *
    * @param string $scope
    *   Azure scope for the token (default: DEFAULT_SCOPE)
    * @param string|null $cachedTokenFileName
    *   Custom cache filename (default: DEFAULT_TOKEN_FILE)
    *
-   * @return string
-   *   Valid access token
+   * @return array
+   *   Valid token data
    *
    * @throws RuntimeException
    *   On configuration or token retrieval errors.
    */
-  public function getToken(string $scope = self::DEFAULT_SCOPE, ?string $cachedTokenFileName = NULL): string {
+  public function getToken(string $scope = self::DEFAULT_SCOPE, ?string $cachedTokenFileName = NULL): array {
     $cacheFile = $cachedTokenFileName ?? self::DEFAULT_TOKEN_FILE;
     return $this->getCachedToken($cacheFile) ?? $this->fetchNewToken($scope, $cacheFile);
   }
