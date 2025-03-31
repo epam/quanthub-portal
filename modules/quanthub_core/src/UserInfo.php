@@ -5,6 +5,7 @@ namespace Drupal\quanthub_core;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\oidc\OpenidConnectSessionInterface;
 use Drupal\user\UserDataInterface;
 use GuzzleHttp\ClientInterface;
@@ -96,6 +97,10 @@ class UserInfo implements UserInfoInterface {
    * Get token for anonymous from cache.
    */
   public function getAnonymousToken() {
+    $quanthubCoreSetting = Settings::get('quanthub_core');
+    if ($quanthubCoreSetting && isset($quanthubCoreSetting['anonymous_token'])) {
+      return $quanthubCoreSetting['anonymous_token'];
+    }
     if (!$this->cache->get(self::ANONYMOUS_TOKEN_CID)) {
       $this->updateAnonymousToken();
     }
