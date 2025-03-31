@@ -77,7 +77,7 @@ class UserInfo implements UserInfoInterface {
   /**
    * Constructs an AnonymousUserInfoTokenSubscriber object.
    */
-  public function __construct(AccountInterface $current_user, CacheBackendInterface $cache, OpenidConnectSessionInterface $openid_connect_session, UserDataInterface $user_data, ClientInterface $http_client, LoggerInterface $logger, ConfigFactoryInterface $configFactory, AzureWorkloadIdentityTokenProvider azure_workload_identity_token_provider) {
+  public function __construct(AccountInterface $current_user, CacheBackendInterface $cache, OpenidConnectSessionInterface $openid_connect_session, UserDataInterface $user_data, ClientInterface $http_client, LoggerInterface $logger, ConfigFactoryInterface $configFactory, AzureWorkloadIdentityTokenProvider $azure_workload_identity_token_provider) {
     $this->currentUser = $current_user;
     $this->cache = $cache;
     $this->openidConnectSession = $openid_connect_session;
