@@ -105,10 +105,10 @@ class AzureWorkloadIdentityTokenProvider {
    * @param string $cachedTokenFileName
    *   Cache filename to check.
    *
-   * @return string|null
+   * @return array|null
    *   Valid access token data or null if not available/expired.
    */
-  private function getCachedToken(string $cachedTokenFileName): ?string {
+  private function getCachedToken(string $cachedTokenFileName): ?array {
     $cachedTokenFile = $this->getCachedTokenFullPath($cachedTokenFileName);
 
     if (!file_exists($cachedTokenFile)) {
@@ -140,13 +140,13 @@ class AzureWorkloadIdentityTokenProvider {
    * @param string $cachedTokenFileName
    *   Cache filename to use.
    *
-   * @return string
-   *   New access token
+   * @return array
+   *   New access token data
    *
    * @throws RuntimeException
    *   On token retrieval or cache failures.
    */
-  private function fetchNewToken(string $scope, string $cachedTokenFileName): string {
+  private function fetchNewToken(string $scope, string $cachedTokenFileName): array {
     $jwt = file_get_contents($this->federatedTokenFile);
     if ($jwt === FALSE) {
       throw new RuntimeException('Failed to read federated token file.');
