@@ -7,8 +7,8 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\quanthub_core\PowerBIEmbedConfigs;
 use GuzzleHttp\Psr7\Response;
-use Laminas\Diactoros\Response\JsonResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
