@@ -21,6 +21,13 @@ class BooksBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
 
   /**
+   * Entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected $entityTypeManager;
+
+  /**
    * The language manager service.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
@@ -42,7 +49,7 @@ class BooksBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     EntityTypeManager $entity_type_manager,
     LanguageManagerInterface $language_manager,
   ) {
-    $this->entityTypeManager = $entity_type_manager->getStorage('node');
+    $this->entityTypeManager = $entity_type_manager;
     $this->languageManager = $language_manager;
   }
 
@@ -74,7 +81,7 @@ class BooksBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     if ($node->bundle() == 'book') {
       // Book Name breadcrumb item for all children elements.
       $bookId = $node->book['bid'];
-      $bookNode = $this->entityTypeManager->load($bookId);
+      $bookNode = $this->entityTypeManager->getStorage('node')->load($bookId);
 
       if ($bookNode instanceof NodeInterface && $bookNode->hasTranslation($currentLanguage)) {
         $breadcrumb->addLink($bookNode->getTranslation($currentLanguage)->toLink());
@@ -85,12 +92,12 @@ class BooksBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     if ($node->bundle() == 'book_content') {
       // Get first referenced node.
       $referencedPageId = $node->field_book_page_ref->first()->getString();
-      $referencedNode = $this->entityTypeManager->load($referencedPageId);
+      $referencedNode = $this->entityTypeManager->getStorage('node')->load($referencedPageId);
 
       // Get book node by id from referenced node.
       $bookId = $referencedNode->book['bid'];
       if (!empty($bookId)) {
-        $bookNode = $this->entityTypeManager->load($bookId);
+        $bookNode = $this->entityTypeManager->getStorage('node')->load($bookId);
       }
       // Book Name item.
       if ($bookNode instanceof NodeInterface && $bookNode->hasTranslation($currentLanguage)) {
