@@ -4,8 +4,6 @@ on:
   pull_request:
     branches:
       - 1.0.x
-env:
-  PHP_VERSION: 8.1
 
 jobs:
   PHP-Code-Standards:
@@ -14,13 +12,14 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Set PHP Version
-        run: |
-          sudo update-alternatives --set php /usr/bin/php$PHP_VERSION
-          sudo update-alternatives --set phar /usr/bin/phar$PHP_VERSION
-          sudo update-alternatives --set phpdbg /usr/bin/phpdbg$PHP_VERSION
-          sudo update-alternatives --set php-cgi /usr/bin/php-cgi$PHP_VERSION
-          sudo update-alternatives --set phar.phar /usr/bin/phar.phar$PHP_VERSION
+      - name: Setup PHP
+        id: setup-php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Print PHP version
+        run: echo ${{ steps.setup-php.outputs.php-version }}
 
       - name: Сomposer Install
         run: |
@@ -29,7 +28,7 @@ jobs:
 
       - name: Install PHP_CodeSniffer and Drupal Coder
         run: |
-          composer global require "squizlabs/php_codesniffer=3.7.2"
+          composer global require "squizlabs/php_codesniffer=*"
           composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
           composer global require drupal/coder
 
