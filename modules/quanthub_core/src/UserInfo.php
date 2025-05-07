@@ -8,6 +8,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\oidc\OpenidConnectSessionInterface;
 use Drupal\user\UserDataInterface;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Log\LoggerInterface;
 
@@ -89,7 +90,14 @@ class UserInfo implements UserInfoInterface {
       if (!$this->cache->get(self::ANONYMOUS_TOKEN_CID)) {
         $this->updateAnonymousToken();
       }
-      $token = $this->cache->get(self::ANONYMOUS_TOKEN_CID)->data;
+      $cached_item = $this->cache->get(self::ANONYMOUS_TOKEN_CID);
+
+      // Check if the cached item exists and retrieve its data, or use a fallback.
+      $token = $cached_item ? $cached_item->data : NULL;
+
+      if (!$token) {
+        $this->logger->warning("Anonymous user token not found in cache.");
+      }
     }
     else {
       $token = $this->openidConnectSession->getJsonWebTokens()->getAccessToken()->getValue();
@@ -172,8 +180,9 @@ class UserInfo implements UserInfoInterface {
           'headers' => [
             'Content-Type' => 'application/json',
           ],
+          'timeout' => 10,
+          'connect_timeout' => 10,
         ]);
-
         $user_info_data = json_decode($response->getBody(), TRUE);
         $this->cache->set(self::ANONYMOUS_TOKEN_CID, $user_info_data['token'], strtotime($user_info_data['expiresOn']));
       }
@@ -181,8 +190,11 @@ class UserInfo implements UserInfoInterface {
         $this->logger->error('Failed to retrieve tokens for anonymous user: @error.', [
           '@error' => $e->getMessage(),
         ]);
-
-        throw new \RuntimeException('Failed to retrieve the user info anonymous token', 0, $e);
+      }
+      catch (ConnectException $e) {
+        $this->logger->error('Failed to connect to receive tokens for anonymous user: @error.', [
+          '@error' => $e->getMessage(),
+        ]);
       }
     }
     else {
@@ -206,8 +218,6 @@ class UserInfo implements UserInfoInterface {
         $this->logger->error('Failed to retrieve quanthub user id for anonymous user: @error.', [
           '@error' => $e->getMessage(),
         ]);
-
-        throw new \RuntimeException('Failed to retrieve quanthub user id for anonymous token', 0, $e);
       }
     }
   }
