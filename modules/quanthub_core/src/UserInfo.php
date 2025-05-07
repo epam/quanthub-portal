@@ -92,12 +92,8 @@ class UserInfo implements UserInfoInterface {
       }
       $cached_item = $this->cache->get(self::ANONYMOUS_TOKEN_CID);
 
-      // Check if the cached item exists and retrieve its data, or use a fallback.
       $token = $cached_item ? $cached_item->data : NULL;
 
-      if (!$token) {
-        $this->logger->warning("Anonymous user token not found in cache.");
-      }
     }
     else {
       $token = $this->openidConnectSession->getJsonWebTokens()->getAccessToken()->getValue();
