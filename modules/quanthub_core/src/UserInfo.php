@@ -196,26 +196,6 @@ class UserInfo implements UserInfoInterface {
     else {
       $this->logger->error('Failed to retrieve tokens for anonymous user: Anonymous token is not set');
     }
-
-    $user_attributes_endpoint = $oidc_plugin->get(self::USER_ATTRIBUTES_ENDPOINT);
-    if (!$this->cache->get(self::ANONYMOUS_QUANTHUB_USER_ID) && !empty($user_info_data['token']) && !empty($user_info_data['expiresOn'])) {
-      try {
-        $response = $this->httpClient->get($user_attributes_endpoint, [
-          'headers' => [
-            'Authorization' => 'Bearer ' . $user_info_data['token'],
-            'Content-Type' => 'application/json',
-          ],
-        ]);
-
-        $user_attributes_data = json_decode($response->getBody(), TRUE);
-        $this->cache->set(self::ANONYMOUS_QUANTHUB_USER_ID, $user_attributes_data['userAttributes']['USER_ID'], strtotime($user_info_data['expiresOn']));
-      }
-      catch (RequestException $e) {
-        $this->logger->error('Failed to retrieve quanthub user id for anonymous user: @error.', [
-          '@error' => $e->getMessage(),
-        ]);
-      }
-    }
   }
 
 }
