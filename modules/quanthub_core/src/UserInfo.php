@@ -80,7 +80,7 @@ class UserInfo implements UserInfoInterface {
   }
 
   /**
-   * Get token for anonymous from cache and authenticated user from oidc plugin.
+   * Get token for user from cache.
    */
   public function getToken() {
     if (!$this->cache->get(self::ANONYMOUS_TOKEN_CID)) {
@@ -92,6 +92,7 @@ class UserInfo implements UserInfoInterface {
   }
 
   /**
+   * @deprecated. Authenticated token is deprecated and will be deleted soon.
    * Get QuantHub User Id for anonymous and authenticated user.
    *
    * For anonymous from cache and authenticated user from user data.
@@ -112,6 +113,7 @@ class UserInfo implements UserInfoInterface {
   }
 
   /**
+   * @deprecated. Authenticated token is deprecated and will be deleted soon.
    * Get Quanthub User Role.
    */
   public function getUserInfoRole() {
@@ -128,6 +130,7 @@ class UserInfo implements UserInfoInterface {
   }
 
   /**
+   * @deprecated. Authenticated token is deprecated and will be deleted soon.
    * Get Quanthub User Groups.
    */
   public function getUserInfoGroups() {
