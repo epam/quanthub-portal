@@ -162,8 +162,8 @@ class UserInfo implements UserInfoInterface {
       $this->logger->error('Config @config does not exist', ['@config' => $configName]);
       return;
     }
-    $anonymous_endpoint = $oidc_plugin->get(self::ANONYMOUS_TOKEN_ENDPOINT);
 
+    $anonymous_endpoint = $oidc_plugin->get(self::ANONYMOUS_TOKEN_ENDPOINT);
     if ($anonymous_endpoint) {
       try {
         $response = $this->httpClient->get($anonymous_endpoint, [
@@ -173,6 +173,7 @@ class UserInfo implements UserInfoInterface {
           'timeout' => 10,
           'connect_timeout' => 10,
         ]);
+
         $user_info_data = json_decode($response->getBody(), TRUE);
         $this->cache->set(self::ANONYMOUS_TOKEN_CID, $user_info_data['token'], strtotime($user_info_data['expiresOn']));
       }
