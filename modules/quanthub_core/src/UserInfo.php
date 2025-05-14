@@ -8,8 +8,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\oidc\OpenidConnectSessionInterface;
 use Drupal\user\UserDataInterface;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\RequestException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -85,21 +83,12 @@ class UserInfo implements UserInfoInterface {
    * Get token for anonymous from cache and authenticated user from oidc plugin.
    */
   public function getToken() {
-    // For anonymous and admin we will use anonymous token.
-    if ($this->currentUser->isAnonymous() || $this->currentUser->id() == 1) {
-      if (!$this->cache->get(self::ANONYMOUS_TOKEN_CID)) {
-        $this->updateAnonymousToken();
-      }
-      $cached_item = $this->cache->get(self::ANONYMOUS_TOKEN_CID);
-
-      $token = $cached_item ? $cached_item->data : NULL;
-
+    if (!$this->cache->get(self::ANONYMOUS_TOKEN_CID)) {
+      $this->updateAnonymousToken();
     }
-    else {
-      $token = $this->openidConnectSession->getJsonWebTokens()->getAccessToken()->getValue();
-    }
+    $cached_item = $this->cache->get(self::ANONYMOUS_TOKEN_CID);
 
-    return $token;
+    return $cached_item ? $cached_item->data : NULL;
   }
 
   /**
@@ -164,8 +153,10 @@ class UserInfo implements UserInfoInterface {
     }
 
     $oidc_plugin_id = array_shift($generic_realms);
-    $oidc_plugin = $this->configFactory->get('oidc.realm.quanthub_b2c_realm.' . $oidc_plugin_id);
-    if (!isset($oidc_plugin)) {
+    $configName = 'oidc.realm.quanthub_b2c_realm.' . $oidc_plugin_id;
+    $oidc_plugin = $this->configFactory->get($configName);
+    if ($oidc_plugin->isNew()) {
+      $this->logger->error('Config @config does not exist', ['@config' => $configName]);
       return;
     }
     $anonymous_endpoint = $oidc_plugin->get(self::ANONYMOUS_TOKEN_ENDPOINT);
@@ -182,20 +173,15 @@ class UserInfo implements UserInfoInterface {
         $user_info_data = json_decode($response->getBody(), TRUE);
         $this->cache->set(self::ANONYMOUS_TOKEN_CID, $user_info_data['token'], strtotime($user_info_data['expiresOn']));
       }
-      catch (RequestException $e) {
+      catch (\Exception $e) {
         $this->logger->error('Failed to retrieve tokens for anonymous user: @error.', [
           '@error' => $e->getMessage(),
         ]);
       }
-      catch (ConnectException $e) {
-        $this->logger->error('Failed to connect to receive tokens for anonymous user: @error.', [
-          '@error' => $e->getMessage(),
-        ]);
-      }
     }
-    else {
-      $this->logger->error('Failed to retrieve tokens for anonymous user: Anonymous token is not set');
-    }
+
+    $this->logger->error('Failed to retrieve tokens for anonymous user: Anonymous token is not set');
+
   }
 
 }
