@@ -10,7 +10,7 @@ interface UserInfoInterface extends QuanthubCoreInterface {
   /**
    * Cache ID for anonymous user info token.
    */
-  const ANONYMOUS_TOKEN_CID = self::MODULE_NAME . ':ANONYMOUS_USERINFO_TOKEN';
+  const ANONYMOUS_TOKEN_CID = 'ANONYMOUS_USERINFO_TOKEN';
 
   /**
    * User Data key for quanthub id.
