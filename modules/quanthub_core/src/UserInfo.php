@@ -183,8 +183,9 @@ class UserInfo implements UserInfoInterface {
         ]);
       }
     }
-
-    $this->logger->error('Failed to retrieve tokens for anonymous user: Anonymous token is not set');
+    else {
+      $this->logger->error('Failed to retrieve tokens for anonymous user: Anonymous endpoint is not set');
+    }
 
   }
 
