@@ -56,7 +56,6 @@ class AllowedDatasetsCacheContext extends UserCacheContextBase implements CacheC
    */
   public function getCacheableMetadata() {
     return (new CacheableMetadata())
-      ->setCacheTags(['user:' . $this->user->id()])
       ->setCacheContexts(['user.permissions']);
   }
 
