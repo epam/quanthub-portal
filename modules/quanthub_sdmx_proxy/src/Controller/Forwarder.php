@@ -7,6 +7,7 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\quanthub_core\UserInfo;
+use Drupal\user\Entity\User;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -109,7 +110,35 @@ final class Forwarder extends ControllerBase {
    *   The response object.
    */
   public function forwardDownload(Request $request): Response {
+    $this->logForwardDownload($request);
     return $this->forwardInternal($request, getenv('SDMX_DOWNLOAD_API_URL'));
+  }
+
+  /**
+   * Log info about downloads.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request.
+   */
+  private function logForwardDownload(Request $request) {
+    $uri = $request->query->get('uri');
+    $current_user = \Drupal::currentUser();
+    $user = NULL;
+    if (!$current_user->isAnonymous()) {
+      $uid = $current_user->id();
+      $user = User::load($uid);
+    }
+    if ($user) {
+      $this->loggerFactory->get('quanthub_sdmx_proxy')->info('forwardDownload', [
+        'uri' => $uri,
+        'user' => $user->getDisplayName(),
+        'email' => $user->getEmail()
+      ]);
+    } else {
+      $this->loggerFactory->get('quanthub_sdmx_proxy')->info('forwardDownload', [
+        'uri' => $uri
+      ]);
+    }
   }
 
   /**
