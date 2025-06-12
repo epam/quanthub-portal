@@ -6,7 +6,9 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\quanthub_core\UserInfo;
+use Drupal\user\UserStorageInterface;
 use Drupal\user\Entity\User;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
@@ -66,7 +68,9 @@ final class Forwarder extends ControllerBase {
       $container->get('psr7.http_foundation_factory'),
       $container->get('logger.factory'),
       $container->get('config.factory'),
-      $container->get('user_info')
+      $container->get('user_info'),
+      $container->get('current_user'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -79,12 +83,16 @@ final class Forwarder extends ControllerBase {
     LoggerChannelFactoryInterface $logger_factory,
     ConfigFactory $config_factory,
     UserInfo $user_info,
+    AccountProxyInterface $currentUser,
+    EntityTypeManagerInterface $entityTypeManager,
   ) {
     $this->client = $client;
     $this->foundationFactory = $foundation_factory;
     $this->loggerFactory = $logger_factory;
     $this->configFactory = $config_factory;
     $this->userInfo = $user_info;
+    $this->currentUser = $currentUser;
+    $this->userStorage = $entityTypeManager->getStorage('user');
   }
 
   /**
@@ -122,17 +130,16 @@ final class Forwarder extends ControllerBase {
    */
   private function logForwardDownload(Request $request) {
     $uri = $request->query->get('uri');
-    $current_user = \Drupal::currentUser();
     $user = NULL;
-    if (!$current_user->isAnonymous()) {
-      $uid = $current_user->id();
-      $user = User::load($uid);
+    if (!$this->currentUser->isAnonymous()) {
+      $uid = $this->currentUser->id();
+      $user = $this->userStorage->load($uid);
     }
     if ($user) {
       $this->loggerFactory->get('quanthub_sdmx_proxy')->info('forwardDownload', [
         'uri' => $uri,
         'user' => $user->getDisplayName(),
-        'email' => $user->getEmail()
+        'email' => $user->getEmail(),
       ]);
     } else {
       $this->loggerFactory->get('quanthub_sdmx_proxy')->info('forwardDownload', [
