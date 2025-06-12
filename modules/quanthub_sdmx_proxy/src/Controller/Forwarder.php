@@ -5,6 +5,7 @@ namespace Drupal\quanthub_sdmx_proxy\Controller;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\quanthub_core\UserInfo;
@@ -127,11 +128,11 @@ final class Forwarder extends ControllerBase {
    *   The incoming request.
    */
   private function logForwardDownload(Request $request) {
-    $context = array();
-    $context['uri'] = $request->query->get('uri');    
+    $context = [];
+    $context['uri'] = $request->query->get('uri');
     if ($body = $request->getContent()) {
       $context['body'] = $body;
-    }    
+    }
     if (!$this->currentUser->isAnonymous()) {
       $uid = $this->currentUser->id();
       $user = $this->userStorage->load($uid);
