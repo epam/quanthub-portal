@@ -127,24 +127,18 @@ final class Forwarder extends ControllerBase {
    *   The incoming request.
    */
   private function logForwardDownload(Request $request) {
-    $uri = $request->query->get('uri');
-    $user = NULL;
+    $context = array();
+    $context['uri'] = $request->query->get('uri');    
+    if ($body = $request->getContent()) {
+      $context['body'] = $body;
+    }    
     if (!$this->currentUser->isAnonymous()) {
       $uid = $this->currentUser->id();
       $user = $this->userStorage->load($uid);
+      $context['user'] => $user->getDisplayName();
+      $context['email'] => $user->getEmail();
     }
-    if ($user) {
-      $this->loggerFactory->get('quanthub_sdmx_proxy')->info('forwardDownload', [
-        'uri' => $uri,
-        'user' => $user->getDisplayName(),
-        'email' => $user->getEmail(),
-      ]);
-    }
-    else {
-      $this->loggerFactory->get('quanthub_sdmx_proxy')->info('forwardDownload', [
-        'uri' => $uri,
-      ]);
-    }
+    $this->loggerFactory->get('quanthub_sdmx_proxy')->info('forwardDownload', $context);
   }
 
   /**
