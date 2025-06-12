@@ -136,8 +136,8 @@ final class Forwarder extends ControllerBase {
     if (!$this->currentUser->isAnonymous()) {
       $uid = $this->currentUser->id();
       $user = $this->userStorage->load($uid);
-      $context['user'] => $user->getDisplayName();
-      $context['email'] => $user->getEmail();
+      $context['user'] = $user->getDisplayName();
+      $context['email'] = $user->getEmail();
     }
     $this->loggerFactory->get('quanthub_sdmx_proxy')->info('forwardDownload', $context);
   }
