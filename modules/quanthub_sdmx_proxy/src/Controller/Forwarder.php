@@ -8,8 +8,6 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\quanthub_core\UserInfo;
-use Drupal\user\UserStorageInterface;
-use Drupal\user\Entity\User;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -141,9 +139,10 @@ final class Forwarder extends ControllerBase {
         'user' => $user->getDisplayName(),
         'email' => $user->getEmail(),
       ]);
-    } else {
+    } 
+    else {
       $this->loggerFactory->get('quanthub_sdmx_proxy')->info('forwardDownload', [
-        'uri' => $uri
+        'uri' => $uri,
       ]);
     }
   }
