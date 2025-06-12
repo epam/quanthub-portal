@@ -139,7 +139,7 @@ final class Forwarder extends ControllerBase {
         'user' => $user->getDisplayName(),
         'email' => $user->getEmail(),
       ]);
-    } 
+    }
     else {
       $this->loggerFactory->get('quanthub_sdmx_proxy')->info('forwardDownload', [
         'uri' => $uri,
