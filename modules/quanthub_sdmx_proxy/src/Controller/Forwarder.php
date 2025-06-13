@@ -58,6 +58,8 @@ final class Forwarder extends ControllerBase {
    */
   private $foundationFactory;
 
+  private const DOWNLOAD_SUBMIT_PATH = '/submit';
+
   /**
    * {@inheritdoc}
    */
@@ -117,19 +119,24 @@ final class Forwarder extends ControllerBase {
    *   The response object.
    */
   public function forwardDownload(Request $request): Response {
-    $this->logForwardDownload($request);
+    $this->logForwardDownloadSubmit($request);
     return $this->forwardInternal($request, getenv('SDMX_DOWNLOAD_API_URL'));
   }
 
   /**
-   * Log info about downloads.
+   * Log info about submit of downloads.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request.
    */
-  private function logForwardDownload(Request $request) {
+  private function logForwardDownloadSubmit(Request $request) {
+    $uri = $request->query->get('uri');
+    if (!is_string($uri) || !str_ends_with($uri, self::DOWNLOAD_SUBMIT_PATH)) {
+      return;
+    }
+
     $context = [];
-    $context['uri'] = $request->query->get('uri');
+    $context['uri'] = $uri;
     if ($body = $request->getContent()) {
       $context['body'] = $body;
     }
