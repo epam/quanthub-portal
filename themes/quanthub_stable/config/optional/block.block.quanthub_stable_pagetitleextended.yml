@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - quanthub
+  theme:
+    - quanthub_stable
+id: quanthub_stable_pagetitleextended
+theme: quanthub_stable
+region: header
+weight: 0
+provider: null
+plugin: page_title_extended
+settings:
+  id: page_title_extended
+  label: 'Page title (extended)'
+  label_display: '0'
+  provider: quanthub
+  background: 1
+  description: 1
+  summary: 0
+visibility: {  }

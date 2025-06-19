@@ -1,9 +1,0 @@
-first_day: 1
-country:
-  default: UA
-timezone:
-  default: Europe/Kyiv
-  user:
-    configurable: true
-    default: 0
-    warn: false

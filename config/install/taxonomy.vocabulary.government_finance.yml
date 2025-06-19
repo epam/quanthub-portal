@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: 'Government finance'
-vid: government_finance
-description: ''
-weight: 0

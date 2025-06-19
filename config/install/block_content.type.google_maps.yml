@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-id: google_maps
-label: 'Google Maps'
-revision: 0
-description: ''

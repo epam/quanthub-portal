@@ -2,11 +2,8 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the standard installation profile.
+ * Install, update and uninstall functions for the Quanthub profile.
  */
-
-use Drupal\user\Entity\User;
-use Drupal\shortcut\Entity\Shortcut;
 
 /**
  * Implements hook_install().
@@ -15,27 +12,88 @@ use Drupal\shortcut\Entity\Shortcut;
  *
  * @see system_install()
  */
-//function quanthub_install() {
-//  // Assign user 1 the "administrator" role.
-//  /** @var \Drupal\user\Entity\User $user */
-//  $user = User::load(1);
-//  $user->addRole('administrator');
-//  $user->save();
-//
-//  // Populate the default shortcut set.
-//  $shortcut = Shortcut::create([
-//    'shortcut_set' => 'default',
-//    'title' => t('Add content'),
-//    'weight' => -20,
-//    'link' => ['uri' => 'internal:/node/add'],
-//  ]);
-//  $shortcut->save();
-//
-//  $shortcut = Shortcut::create([
-//    'shortcut_set' => 'default',
-//    'title' => t('All content'),
-//    'weight' => -19,
-//    'link' => ['uri' => 'internal:/admin/content'],
-//  ]);
-//  $shortcut->save();
-//}
+function quanthub_install() {
+  $module_handler = \Drupal::moduleHandler();
+  $profile = $module_handler->getModule('quanthub');
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $config_factory = \Drupal::configFactory();
+
+  // Set profile's favicon.
+  \Drupal::configFactory()
+    ->getEditable('system.theme.global')
+    ->set('favicon.use_default', FALSE)
+    ->set('favicon.path', $profile->getPath() . '/favicon.ico')
+    ->save();
+
+  // Create "Data" pseudo-link.
+  $entity_type_manager->getStorage('menu_link_content')->create([
+    'uuid' => '867e796f-d11c-4a8d-bfb2-141893f10c82',
+    'link' => ['uri' => 'route:<nolink>'],
+    'title' => 'Data',
+    'description' => 'Dive into datasets, analyse trends with interactive dashboards, and explore detailed data insights.',
+    'enabled' => 1,
+    'menu_name' => 'main',
+  ])->save();
+
+  // Remove RSS feed and empty behaviour.
+  /** @var \Drupal\views\ViewEntityInterface $view */
+  $views = $entity_type_manager->getStorage('view')->loadMultiple(['frontpage', 'taxonomy_term']);
+  foreach ($views as $view) {
+    $displays = $view->get('display');
+    foreach ($displays as $display_id => $display) {
+      if ($display['display_plugin'] === 'feed') {
+        $displays[$display_id]['display_options']['enabled'] = FALSE;
+      }
+      if ($display['display_plugin'] === 'default') {
+        $displays[$display_id]['display_options']['empty'] = [];
+      }
+    }
+    $view->set('display', $displays)->save();
+  }
+
+  // Disable some views we don't need.
+  $views = $entity_type_manager->getStorage('view')->loadMultiple(['who_s_new', 'who_s_online']);
+  foreach ($views as $view) {
+    $view->disable()->save();
+  }
+
+  // Create "Terms of Use" and "Privacy Policy" pages.
+  $pages = [
+    '7d8f9595-fd43-4571-b1a4-a627905ddf5f' => 'Privacy Policy',
+    '965ffd8e-ee26-4f8f-a794-4250e5135b0c' => 'Terms of Use',
+  ];
+  foreach ($pages as $uuid => $title) {
+    $node = $entity_type_manager->getStorage('node')->create([
+      'uuid' => $uuid,
+      'title' => $title,
+      'body' => 'Provide your content here.',
+      'type' => 'page',
+      'status' => 1,
+    ]);
+    $node->save();
+    $entity_type_manager->getStorage('menu_link_content')->create([
+      'link' => ['uri' => 'entity:node/' . $node->id()],
+      'langcode' => $node->language()->getId(),
+      'title' => $title,
+      'enabled' => 1,
+      'menu_name' => 'footer',
+    ])->save();
+  }
+
+  // Fix entity view configs with title field.
+  foreach ($entity_type_manager->getStorage('node_type')->loadMultiple() as $node_type) {
+    $config_factory->getEditable('core.entity_view_display.node.' . $node_type->id() . '.default')
+      ->set('hidden.title', TRUE)
+      ->save();
+    $config_factory->getEditable('core.entity_view_display.node.' . $node_type->id() . '.teaser')
+      ->set('content.title', [
+        'type' => 'string',
+        'label' => 'hidden',
+        'settings' => ['link_to_entity' => TRUE],
+        'third_party_settings' => [],
+        'weight' => 1,
+        'region' => 'content',
+      ])
+      ->save();
+  }
+}

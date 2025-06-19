@@ -3,6 +3,8 @@ type: module
 description: 'Quanthub Visualization'
 package: 'Epam Quanthub'
 core_version_requirement: ^10
+lifecycle: deprecated
+lifecycle_link: https://github.com/epam/quanthub-portal/tree/1.1.x
 
 dependencies:
   - json_field

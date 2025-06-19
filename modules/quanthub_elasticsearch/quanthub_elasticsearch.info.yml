@@ -1,0 +1,13 @@
+name: 'Quanthub Elasticsearch'
+type: module
+description: 'Elacticsearch support for Quanthub projects.'
+core_version_requirement: ^10 || ^11
+package: 'Epam Quanthub'
+dependencies:
+  - drupal:node
+  - drupal:views
+  - drupal:user
+  - elasticsearch_connector:elasticsearch_connector
+  - facets:facets
+  - key:key
+  - search_api_block:search_api_block

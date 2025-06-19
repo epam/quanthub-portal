@@ -3,7 +3,7 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_dataset
-    - node.type.dataset
+    - node.type.dashboard
     - node.type.publication
 id: node.publication.field_dataset
 field_name: field_dataset
@@ -11,7 +11,7 @@ entity_type: node
 bundle: publication
 label: Dataset
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''

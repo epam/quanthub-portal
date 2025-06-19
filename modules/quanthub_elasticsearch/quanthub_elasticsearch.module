@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations and general functionality for Quanthub Elasticsearch.
+ */
+
+/**
+ * Implements hook_entity_load().
+ */
+function quanthub_elasticsearch_entity_load(array $entities, $entity_type_id) {
+  if ($entity_type_id !== 'search_api_server') {
+    return;
+  }
+  /** @var \Drupal\search_api\ServerInterface $entity */
+  foreach ($entities as $entity) {
+    $backend_config = $entity->getBackendConfig();
+    if (
+      empty($backend_config['connector_config']['username']) ||
+      empty($backend_config['connector_config']['password'])) {
+      $backend_config['connector'] = 'standard';
+    }
+    else {
+      $backend_config['connector'] = 'basicauth';
+    }
+    $entity->setBackendConfig($backend_config);
+  }
+}

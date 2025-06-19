@@ -1,0 +1,56 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 796b7fda-81d6-4bf3-bc76-4a77113939e7
+  bundle: release
+  default_langcode: en
+  depends:
+    e9159ac5-b796-448d-91e1-2cdf5feb5644: node
+    8d93b538-225d-4836-8f3c-8ae9cae1155e: taxonomy_term
+default:
+  revision_uid:
+    -
+      target_id: 0
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 0
+  title:
+    -
+      value: 'Future Insurance Release'
+  created:
+    -
+      value: 1748955252
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: /releases/future-insurance-release
+      langcode: en
+      pathauto: 1
+  published_at:
+    -
+      value: 1748955291
+  body:
+    -
+      value: "<p>With the growing adoption of electric vehicles (EVs), insurance companies are adapting their policies to meet the unique needs of EV owners. Many insurers are introducing specialized coverage options that address risks such as battery replacement, charging station damage, and software-related issues. This shift reflects the industry's effort to support the transition to sustainable transportation while catering to emerging consumer demands.</p><p>As EV technology evolves, insurers are also leveraging data from connected vehicles to offer usage-based policies and personalized premiums. Experts believe that these innovations will not only enhance customer satisfaction but also position insurers as key players in the green energy revolution.</p>"
+      format: basic_html
+      summary: ''
+  field_dataset:
+    -
+      entity: e9159ac5-b796-448d-91e1-2cdf5feb5644
+  field_timestamp:
+    -
+      value: 1893510000
+  field_topics:
+    -
+      entity: 8d93b538-225d-4836-8f3c-8ae9cae1155e

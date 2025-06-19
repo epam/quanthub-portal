@@ -3,3 +3,5 @@ type: module
 description: 'Quanthub custom component Analytical Studio.'
 core_version_requirement: ^9.5.2 || ^10
 package: 'Epam Quanthub'
+lifecycle: deprecated
+lifecycle_link: https://github.com/epam/quanthub-portal/tree/1.1.x

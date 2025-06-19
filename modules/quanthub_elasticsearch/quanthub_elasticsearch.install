@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Quanthub ES module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function quanthub_elasticsearch_uninstall() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  $keys = $entity_type_manager->getStorage('key')->loadMultiple([
+    'elastic_url',
+    'elastic_prefix',
+    'elastic_user',
+    'elastic_password',
+  ]);
+  foreach ($keys as $key) {
+    $key->delete();
+  }
+
+  /** @var \Drupal\search_api\ServerInterface[] $servers */
+  $servers = $entity_type_manager->getStorage('search_api_server')->loadMultiple(['elasticsearch']);
+  foreach ($servers as $server) {
+    foreach ($server->getIndexes() as $index) {
+      $index->delete();
+    }
+    $server->delete();
+  }
+}

@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.dashboard
+  module:
+    - text
+id: node.dashboard.body
+field_name: body
+entity_type: node
+bundle: dashboard
+label: Body
+description: "<strong>Available styles:</strong>\r\n<ul>\r\n<li>Title: <i>Heading 3 + Title</i></li>\r\n<li>Large paragraph: <i>Paragraph + Large</i></li>\r\n<li>Caption: <i>Paragraph + Caption</i></li>\r\n</ul>"
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+  allowed_formats: {  }
+field_type: text_with_summary

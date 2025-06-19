@@ -1,0 +1,31 @@
+_meta:
+  version: '1.0'
+  entity_type: taxonomy_term
+  uuid: 8d93b538-225d-4836-8f3c-8ae9cae1155e
+  bundle: topics
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  name:
+    -
+      value: Insurance
+  description:
+    -
+      value: '<p>The "<strong>Insurance</strong>" topic covers risk management strategies that provide financial protection against potential losses.&nbsp;</p><p>It explores various types of insurance, such as health, life, property, and liability, along with policies, premiums, claims processes, and the role of insurers in mitigating uncertainty for individuals and businesses.</p>'
+      format: basic_html
+  weight:
+    -
+      value: 0
+  parent:
+    -
+      target_id: 0
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+      pathauto: 0

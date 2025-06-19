@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.listings.field_background
+    - taxonomy.vocabulary.listings
+id: taxonomy_term.listings.default
+targetEntityType: taxonomy_term
+bundle: listings
+mode: default
+content: {  }
+hidden:
+  description: true
+  field_background: true

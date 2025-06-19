@@ -1,0 +1,40 @@
+.page-title-extended.has-background {
+  position: relative;
+  margin: 0;
+  text-align: center;
+  min-height: 300px;
+  overflow: hidden;
+}
+
+.page-title-extended.has-background h1 {
+  margin: 0;
+  padding-block: 2em;
+}
+
+.page-title-extended:not(.has-background) .description {
+  font-size: .75em;
+  line-height: 1.2;
+}
+
+.page-title-extended .background {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  background-color: #ddd;
+}
+
+.page-title-extended .background img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+}
+
+.page-title-extended .background .visually-hidden {
+  display: none;
+}

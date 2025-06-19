@@ -1,5 +1,0 @@
-generic_realms: []
-login_path: null
-redirect_403: false
-disable_user_routes: true
-show_session_expired_message: true

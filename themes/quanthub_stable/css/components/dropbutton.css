@@ -1,0 +1,44 @@
+/**
+ * @file
+ * Base styles for dropbuttons.
+ */
+
+td .dropbutton-wrapper.dropbutton-multiple {
+  padding-right: 0;
+}
+
+td .dropbutton-multiple .dropbutton-action a,
+td .dropbutton-multiple .dropbutton-action input,
+td .dropbutton-multiple .dropbutton-action button {
+  height: auto;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.dropbutton-widget {
+  background-color: var(--color--gray-90);
+  white-space: nowrap;
+}
+
+.dropbutton li.dropbutton-action,
+.dropbutton li.dropbutton-toggle {
+  display: table-cell;
+  vertical-align: middle;
+  height: var(--space-doble);
+  font-weight: bold;
+}
+
+.dropbutton .dropbutton-action {
+  padding-inline: var(--space-base);
+}
+
+.dropbutton-arrow {
+  top: var(--space-base);
+}
+
+.dropbutton-multiple.open .dropbutton-arrow {
+  top: var(--space-base);
+  margin-top: -0.5em;
+}

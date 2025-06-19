@@ -1,0 +1,6 @@
+services:
+  quanthub_tvi.event_subscriber:
+    class: Drupal\quanthub_tvi\EventSubscriber\DefaultContentSubscriber
+    arguments: ['@entity_type.manager', '@config.factory']
+    tags:
+      - { name: event_subscriber }

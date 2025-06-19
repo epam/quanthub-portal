@@ -10,51 +10,59 @@ editor: ckeditor5
 settings:
   toolbar:
     items:
-      -
+      - heading
+      - style
+      - bold
+      - italic
+      - '|'
+      - blockQuote
+      - code
+      - bulletedList
+      - numberedList
+      - link
+      - strikethrough
+      - underline
+      - superscript
+      - subscript
+      - '|'
+      - specialCharacters
+      - insertTable
+      - drupalMedia
+      - '|'
+      - removeFormat
+      - sourceEditing
+  plugins:
+    ckeditor5_heading:
+      enabled_headings:
+        - heading3
+        - heading4
+        - heading5
+    ckeditor5_list:
+      properties:
+        reversed: false
+        startIndex: true
+      multiBlock: true
+    ckeditor5_sourceEditing:
+      allowed_tags:
+        - '<drupal-media data-*>'
+    ckeditor5_style:
+      styles:
         -
-          name: 'Block Formatting'
-          items:
-            - Format
+          label: Title
+          element: '<h3 class="t-title">'
         -
-          name: Formatting
-          items:
-            - Bold
-            - Italic
-            - Strike
-            - Underline
-            - Superscript
-            - Subscript
-            - RemoveFormat
+          label: Large
+          element: '<p class="t-large">'
         -
-          name: Links
-          items:
-            - DrupalLink
-            - DrupalUnlink
-            - Anchor
-        -
-          name: Lists
-          items:
-            - BulletedList
-            - NumberedList
-            - Table
-            - Accordion
-        -
-          name: Media
-          items:
-            - Blockquote
-            - DrupalImage
-            - DrupalFontAwesome
-        -
-          name: Tools
-          items:
-            - Source
-            - ShowBlocks
-  plugins: {  }
+          label: Caption
+          element: '<p class="t-small">'
+    media_media:
+      allow_view_mode_override: false
 image_upload:
   status: true
   scheme: public
   directory: inline-images
-  max_size: ''
+  max_size: null
   max_dimensions:
     width: null
     height: null

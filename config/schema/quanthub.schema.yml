@@ -1,0 +1,18 @@
+# Schema for the configuration files of the Quanthub module.
+quanthub.settings:
+  type: config_object
+  label: 'Quanthub Settings'
+  mapping:
+    content:
+      type: mapping
+      label: 'Content Settings'
+      mapping:
+        import:
+          type: boolean
+          label: 'Import demo content'
+        title:
+          type: boolean
+          label: 'Allow node title configuration in view modes'
+        urn_versioning:
+          type: boolean
+          label: 'Allow version in URN fields'

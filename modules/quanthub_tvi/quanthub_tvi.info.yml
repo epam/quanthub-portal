@@ -1,0 +1,9 @@
+name: 'Quanthub Taxonomy Views Integrator'
+type: module
+description: 'Taxonomy Views Integrator configuration.'
+core_version_requirement: ^10 || ^11
+package: 'Epam Quanthub'
+dependencies:
+  - flat_taxonomy:flat_taxonomy
+  - taxonomy_menu_ui:taxonomy_menu_ui
+  - tvi:tvi

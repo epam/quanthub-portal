@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: content
+label: Content
+type: 'canonical_entities:node'
+pattern: '[node:content-type:machine-name]s/[node:title]'
+selection_criteria:
+  466d2dce-d950-483c-89fc-2d0d3d777d57:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 466d2dce-d950-483c-89fc-2d0d3d777d57
+    context_mapping:
+      node: node
+    bundles:
+      dashboard: dashboard
+      dataset: dataset
+      publication: publication
+      release: release
+selection_logic: and
+weight: -5
+relationships: {  }

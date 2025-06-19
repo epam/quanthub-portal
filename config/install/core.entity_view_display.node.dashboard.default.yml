@@ -1,0 +1,36 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.dashboard.body
+    - field.field.node.dashboard.field_dataset
+    - field.field.node.dashboard.field_topics
+    - node.type.dashboard
+  module:
+    - text
+    - user
+id: node.dashboard.default
+targetEntityType: node
+bundle: dashboard
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_topics:
+    type: entity_reference_label
+    label: visually_hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_dataset: true
+  links: true
+  published_at: true
+  title: true

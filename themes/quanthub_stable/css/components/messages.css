@@ -1,0 +1,69 @@
+/**
+ * @file
+ * Messages.
+ */
+
+:root {
+  --messages-icon-size: 3rem;
+}
+
+.messages-list {
+  margin-block: var(--space-base);
+  padding-block: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  list-style: none;
+}
+
+.messages {
+  position: relative;
+  min-height: calc(var(--messages-icon-size) + 2 * var(--space-base));
+  margin-block: var(--space-base);
+  padding-block: var(--space-base);
+  padding-inline-start: calc(var(--messages-icon-size) + 2 * var(--space-base));
+  padding-inline-end: var(--space-base);
+  color: var(--color--white);
+  outline: solid 1px transparent;
+  background-color: var(--color--gray-60);
+}
+
+.messages * {
+  color: inherit;
+}
+
+.messages a {
+  color: var(--color--white);
+}
+
+.messages pre {
+  margin: 0;
+}
+
+.messages::before {
+  content: '';
+  position: absolute;
+  width: var(--messages-icon-size);
+  height: var(--messages-icon-size);
+  top: var(--space-base);
+  left: var(--space-base);
+}
+
+[dir="rtl"] .messages::before {
+  left: auto;
+  right: var(--space-base);
+}
+
+.messages--status::before {
+  background-color: var(--color--green);
+  -webkit-mask-image: url('../../images/check.svg');
+}
+
+.messages--warning::before {
+  background-color: var(--color--gold);
+  -webkit-mask-image: url('../../images/warning.svg');
+}
+
+.messages--error::before {
+  background-color: var(--color--red);
+  -webkit-mask-image: url('../../images/error.svg');
+}

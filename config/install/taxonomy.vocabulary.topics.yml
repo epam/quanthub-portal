@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - flat_taxonomy
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  flat_taxonomy:
+    flat: 1
+name: Topics
+vid: topics
+description: 'Use topics to group articles into categories.'
+weight: 0
+new_revision: false

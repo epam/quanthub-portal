@@ -6,12 +6,12 @@ dependencies:
 id: news
 label: News
 type: 'canonical_entities:node'
-pattern: '/news/[node:nid]'
+pattern: '[node:content-type:machine-name]/[node:title]'
 selection_criteria:
-  200cfe84-9e79-45ca-b261-85b9771b3780:
+  ff956669-67ff-4f33-932d-7cd658ad1945:
     id: 'entity_bundle:node'
     negate: false
-    uuid: 200cfe84-9e79-45ca-b261-85b9771b3780
+    uuid: ff956669-67ff-4f33-932d-7cd658ad1945
     context_mapping:
       node: node
     bundles:

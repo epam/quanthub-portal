@@ -1,0 +1,49 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: e9159ac5-b796-448d-91e1-2cdf5feb5644
+  bundle: dataset
+  default_langcode: en
+  depends:
+    8d93b538-225d-4836-8f3c-8ae9cae1155e: taxonomy_term
+default:
+  revision_uid:
+    -
+      target_id: 0
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 0
+  title:
+    -
+      value: 'Standard Insurance Data'
+  created:
+    -
+      value: 1748875952
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: /datasets/standard-insurance-data
+      langcode: en
+      pathauto: 1
+  published_at:
+    -
+      value: 1748875999
+  body:
+    -
+      value: '<p>The Standard Insurance Data dataset offers a detailed compilation of key insurance metrics essential for understanding trends, evaluating risks, and optimizing strategies. The dataset includes information on premiums, claims, policy types, customer demographics, and market performance. These indicators provide critical insights into underwriting, risk assessment, market dynamics, and financial stability.</p><p>This dataset is invaluable for:</p><ul><li><strong>Risk Analysis:</strong> Assessing potential risks and improving underwriting practices.</li><li><strong>Policy Development:</strong> Informing the design and pricing of insurance products.</li><li><strong>Market Research:</strong> Analyzing industry trends and identifying growth opportunities.</li><li><strong>Academic Research:</strong> Supporting studies on insurance performance, market behavior, and regulatory impacts.</li></ul>'
+      format: basic_html
+      summary: 'The dataset provides a comprehensive collection of key insurance-related indicators, offering valuable insights for analyzing trends, assessing risks, and supporting decision-making in the insurance industry.'
+  field_topics:
+    -
+      entity: 8d93b538-225d-4836-8f3c-8ae9cae1155e

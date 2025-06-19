@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: Environment
-vid: environment
-description: ''
-weight: 0

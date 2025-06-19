@@ -1,0 +1,49 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: bc414af2-854d-4211-bf24-f4a40ba0de17
+  bundle: dataset
+  default_langcode: en
+  depends:
+    d4a96157-aab6-4fac-821d-29e3043b0755: taxonomy_term
+default:
+  revision_uid:
+    -
+      target_id: 0
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 0
+  title:
+    -
+      value: 'Standard Economic Data'
+  created:
+    -
+      value: 1748875793
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: /datasets/standard-economic-data
+      langcode: en
+      pathauto: 1
+  published_at:
+    -
+      value: 1748875943
+  body:
+    -
+      value: '<p>This dataset provides a comprehensive collection of key indicators that are essential for analyzing performance and trends across various regions. The dataset includes data on prices, policy measures, output, earnings, and bond yields. These indicators offer valuable insights into inflation, growth, policy dynamics, and stability.</p><p>This dataset is invaluable for:</p><ul><li><strong>Analysis:</strong> Understanding and forecasting conditions and trends.</li><li><strong>Decision Making:</strong> Informing strategies on fiscal and monetary measures.</li><li><strong>Research:</strong> Analyzing conditions and opportunities in various sectors.</li><li><strong>Academic Studies:</strong> Conducting research on performance and policy impacts.</li></ul>'
+      format: basic_html
+      summary: 'The Dataset provides a comprehensive view of key variables, offering essential insights for analysts, decision-makers, researchers, and stakeholders. Its detailed and reliable data is crucial for understanding and navigating the complex landscape.'
+  field_topics:
+    -
+      entity: d4a96157-aab6-4fac-821d-29e3043b0755

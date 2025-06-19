@@ -1,0 +1,5 @@
+enable_override: true
+view: publication
+view_display: embed
+inherit_settings: false
+pass_arguments: false

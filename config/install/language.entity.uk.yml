@@ -1,8 +1,0 @@
-langcode: uk
-status: true
-dependencies: {  }
-id: uk
-label: UK
-direction: ltr
-weight: 1
-locked: false

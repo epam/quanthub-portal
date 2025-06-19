@@ -1,0 +1,56 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 929d79f4-046d-4f83-b321-b4070f4ad2cb
+  bundle: release
+  default_langcode: en
+  depends:
+    bc414af2-854d-4211-bf24-f4a40ba0de17: node
+    d4a96157-aab6-4fac-821d-29e3043b0755: taxonomy_term
+default:
+  revision_uid:
+    -
+      target_id: 0
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 0
+  title:
+    -
+      value: 'Past Economic Release'
+  created:
+    -
+      value: 1748954932
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: /releases/past-economic-release
+      langcode: en
+      pathauto: 1
+  published_at:
+    -
+      value: 1748955115
+  body:
+    -
+      value: '<p>Global trade volumes are showing signs of recovery as supply chain disruptions caused by the pandemic and geopolitical tensions begin to ease. Recent data highlights a steady increase in exports and imports across major economies, driven by improved logistics, declining shipping costs, and growing demand for goods. Key sectors such as manufacturing and technology have been leading the rebound, contributing to a more optimistic outlook for global commerce.</p><p>Economists, however, remain cautious about potential headwinds, including fluctuating energy prices, regional conflicts, and inflationary pressures. Policymakers are emphasizing the need for continued international cooperation to sustain the momentum and ensure long-term stability in global trade.</p>'
+      format: basic_html
+      summary: ''
+  field_dataset:
+    -
+      entity: bc414af2-854d-4211-bf24-f4a40ba0de17
+  field_timestamp:
+    -
+      value: 1735743600
+  field_topics:
+    -
+      entity: d4a96157-aab6-4fac-821d-29e3043b0755

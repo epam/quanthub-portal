@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - key.key.elastic_url
+    - search_api.server.elasticsearch
+id: elastic_url
+label: 'Elastic Url'
+config_type: search_api_server
+config_prefix: search_api.server
+config_name: elasticsearch
+config_item: backend_config.connector_config.url
+key_id: elastic_url

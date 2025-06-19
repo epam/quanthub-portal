@@ -1,0 +1,56 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 4bf5a093-9646-4cb4-b00e-336537356845
+  bundle: release
+  default_langcode: en
+  depends:
+    bc414af2-854d-4211-bf24-f4a40ba0de17: node
+    d4a96157-aab6-4fac-821d-29e3043b0755: taxonomy_term
+default:
+  revision_uid:
+    -
+      target_id: 0
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 0
+  title:
+    -
+      value: 'Future Economic Release'
+  created:
+    -
+      value: 1748955120
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: /releases/future-economic-release
+      langcode: en
+      pathauto: 1
+  published_at:
+    -
+      value: 1748955164
+  body:
+    -
+      value: '<p>Despite ongoing economic challenges, recent labor market data reveals steady job growth and declining unemployment rates in several major economies. Sectors such as healthcare, technology, and renewable energy have been key drivers of employment, reflecting shifts in consumer demand and investment priorities. Wage growth has also been observed in some regions, offering workers relief from rising living costs.</p><p>However, experts warn that lingering inflation, interest rate hikes, and geopolitical tensions could still impact hiring trends in the coming months. Policymakers are closely monitoring labor market dynamics to balance economic recovery efforts with long-term financial stability.</p>'
+      format: basic_html
+      summary: ''
+  field_dataset:
+    -
+      entity: bc414af2-854d-4211-bf24-f4a40ba0de17
+  field_timestamp:
+    -
+      value: 1893510000
+  field_topics:
+    -
+      entity: d4a96157-aab6-4fac-821d-29e3043b0755

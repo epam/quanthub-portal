@@ -1,0 +1,31 @@
+_meta:
+  version: '1.0'
+  entity_type: taxonomy_term
+  uuid: d4a96157-aab6-4fac-821d-29e3043b0755
+  bundle: topics
+  default_langcode: en
+default:
+  status:
+    -
+      value: true
+  name:
+    -
+      value: Economic
+  description:
+    -
+      value: '<p>The "<strong>Economic</strong>" topic focuses on the production, distribution, and consumption of goods and services.&nbsp;</p><p>It explores financial systems, markets, trade, and policies that impact growth, stability, and the allocation of resources within societies.</p>'
+      format: basic_html
+  weight:
+    -
+      value: 0
+  parent:
+    -
+      target_id: 0
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+      pathauto: 0

@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.publication
+  module:
+    - quanthub_elasticsearch
+    - system
+    - views
+  theme:
+    - quanthub_stable
+id: quanthub_stable_views_block__publication_block
+theme: quanthub_stable
+region: content
+weight: 5
+provider: null
+plugin: 'views_block:publication-block'
+settings:
+  id: 'views_block:publication-block'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'

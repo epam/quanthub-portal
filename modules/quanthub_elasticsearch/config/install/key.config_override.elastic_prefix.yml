@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - key.key.elastic_prefix
+    - search_api.server.elasticsearch
+id: elastic_prefix
+label: 'Elastic Index Prefix'
+config_type: search_api_server
+config_prefix: search_api.server
+config_name: elasticsearch
+config_item: backend_config.advanced.prefix
+key_id: elastic_prefix

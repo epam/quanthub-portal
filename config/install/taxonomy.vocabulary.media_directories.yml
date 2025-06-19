@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - flat_taxonomy
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  flat_taxonomy:
+    flat: 0
+name: Media directories
+vid: media_directories
+description: 'Media Directories folders structure.'
+weight: 0
+new_revision: false

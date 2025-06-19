@@ -3,3 +3,5 @@ type: module
 description: 'Quanthub custom component Chat Overlay.'
 core_version_requirement: ^10 || ^11
 package: 'Epam Quanthub'
+lifecycle: deprecated
+lifecycle_link: https://github.com/epam/quanthub-portal/tree/1.1.x

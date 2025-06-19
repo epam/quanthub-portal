@@ -1,0 +1,53 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 59578f2e-98e8-4d37-bcde-79d00ec6f906
+  bundle: dashboard
+  default_langcode: en
+  depends:
+    bc414af2-854d-4211-bf24-f4a40ba0de17: node
+    d4a96157-aab6-4fac-821d-29e3043b0755: taxonomy_term
+default:
+  revision_uid:
+    -
+      target_id: 0
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 0
+  title:
+    -
+      value: 'Economic Index'
+  created:
+    -
+      value: 1748953413
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: /dashboards/economic-index
+      langcode: en
+      pathauto: 1
+  published_at:
+    -
+      value: 1748953454
+  body:
+    -
+      value: '<p>A Standard Economic Dataset provides comprehensive data on key economic indicators, including GDP growth, inflation rates, unemployment figures, trade balances, and consumer spending. This dataset serves as a valuable resource for analyzing economic trends, forecasting market conditions, and supporting policy decisions. It is widely used by economists, researchers, and businesses to gain insights into the health and performance of local, regional, and global economies.</p>'
+      format: basic_html
+      summary: ''
+  field_dataset:
+    -
+      entity: bc414af2-854d-4211-bf24-f4a40ba0de17
+  field_topics:
+    -
+      entity: d4a96157-aab6-4fac-821d-29e3043b0755

@@ -7,37 +7,6 @@ dependencies:
     - media.type.image
   module:
     - image
-    - layout_builder
-    - layout_discovery
-third_party_settings:
-  layout_builder:
-    enabled: true
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings:
-          label: ''
-        components:
-          b127313f-36bf-49fb-a135-704eb37d91c4:
-            uuid: b127313f-36bf-49fb-a135-704eb37d91c4
-            region: content
-            configuration:
-              id: 'field_block:media:image:field_media_image'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: image
-                label: visually_hidden
-                settings:
-                  image_link: ''
-                  image_style: large
-                  image_loading:
-                    attribute: lazy
-                third_party_settings: {  }
-            weight: 0
-            additional: {  }
-        third_party_settings: {  }
 id: media.image.default
 targetEntityType: media
 bundle: image
@@ -47,8 +16,8 @@ content:
     type: image
     label: visually_hidden
     settings:
+      image_style: 'large'
       image_link: ''
-      image_style: large
       image_loading:
         attribute: lazy
     third_party_settings: {  }
@@ -56,8 +25,6 @@ content:
     region: content
 hidden:
   created: true
-  langcode: true
-  name: true
-  search_api_excerpt: true
   thumbnail: true
   uid: true
+  name: true

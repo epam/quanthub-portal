@@ -1,0 +1,36 @@
+_meta:
+  version: '1.0'
+  entity_type: media
+  uuid: 4607e4ee-f612-44ab-abf5-3ccaed07ca69
+  bundle: background
+  default_langcode: en
+  depends:
+    f6af625b-5cd8-4dd6-9715-989d33d87c0d: file
+default:
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 0
+  name:
+    -
+      value: example4.jpg
+  created:
+    -
+      value: 1749648195
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+      pathauto: 0
+  field_media_image:
+    -
+      entity: f6af625b-5cd8-4dd6-9715-989d33d87c0d
+      alt: ''
+      title: ''
+      width: 1920
+      height: 640

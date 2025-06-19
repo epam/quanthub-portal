@@ -1,0 +1,5 @@
+page_title_block:
+  version: VERSION
+  css:
+    component:
+      css/page-title.css: {}

@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-id: quanthub_medium
-label: 'Quanthub Medium'
-locked: false
-pattern: 'j  M,  Y'

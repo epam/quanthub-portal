@@ -1,0 +1,9 @@
+name: Quanthub Stable
+description: Quanthub theme for Drupal based on Stable core theme.
+core_version_requirement: ^10 || ^11
+type: theme
+base theme: stable9
+logo: logo.png
+
+libraries:
+  - quanthub_stable/global-styling

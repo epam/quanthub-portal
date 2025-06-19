@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: 'Global Markets'
-vid: global_markets
-description: ''
-weight: 0

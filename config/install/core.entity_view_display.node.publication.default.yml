@@ -3,28 +3,13 @@ status: true
 dependencies:
   config:
     - field.field.node.publication.body
-    - field.field.node.publication.field_body_2
-    - field.field.node.publication.field_body_3
-    - field.field.node.publication.field_dataset
+    - field.field.node.publication.field_document
     - field.field.node.publication.field_image
-    - field.field.node.publication.field_image_2
-    - field.field.node.publication.field_powerbi_report
-    - field.field.node.publication.field_powerbi_report_2
-    - field.field.node.publication.field_powerbi_report_3
-    - field.field.node.publication.field_references
     - field.field.node.publication.field_topics
-    - field.field.node.publication.layout_builder__layout
     - node.type.publication
   module:
-    - image
-    - layout_builder
-    - quanthub_core
     - text
     - user
-third_party_settings:
-  layout_builder:
-    enabled: false
-    allow_custom: false
 id: node.publication.default
 targetEntityType: node
 bundle: publication
@@ -35,94 +20,54 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
-  field_body_2:
-    type: text_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 4
-    region: content
-  field_body_3:
-    type: text_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 7
-    region: content
-  field_dataset:
-    type: entity_reference_label
+  field_document:
+    type: entity_reference_entity_view
     label: above
     settings:
-      link: true
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  field_image:
-    type: image
-    label: above
-    settings:
-      image_link: ''
-      image_style: ''
-      image_loading:
-        attribute: lazy
-    third_party_settings: {  }
+      view_mode: default
+      link: false
+    third_party_settings: { }
     weight: 5
     region: content
-  field_image_2:
-    type: image
-    label: above
+  field_image:
+    type: entity_reference_entity_view
+    label: hidden
     settings:
-      image_link: ''
-      image_style: ''
-      image_loading:
-        attribute: lazy
-    third_party_settings: {  }
-    weight: 8
-    region: content
-  field_powerbi_report:
-    type: quanthub_powerbi_embed_formatter
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 6
-    region: content
-  field_powerbi_report_2:
-    type: quanthub_powerbi_embed_formatter
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 9
-    region: content
-  field_powerbi_report_3:
-    type: quanthub_powerbi_embed_formatter
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 10
-    region: content
-  field_references:
-    type: text_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 11
+      view_mode: default
+      link: true
+    third_party_settings: { }
+    weight: -1
     region: content
   field_topics:
     type: entity_reference_label
-    label: above
+    label: visually_hidden
     settings:
       link: true
     third_party_settings: {  }
-    weight: 2
+    weight: 0
     region: content
-  links:
-    settings: {  }
-    third_party_settings: {  }
+  published_at:
+    type: timestamp
+    label: hidden
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+      tooltip:
+        date_format: ''
+        custom_date_format: ''
+      time_diff:
+        enabled: false
+        future_format: '@interval hence'
+        past_format: '@interval ago'
+        granularity: 2
+        refresh: 60
+        description: ''
+    third_party_settings: { }
     weight: 0
     region: content
 hidden:
-  langcode: true
-  layout_builder__layout: true
-  search_api_excerpt: true
+  links: true
+  title: true

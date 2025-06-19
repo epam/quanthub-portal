@@ -1,104 +1,41 @@
 name: Quanthub
 type: profile
-description: 'Qunthub Portal Profile'
-core_version_requirement: ^9.5.2 || ^10
-version: 1.1.0
+description: 'Quanthub Portal Profile'
+core_version_requirement: ^10 || ^11
+version: 2.0.x-dev
 install:
-  - admin_toolbar
   - admin_toolbar_tools
-  - anchor_link
   - automated_cron
+  - big_pipe
   - block
   - block_content
   - breakpoint
   - ckeditor5
-  - ckeditor_details
-  - colorbutton
-  - comment
   - config
-  - config_translation
   - contextual
-  - ctools
-  - current_page_crumb
-  - datetime
   - dblog
-  - default_content
   - dynamic_page_cache
   - editor
-  - elasticsearch_connector
-  - embed
-  - entity_browser
-  - entity_embed
-  - facets
-  - facets_searchbox_widget
-  - facets_summary
   - field
   - field_ui
   - file
-  - filter
-  - fontawesome
-  - fullcalendar_view
-  - google_map_field
-  - hal
+  - flat_taxonomy
   - help
-  - history
   - image
-  - key
-  - key_value_field
-  - language
-  - layout_builder
-  - layout_builder_modal
-  - layout_builder_restrictions
-  - layout_custom_section_classes
-  - layout_discovery
-  - link
-  - locale
   - media
-  - media_directories
-  - media_directories_editor
   - media_directories_ui
-  - media_library
   - menu_link_content
   - menu_ui
   - node
-  - oidc
   - options
   - page_cache
-  - panelbutton
   - path
-  - path_alias
-  - pgsql
-  - powerbi_embed
-  - quanthub_codelists
-  - quanthub_core
-  - quanthub_datasetexplorer
-  - quanthub_download_button
-  - quanthub_metadata_button
-  - quanthub_pivot
-  - quanthub_sdmx_proxy
-  - quanthub_sdmx_sync
-  - quanthub_statgpt
-  - rabbit_hole
-  - rh_taxonomy
-  - search_api
-  - serialization
-  - shortcut
-  - system
-  - taxonomy
-  - text
-  - token
-  - toolbar
-  - twig_tweak
-  - ultimate_cron
-  - update
-  - user
-  - view_mode_page
-  - views_exposed_filter_blocks
-  - views_ui
   - pathauto
-  - content_translation
-  - externalauth
+  - publication_date
+  - taxonomy
+  - toolbar
   - views
+  - views_ui
 themes:
   - claro
-  - quanthub_tailwindcss
+  - quanthub_stable

@@ -1,0 +1,49 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 81c04788-4e35-442c-8025-cc48dae612a8
+  bundle: news
+  default_langcode: en
+  depends:
+    8d93b538-225d-4836-8f3c-8ae9cae1155e: taxonomy_term
+default:
+  revision_uid:
+    -
+      target_id: 0
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 0
+  title:
+    -
+      value: 'Insurance news'
+  created:
+    -
+      value: 1748954017
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: /news/insurance-news
+      langcode: en
+      pathauto: 1
+  published_at:
+    -
+      value: 1748954083
+  body:
+    -
+      value: '<p>The global demand for cyber insurance is skyrocketing as businesses face an increasing number of cyberattacks and data breaches. Companies across industries are seeking coverage to mitigate financial losses and legal liabilities associated with ransomware, phishing, and other cyber threats. Insurers are responding by expanding their offerings and tailoring policies to address the evolving risks of the digital age.</p><p>However, the surge in demand has also led to rising premiums and stricter underwriting processes. Experts warn that organizations must not only rely on insurance but also invest in robust cybersecurity measures to reduce vulnerabilities and improve their insurability in a rapidly changing threat landscape.</p>'
+      format: basic_html
+      summary: ''
+  field_topics:
+    -
+      entity: 8d93b538-225d-4836-8f3c-8ae9cae1155e

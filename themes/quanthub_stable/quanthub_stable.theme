@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Quanthub Stable theme.
+ */
+
+use Drupal\Component\Utility\Html;
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function quanthub_stable_preprocess_region(&$variables) {
+  $variables['attributes']['class'][] = 'layout-region';
+  $variables['attributes']['class'][] = 'layout-' . Html::getClass($variables['region']);
+}
+
+/**
+ * Implements hook_preprocess_form_element().
+ */
+function quanthub_stable_preprocess_form_element(&$variables): void {
+  if (in_array($variables['element']['#type'] ?? FALSE, ['checkbox', 'radio'], TRUE)) {
+    $variables['attributes']['class'][] = 'form-type-boolean';
+  }
+
+  if (!empty($variables['description']['attributes'])) {
+    $variables['description']['attributes']->addClass('form-item__description');
+  }
+
+  if ($variables['disabled']) {
+    $variables['label']['#attributes']['class'][] = 'is-disabled';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function quanthub_stable_preprocess_form_element_label(&$variables): void {
+  $variables['attributes']['class'][] = 'form-item__label';
+}
+
+/**
+ * Implements hook_form_views_exposed_form_alter().
+ */
+function quanthub_stable_form_views_exposed_form_alter(&$form): void {
+  $form['#attributes']['class'][] = 'form-inline';
+}

@@ -1,0 +1,45 @@
+.tabs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-block: 0 var(--space-base);
+  margin-inline-start: 0; /* Override [dir] attribute in base <ul> in compiled CSS. */
+  padding: 0;
+  list-style: none;
+  border-bottom: 3px solid var(--color--primary-50);
+}
+.tabs--secondary .tabs__tab {
+  display: block;
+}
+.tabs__tab a {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  padding-block: var(--space-half);
+  padding-inline-start: var(--space-base);
+  padding-inline-end: var(--space-base);
+  transition: background-color 0.2s;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  letter-spacing: 1px;
+  color: var(--color-text-neutral-soft);
+  border: var(--tabs-border-width) solid var(--color--gray-95);
+  background-color: var(--color--gray-100);
+  font-size: var(--font-size-s);
+}
+.tabs__tab a:hover {
+  color: var(--color--gray-5);
+  background-color: var(--color--gray-95);
+}
+.tabs__tab a:focus {
+  position: relative;
+  outline: solid 3px var(--color--primary-50);
+  outline-offset: -3px;
+}
+.tabs__tab a.is-active {
+  position: relative; /* Anchor ::after pseudo-element. */
+  color: var(--color--gray-5);
+  font-weight: 600;
+  background-color: var(--color--primary-80);
+}

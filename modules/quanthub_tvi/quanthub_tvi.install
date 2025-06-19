@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Quanthub TVI module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function quanthub_tvi_install() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  $terms = [
+    'frontpage' => [
+      'uuid' => 'e70f41d1-4eb4-4c45-a348-9deb5c4d2c73',
+      'name' => 'Frontpage',
+    ],
+    'dashboard' => [
+      'uuid' => 'c943ad82-1fb8-40c6-9a71-3651b6d3168b',
+      'name' => 'Dashboards',
+    ],
+    'dataset' => [
+      'uuid' => '93c52c6f-c92f-44f3-82f3-b8f2553adb89',
+      'name' => 'Datasets',
+    ],
+    'news' => [
+      'uuid' => '73d98cb9-5a59-43ac-b01f-a7024c2b28e6',
+      'name' => 'News',
+    ],
+    'publication' => [
+      'uuid' => '02553986-d605-42ab-acd6-85bea2cd1780',
+      'name' => 'Publications',
+    ],
+    'release' => [
+      'uuid' => '41688334-b51c-4cc0-a171-63fc9c38bb1b',
+      'name' => 'Releases',
+    ],
+  ];
+
+  // Replace frontpage.
+  $entity_type_manager->getStorage('view')->load('frontpage')?->disable()?->save();
+  $entity_type_manager->getStorage('taxonomy_term')->create($terms['frontpage'] + [
+    'vid' => 'listings',
+    'status' => 1,
+    'path' => ['alias' => '/node', 'pathauto' => 0],
+  ])->save();
+
+  // Disable views pages and attach to terms.
+  $weight = 0;
+  $views = $entity_type_manager->getStorage('view')->loadMultiple([
+    'dashboard',
+    'dataset',
+    'news',
+    'publication',
+    'release',
+  ]);
+  foreach ($views as $view_id => $view) {
+    if (empty($terms[$view_id])) {
+      continue;
+    }
+    $displays = $view->get('display');
+    if (isset($displays['page'])) {
+      $displays['page']['display_options']['enabled'] = FALSE;
+    }
+    $view->set('display', $displays)->save();
+
+    $alias = $view_id === 'news' ? '/news' : '/' . $view_id . 's';
+    $term = $entity_type_manager->getStorage('taxonomy_term')->create($terms[$view_id] + [
+      'vid' => 'listings',
+      'status' => 1,
+      'path' => ['alias' => $alias, 'pathauto' => 0],
+    ]);
+    $term->save();
+
+    $parent = str_starts_with($view_id, 'd') ? 'menu_link_content:867e796f-d11c-4a8d-bfb2-141893f10c82' : NULL;
+    $entity_type_manager->getStorage('menu_link_content')->create([
+      'link' => ['uri' => 'entity:taxonomy_term/' . $term->id()],
+      'langcode' => $term->language()->getId(),
+      'title' => $term->label(),
+      'enabled' => 1,
+      'menu_name' => 'main',
+      'parent' => $parent,
+      'weight' => $weight++,
+    ])->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function quanthub_tvi_uninstall() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  $terms = $entity_type_manager->getStorage('taxonomy_term')->loadByProperties(['vid' => 'listings']);
+  foreach ($terms as $term) {
+    if (($media = $term->field_background?->entity)) {
+      $media->delete();
+    }
+    $term->delete();
+  }
+
+  $entity_type_manager->getStorage('taxonomy_vocabulary')->load('listings')?->delete();
+
+  $entity_type_manager->getStorage('view')->load('frontpage')?->enable()?->save();
+
+  $views = $entity_type_manager->getStorage('view')->loadMultiple([
+    'dashboard',
+    'dataset',
+    'news',
+    'publication',
+    'release',
+  ]);
+  foreach ($views as $view) {
+    $displays = $view->get('display');
+    if (isset($displays['page'])) {
+      $displays['page']['enabled'] = TRUE;
+    }
+    $view->set('display', $displays)->save();
+  }
+}

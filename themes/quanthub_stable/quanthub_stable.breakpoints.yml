@@ -1,0 +1,24 @@
+quanthub_stable.sm:
+  label: Small
+  mediaQuery: 'all and (min-width: 481px)'
+  weight: 0
+  multipliers:
+    - 1x
+quanthub_stable.md:
+  label: Medium
+  mediaQuery: 'all and (min-width: 769px)'
+  weight: 1
+  multipliers:
+    - 1x
+quanthub_stable.lg:
+  label: Large
+  mediaQuery: 'all and (min-width: 1280px)'
+  weight: 2
+  multipliers:
+    - 1x
+quanthub_stable.xl:
+  label: X-Large
+  mediaQuery: 'all and (min-width: 1920px)'
+  weight: 3
+  multipliers:
+    - 1x

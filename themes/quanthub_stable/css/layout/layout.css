@@ -1,0 +1,33 @@
+/**
+ * @file
+ * Layout.
+ */
+
+.layout-container {
+  margin-inline: var(--space-half);
+}
+
+.layout-primary-menu {
+  display: flex;
+  gap: 1rem;
+}
+.layout-primary-menu .block {
+  flex: auto;
+}
+
+@media all and (min-width: 1280px) {
+  .layout-container {
+    margin-inline: var(--space-doble);
+  }
+  .layout-main {
+    display: flex;
+    gap: 1rem;
+  }
+  .layout-sidebar-first,
+  .layout-sidebar-second {
+    flex: 0 0 25%;
+  }
+  .layout-content {
+    flex: auto;
+  }
+}

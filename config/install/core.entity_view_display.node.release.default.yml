@@ -3,13 +3,10 @@ status: true
 dependencies:
   config:
     - field.field.node.release.body
-    - field.field.node.release.field_dataset
-    - field.field.node.release.field_date
-    - field.field.node.release.field_rrule
+    - field.field.node.release.field_timestamp
     - field.field.node.release.field_topics
     - node.type.release
   module:
-    - datetime
     - text
     - user
 id: node.release.default
@@ -22,45 +19,37 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 101
+    weight: 2
     region: content
-  field_dataset:
-    type: entity_reference_label
-    label: above
+  field_timestamp:
+    type: timestamp
+    label: hidden
     settings:
-      link: true
-    third_party_settings: {  }
-    weight: 104
-    region: content
-  field_date:
-    type: datetime_default
-    label: above
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 102
-    region: content
-  field_rrule:
-    type: basic_string
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 103
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+      tooltip:
+        date_format: ''
+        custom_date_format: ''
+      time_diff:
+        enabled: false
+        future_format: '@interval hence'
+        past_format: '@interval ago'
+        granularity: 2
+        refresh: 60
+        description: ''
+    third_party_settings: { }
+    weight: 1
     region: content
   field_topics:
     type: entity_reference_label
-    label: above
+    label: visually_hidden
     settings:
       link: true
     third_party_settings: {  }
-    weight: 105
-    region: content
-  links:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 100
+    weight: 0
     region: content
 hidden:
-  langcode: true
-  search_api_excerpt: true
+  links: true
+  published_at: true
+  title: true

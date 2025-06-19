@@ -1,11 +1,13 @@
 langcode: en
-name: 'QuantHub Portal'
-mail: admin@example.com
+uuid: ''
+name: ''
+mail: ''
 slogan: ''
 page:
   403: ''
   404: ''
-  front: /home
+  front: /node
 admin_compact_mode: false
 weight_select_max: 100
 default_langcode: en
+mail_notification: null

@@ -1,0 +1,27 @@
+_meta:
+  version: '1.0'
+  entity_type: file
+  uuid: 35adeb73-3a97-4b5f-8698-385d57f22476
+  default_langcode: en
+default:
+  uid:
+    -
+      target_id: 0
+  filename:
+    -
+      value: example6.jpg
+  uri:
+    -
+      value: 'public://backgrounds/2025-06/example6.jpg'
+  filemime:
+    -
+      value: image/jpeg
+  filesize:
+    -
+      value: 216879
+  status:
+    -
+      value: true
+  created:
+    -
+      value: 1749648230
