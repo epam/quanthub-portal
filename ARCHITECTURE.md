@@ -17,7 +17,6 @@
 - [Development & Operations](#development--operations)
   - [Local Development Setup](#local-development-setup)
   - [Configuration Management](#configuration-management)
-- [Theme Architecture](#theme-architecture)
 
 ## Overview
 
@@ -361,19 +360,3 @@ The portal uses Drupal's configuration management system with environment-specif
   - `ELASTIC_PREFIX` - Index prefix
   - `ELASTIC_USER` - Authentication username
   - `ELASTIC_PASSWORD` - Authentication password
-
-## Theme Architecture
-
-The portal provides two themes with a parent-child relationship:
-
-```mermaid
-graph TD
-    CORE[Drupal Core Themes] --> STABLE[Quanthub Stable<br/>Base Theme]
-    STABLE --> TAILWIND[Quanthub Tailwind CSS<br/>Active Sub-theme]
-    
-    STABLE -.->|Provides| BASE[Basic Templates<br/>Essential CSS]
-    TAILWIND -.->|Adds| MODERN[Modern UI<br/>Tailwind Utilities<br/>Custom Fonts<br/>Advanced Templates]
-```
-
-- **Quanthub Stable**: Provides essential theming and base templates
-- **Quanthub Tailwind CSS**: Modern theme built on Tailwind CSS framework, inheriting from Quanthub Stable while adding contemporary design patterns and responsive layouts
