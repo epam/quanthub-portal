@@ -264,7 +264,7 @@ class QuanthubSdmxClient {
     }
 
     $dataset_structure = $this->getDasetStructure($urn, TRUE, TRUE);
-    if ($dataset_structure['data']['glossaries']) {
+    if (!empty($dataset_structure['data']['glossaries'])) {
       $dataset_glossaries = $dataset_structure['data']['glossaries'];
 
       if (!empty($dataset_structure['data']['dataStructures'][0]['dataStructureComponents']['dimensionList']['dimensions'])) {
