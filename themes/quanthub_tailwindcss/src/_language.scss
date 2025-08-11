@@ -1,3 +1,7 @@
+@use './color-palette' as *;
+@use './font-mixins' as *;
+@use './custom' as *;
+
 .language-switcher-language-url {
   margin-left: 1rem;
   width: 70px;

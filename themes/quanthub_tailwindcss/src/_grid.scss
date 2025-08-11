@@ -1,5 +1,5 @@
-@import './font-mixins';
-@import './color-palette';
+@use './color-palette' as *;
+@use './font-mixins' as *;
 
 .ag-theme-balham {
   @apply h-full;

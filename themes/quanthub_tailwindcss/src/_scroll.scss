@@ -1,4 +1,4 @@
-@import './color-palette.scss';
+@use './color-palette' as *;
 
 /* width */
 ::-webkit-scrollbar {

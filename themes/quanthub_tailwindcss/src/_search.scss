@@ -1,3 +1,8 @@
+@use './color-palette' as *;
+@use './font-mixins' as *;
+@use './custom' as *;
+@use './inputs' as *;
+
 form {
   .form--inline {
     display: flex;

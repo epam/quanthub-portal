@@ -1,5 +1,6 @@
-@import 'variables';
-@import 'font-mixins';
+@use './color-palette' as *;
+@use './font-mixins' as *;
+@use './custom' as *;
 
 @mixin base-button {
   @apply flex flex-row;

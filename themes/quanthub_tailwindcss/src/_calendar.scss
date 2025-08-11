@@ -1,3 +1,8 @@
+@use './color-palette' as *;
+@use './font-mixins' as *;
+@use './custom' as *;
+@use './buttons' as *;
+
 .path-releases {
   main[role='main'] {
     @include col-10;
