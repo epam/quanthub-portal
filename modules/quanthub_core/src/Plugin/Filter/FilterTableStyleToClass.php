@@ -62,7 +62,7 @@ class FilterTableStyleToClass extends FilterBase {
   }
 
   /**
-   * Replace style with class
+   * Replace style with class.
    *
    * @param \DOMNode $node
    *   A DOMNode object.
