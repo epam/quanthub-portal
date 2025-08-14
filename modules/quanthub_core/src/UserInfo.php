@@ -92,6 +92,8 @@ class UserInfo implements UserInfoInterface {
   }
 
   /**
+   * Return quanthub user id.
+   *
    * @deprecated. Authenticated token is deprecated and will be deleted soon.
    * Get QuantHub User Id for anonymous and authenticated user.
    *
@@ -113,6 +115,8 @@ class UserInfo implements UserInfoInterface {
   }
 
   /**
+   * Get user info role.
+   *
    * @deprecated. Authenticated token is deprecated and will be deleted soon.
    * Get Quanthub User Role.
    */
@@ -130,6 +134,8 @@ class UserInfo implements UserInfoInterface {
   }
 
   /**
+   * Get user info groups.
+   *
    * @deprecated. Authenticated token is deprecated and will be deleted soon.
    * Get Quanthub User Groups.
    */

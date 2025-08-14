@@ -338,6 +338,9 @@ function quanthub_core_ckeditor5_plugin_info_alter(array &$plugin_definitions): 
 
     $plugin_definition = $plugin_definitions[$plugin_id]->toArray();
     $plugin_definition['drupal']['conditions'] = $conditions;
+    $plugin_definition['drupal']['elements'] = array_map(function ($element) {
+      return str_replace('style', 'class', $element);
+    }, $plugin_definition['drupal']['elements']);
 
     $plugin_definitions[$plugin_id] = new CKEditor5PluginDefinition($plugin_definition);
   }
