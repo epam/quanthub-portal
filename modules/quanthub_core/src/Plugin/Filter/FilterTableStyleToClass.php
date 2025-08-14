@@ -10,6 +10,11 @@ use Drupal\filter\Plugin\FilterBase;
 /**
  * Provides a filter to convert table from ckeditor style to classes.
  *
+ * By default, the use of style attributes is prohibited for all
+ * text formats (except Full HTML). In order to allow the user to replace
+ * the basic styles in the table (for example, alignment),
+ * we replace the style with the corresponding class.
+ *
  * @Filter(
  *   id = "filter_table_style_to_class",
  *   title = @Translation("Convert table styles to class"),
@@ -39,36 +44,12 @@ class FilterTableStyleToClass extends FilterBase {
       $xpath = new \DOMXPath($dom);
       // Handle each table with special inline styles.
       foreach ($xpath->query('//table[@style]') as $table) {
-        $classes = $table->getAttribute('class');
-        // If table has style of 'border-width:0' add 'table-borderless' class.
-        if (str_contains($table->getAttribute('style'), 'border-width:0')) {
-          $classes .= ' borderless';
-          $classes = trim($classes);
-          $table->setAttribute('class', $classes);
-        }
-
-        // If table has a style of 'width:100%', add 'table-wide' class.
-        if (str_contains($table->getAttribute('style'), 'width:100%')) {
-          $classes .= ' table-wide';
-          $classes = trim($classes);
-          $table->setAttribute('class', $classes);
-        }
-        // Remove the style attribute.
-        $table->removeAttribute('style');
+        $this->replaceStyle($table);
       }
 
       // Handle each td tag with special inline styles.
       foreach ($xpath->query('//td[@style]') as $td) {
-        $classes = $td->getAttribute('class');
-
-        // If td has a style of 'border-width:0', add ' borderless' class.
-        if (str_contains($td->getAttribute('style'), 'border-width:0')) {
-          $classes .= ' borderless';
-          $classes = trim($classes);
-          $td->setAttribute('class', $classes);
-        }
-        // Remove the style attribute.
-        $td->removeAttribute('style');
+        $this->replaceStyle($td);
       }
 
       $new_html = $dom->saveHTML();
@@ -78,6 +59,43 @@ class FilterTableStyleToClass extends FilterBase {
     else {
       return new FilterProcessResult($text);
     }
+  }
+
+  /**
+   * Replace style with class
+   *
+   * @param \DOMNode $node
+   *   A DOMNode object.
+   */
+  protected function replaceStyle(\DOMNode $node) {
+    $classes = array_filter(explode(' ', $node->getAttribute('class')));
+    $styles = array_filter(explode(';', $node->getAttribute('style')));
+
+    foreach ($styles as $style) {
+      // If Node has style of 'border-width:0' add 'table-borderless' class.
+      if (str_contains($style, 'border-width:0') || str_contains($style, 'border:0')) {
+        $classes[] = 'borderless';
+      }
+
+      // If $node has a style of 'width:100%', add 'table-wide' class.
+      elseif (str_contains($style, 'width:100%')) {
+        $classes[] = 'table-wide';
+      }
+
+      // If $node has a style of 'vertical-align', add 'vertical-{value}' class.
+      elseif (str_contains($style, 'vertical-align')) {
+        [, $styleValue] = explode(':', str_replace(';', '', $style));
+        $classes[] = 'vertical-' . $styleValue;
+      }
+
+      // If $node has a style of 'text-align', add 'text-{value}' class.
+      elseif (str_contains($style, 'text-align')) {
+        [, $styleValue] = explode(':', str_replace(';', '', $style));
+        $classes[] = 'text-' . $styleValue;
+      }
+    }
+    $node->setAttribute('class', implode(' ', $classes));
+    $node->removeAttribute('style');
   }
 
 }
