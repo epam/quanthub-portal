@@ -1,0 +1,14 @@
+services:
+  logger.channel.quanthub_auth:
+    parent: logger.channel_base
+    arguments: ['quanthub_auth']
+  quanthub.auth:
+    class: Drupal\quanthub_auth\QuanthubAuthManager
+    parent: default_plugin_manager
+    arguments: ['@current_user']
+  Drupal\quanthub_auth\QuanthubAuthInterface: '@quanthub.auth'
+  quanthub_auth.oidc_subscriber:
+    class: Drupal\quanthub_auth\EventSubscriber\OidcEventsSubscriber
+    arguments: [ '@?oidc.openid_connect_session' ]
+    tags:
+      - { name: event_subscriber }

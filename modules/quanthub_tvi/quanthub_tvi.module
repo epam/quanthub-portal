@@ -7,6 +7,8 @@
 
 /**
  * Implements hook_modules_installed().
+ *
+ * @todo move to Recipes.
  */
 function quanthub_tvi_modules_installed($modules) {
   // Don't import content on config sync.

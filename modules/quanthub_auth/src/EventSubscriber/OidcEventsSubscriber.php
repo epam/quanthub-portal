@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quanthub_core\EventSubscriber;
+namespace Drupal\quanthub_auth\EventSubscriber;
 
 use Drupal\externalauth\Event\ExternalAuthEvents;
 use Drupal\externalauth\Event\ExternalAuthLoginEvent;
@@ -14,40 +14,21 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class OidcEventsSubscriber implements EventSubscriberInterface {
 
   /**
-   * Extra roles mapping.
-   */
-  const DEFAULT_ROLES = [
-    'Quanthub.PortalContentEditor' => 'content_editor',
-  ];
-
-  /**
-   * The OpenID Connect session service.
-   *
-   * @var \Drupal\oidc\OpenidConnectSessionInterface
-   */
-  protected $session;
-
-  /**
-   * The roles cache.
-   *
-   * @var array|null
-   */
-  private static $roles;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(OpenidConnectSessionInterface $session) {
-    $this->session = $session;
-  }
+  public function __construct(
+    protected ?OpenidConnectSessionInterface $session,
+  ) {}
 
   /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[ExternalAuthEvents::LOGIN][] = 'onLogin';
+    if (class_exists(ExternalAuthEvents::class)) {
+      $events[ExternalAuthEvents::LOGIN][] = 'onLogin';
+    }
 
-    return $events;
+    return $events ?? [];
   }
 
   /**
@@ -59,32 +40,38 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function onLogin(ExternalAuthLoginEvent $event) {
+    if (!$this->session) {
+      return;
+    }
+
     $plugin_id = $this->session->getRealmPluginId();
     $provider = 'oidc:' . $this->session->getRealmPluginId();
-    $roles_claim = $this->session->getJsonWebTokens()->getClaim('roles');
-    $roles_map = self::getRolesMap();
+    // The provider must match the realm.
+    if (!$plugin_id || $provider !== $event->getProvider()) {
+      return;
+    }
 
-    // The provider must match the realm and provide the claim.
-    if (!$plugin_id || $provider !== $event->getProvider() || $roles_claim === NULL) {
+    $plugin = $this->session->getRealmPlugin();
+    $configuration = $plugin->getConfiguration();
+    $claim_id = $configuration['third_party_settings']['quanthub_auth']['roles_claim'] ?? NULL;
+    // The claim must exist both in the token and configuration.
+    if (!$claim_id || ($claim = $this->session->getJsonWebTokens()->getClaim($claim_id)) === NULL) {
       return;
     }
 
     $account = $event->getAccount();
     $user_roles = $account->getRoles(TRUE);
+    $roles_map = $configuration['third_party_settings']['quanthub_auth']['roles_mapping'] ?? [];
     // Keep roles we don't track with SSO provider.
-    $oidc_roles = array_diff($user_roles, array_filter($roles_map));
+    $oidc_roles = array_diff($user_roles, array_keys($roles_map));
 
-    if (is_array($roles_claim)) {
-      foreach ($roles_claim as $role) {
-        if (empty($roles_map[$role])) {
-          continue;
-        }
-        $oidc_roles[] = $roles_map[$role];
+    foreach ($roles_map as $role_id => $claim_value) {
+      if (in_array($claim_value, (array) $claim)) {
+        $oidc_roles[] = $role_id;
       }
     }
 
     // Only generic realms support this.
-    $plugin = $this->session->getRealmPlugin();
     if ($plugin instanceof GenericOpenidConnectRealm && $plugin->getDefaultRoleId()) {
       $oidc_roles[] = $plugin->getDefaultRoleId();
     }
@@ -93,17 +80,6 @@ class OidcEventsSubscriber implements EventSubscriberInterface {
     if (array_diff($oidc_roles, $user_roles) || array_diff($user_roles, $oidc_roles)) {
       $account->set('roles', array_unique($oidc_roles))->save();
     }
-  }
-
-  /**
-   * Helper to get roles.
-   */
-  protected static function getRolesMap() {
-    if (!isset(self::$roles)) {
-      $roles = \Drupal::moduleHandler()->invokeAll('quanthub_core_roles');
-      self::$roles = $roles + self::DEFAULT_ROLES;
-    }
-    return self::$roles;
   }
 
 }

@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the quanthub_auth module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function quanthub_auth_install() {
+  if (\Drupal::moduleHandler()->moduleExists('oidc')) {
+    quanthub_auth_modules_installed(['oidc']);
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function quanthub_auth_uninstall() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  $keys = $entity_type_manager->getStorage('key')->loadMultiple([
+    'anonymous_token',
+    'anonymous_token_endpoint',
+    'oidc_client_id',
+    'oidc_audience',
+    'oidc_scopes',
+    'oidc_config_endpoint',
+    'oidc_token_endpoint',
+    'oidc_refresh_endpoint',
+  ]);
+  foreach ($keys as $key) {
+    $key->delete();
+  }
+}

@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - key.key.oidc_client_id
+    - oidc.realm.quanthub
+id: oidc_client_id
+label: 'OIDC client ID'
+config_type: system.simple
+config_prefix: ''
+config_name: oidc.realm.quanthub
+config_item: client_id
+key_id: oidc_client_id

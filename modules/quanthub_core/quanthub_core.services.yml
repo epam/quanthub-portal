@@ -11,32 +11,10 @@ services:
     tags:
       - { name: backend_overridable }
 
-  # WSO Token Service. Getting and saving token to cache.
-  wso_token:
-    class: '\Drupal\quanthub_core\WsoToken'
-    arguments: ['@http_client', '@logger.channel.quanthub_core', '@current_user', '@quanthub_tempstore.private']
-
-  # Soap client for getting allowed content according to XACML policies.
-  xacml_soap_client:
-    class: '\Drupal\quanthub_core\XacmlSoapClient'
-    arguments: ['@http_client', '@logger.factory', '@user_info', '@current_user', '@wso_token']
-
   # Managing allowed content in user data. Work sdmx_client.
   allowed_content_manager:
     class: '\Drupal\quanthub_core\AllowedContentManager'
     arguments: ['@current_user', '@cache.default', '@language_manager', '@datetime.time', '@entity_type.manager']
-
-  # Event subscriber for getting and storing user info attributes for authenticated user.
-  user_info_attributes_subscriber:
-    class: '\Drupal\quanthub_core\UserInfoAttributesSubscriber'
-    tags:
-      - { name: event_subscriber }
-    arguments: ['@logger.channel.quanthub_core', '@config.factory', '@http_client', '@oidc.openid_connect_session', '@user.data']
-
-  # Get user info token for any user.
-  user_info:
-    class: '\Drupal\quanthub_core\UserInfo'
-    arguments: ['@current_user', '@cache.default', '@oidc.openid_connect_session', '@user.data', '@http_client', '@logger.channel.quanthub_core', '@config.factory']
 
   powerbi_embed_configs:
     class: Drupal\quanthub_core\PowerBIEmbedConfigs
@@ -60,9 +38,3 @@ services:
     class: Drupal\quanthub_core\EventSubscriber\KernelEventsSubscriber
     arguments: [ '@current_route_match', '@entity_type.manager' ]
     tags: [ 'event_subscriber' ]
-
-  quanthub_core.oidc_subscriber:
-    class: Drupal\quanthub_core\EventSubscriber\OidcEventsSubscriber
-    arguments: [ '@oidc.openid_connect_session' ]
-    tags:
-      - { name: event_subscriber }

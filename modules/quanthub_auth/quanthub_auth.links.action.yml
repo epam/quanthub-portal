@@ -1,0 +1,10 @@
+quanthub_auth.settings:
+  route_name: quanthub_auth.settings
+  title: 'Quanthub Auth settings'
+  appears_on:
+    - quanthub.settings
+quanthub.settings:
+  route_name: quanthub.settings
+  title: 'General Quanthub settings'
+  appears_on:
+    - quanthub_auth.settings

@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - key.key.oidc_refresh_endpoint
+    - oidc.realm.quanthub
+id: oidc_refresh_endpoint
+label: 'OIDC refresh token endpoint'
+config_type: system.simple
+config_prefix: ''
+config_name: oidc.realm.quanthub
+config_item: refresh_endpoint
+key_id: oidc_refresh_endpoint

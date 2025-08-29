@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - key.key.anonymous_token_endpoint
+    - quanthub_auth.plugins.endpoint
+id: anonymous_token_endpoint
+label: 'Anonymous user token endpoint URL'
+config_type: system.simple
+config_prefix: ''
+config_name: quanthub_auth.plugins.endpoint
+config_item: url
+key_id: anonymous_token_endpoint

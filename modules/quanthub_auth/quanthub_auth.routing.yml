@@ -1,0 +1,7 @@
+quanthub_auth.settings:
+  path: '/admin/config/system/quanthub_auth'
+  defaults:
+    _title: 'Quanthub Auth settings'
+    _form: 'Drupal\quanthub_auth\Form\SettingsForm'
+  requirements:
+    _permission: 'administer site configuration'

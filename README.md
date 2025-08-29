@@ -29,3 +29,14 @@ Quanthub Portal Drupal Profile
 - `ELASTIC_PREFIX`: Empty by default
 - `ELASTIC_USER`: Empty by default
 - `ELASTIC_PASSWORD`: Empty by default
+
+### Quanthub Authentication
+
+- `ANONYMOUS_TOKEN`: Static token for anonymous user
+- `ANONYMOUS_TOKEN_ENDPOINT_URL`: Anonymous token endpoint URL
+- `OIDC_CONFIG_ENDPOINT_URL`: OAuth configuration URL (oidc module)
+- `OIDC_CLIENT_ID`: OAuth client ID (oidc module)
+- `OIDC_SCOPES_JSON`: JSON array of OAuth scopes (oidc module)
+- `OIDC_AUDIENCE`: Custom endpoints audience/client ID (oidc module)
+- `OIDC_TOKEN_ENDPOINT_URL`: Custom user token endpoint URL (oidc module)
+- `OIDC_REFRESH_ENDPOINT_URL`: Custom token refresh endpoint URL (oidc module)
