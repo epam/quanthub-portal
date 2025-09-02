@@ -1,0 +1,8 @@
+name: 'Quanthub Authentication'
+type: module
+description: 'Authentication for Quanthub projects.'
+package: 'Epam Quanthub'
+core_version_requirement: ^10 || ^11
+dependencies:
+  - drupal:user
+  - key:key

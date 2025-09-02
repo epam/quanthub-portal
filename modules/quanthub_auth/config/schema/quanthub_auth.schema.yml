@@ -1,0 +1,58 @@
+quanthub_auth.plugins.*:
+  type: config_object
+  label: 'Quanthub Auth plugin configuration'
+
+quanthub_auth.plugins.key:
+  type: quanthub_auth.plugins.*
+  label: 'Key Quanthub Auth plugin configuration'
+  mapping:
+    key:
+      type: string
+      label: 'Key name'
+
+quanthub_auth.plugins.fallback:
+  type: quanthub_auth.plugins.*
+  label: 'Fallback Quanthub Auth plugin configuration'
+  mapping:
+    roles:
+      type: sequence
+      label: 'Roles'
+      sequence:
+        type: string
+        label: 'Role'
+
+quanthub_auth.plugins.endpoint:
+  type: quanthub_auth.plugins.*
+  label: 'Endpoint Quanthub Auth plugin configuration'
+  mapping:
+    url:
+      type: uri
+      label: 'Token endpoint URL'
+
+oidc.realm.generic.third_party.quanthub_auth:
+  type: mapping
+  label: 'Quanthub Auth additions for OIDC realms'
+  mapping:
+    roles_claim:
+      type: string
+      label: Roles claim
+    roles_mapping:
+      type: sequence
+      label: 'Roles mapping'
+      sequence:
+        type: string
+        label: 'Claim value keyed by Role ID'
+
+oidc.realm.quanthub:
+  type: oidc.realm.generic.*
+  label: Quanthub B2C Realm configuration
+  mapping:
+    aud:
+      type: string
+      label: Audience data
+    token_endpoint:
+      type: uri
+      label: URL of token endpoint
+    refresh_endpoint:
+      type: uri
+      label: URL of token refresh endpoint

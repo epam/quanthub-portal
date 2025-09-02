@@ -1,0 +1,5 @@
+quanthub_auth.settings:
+  title: Quanthub Auth settings
+  parent: system.admin_config_system
+  route_name: quanthub_auth.settings
+  weight: 10

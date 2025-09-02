@@ -9,6 +9,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Implements hook_modules_installed().
+ *
+ * @todo move to Recipes.
  */
 function quanthub_modules_installed($modules) {
   // Don't import content on config sync.

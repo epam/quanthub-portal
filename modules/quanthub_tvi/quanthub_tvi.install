@@ -55,6 +55,8 @@ function quanthub_tvi_install() {
     'publication',
     'release',
   ]);
+
+  // @todo add view alter hook to modify it when created.
   foreach ($views as $view_id => $view) {
     if (empty($terms[$view_id])) {
       continue;
@@ -91,12 +93,14 @@ function quanthub_tvi_install() {
  */
 function quanthub_tvi_uninstall() {
   $entity_type_manager = \Drupal::entityTypeManager();
+  $config_factory = \Drupal::configFactory();
 
   $terms = $entity_type_manager->getStorage('taxonomy_term')->loadByProperties(['vid' => 'listings']);
   foreach ($terms as $term) {
     if (($media = $term->field_background?->entity)) {
       $media->delete();
     }
+    $config_factory->getEditable('tvi.taxonomy_term.' . $term->uuid())->delete();
     $term->delete();
   }
 

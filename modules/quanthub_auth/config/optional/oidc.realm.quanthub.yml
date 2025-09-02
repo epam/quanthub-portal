@@ -1,0 +1,21 @@
+langcode: en
+config_url: ''
+client_id: ''
+client_secret: ''
+scopes: {  }
+request_userinfo: false
+id_claim: unique_name
+username_claim: unique_name
+email_claim: email
+given_name_claim: given_name
+family_name_claim: family_name
+display_name_format: '[user:given-name] [user:family-name]'
+default_rid: null
+token_endpoint: ''
+refresh_endpoint: ''
+name: 'Quanthub B2C realm'
+third_party_settings:
+  quanthub_auth:
+    roles_claim: roles
+    roles_mapping:
+      content_editor: 'Quanthub.PortalContentEditor'

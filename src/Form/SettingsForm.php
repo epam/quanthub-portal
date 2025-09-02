@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\quanthub\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

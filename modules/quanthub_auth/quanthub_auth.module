@@ -1,0 +1,185 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for quanthub_auth module.
+ */
+
+use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\RoleInterface;
+
+/**
+ * Implements hook_modules_installed().
+ *
+ * @todo move to Recipes.
+ */
+function quanthub_auth_modules_installed($modules) {
+  // Don't import content on config sync.
+  if (\Drupal::isConfigSyncing()) {
+    return;
+  }
+
+  $module = \Drupal::moduleHandler()->getModule('quanthub_auth');
+  /** @var \Drupal\Core\Config\ConfigInstallerInterface $config_installer */
+  $config_installer = \Drupal::service('config.installer');
+  if (in_array('oidc', $modules)) {
+    // Optional storage don't support simple configuration, import manually.
+    $storage = new FileStorage($module->getPath() . '/config/optional');
+    foreach ($storage->readMultiple(['oidc.settings', 'oidc.realm.quanthub']) as $name => $data) {
+      \Drupal::configFactory()->getEditable($name)->setData($data)->save();
+    }
+    $config_installer->installOptionalConfig($storage);
+  }
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function quanthub_auth_config_schema_info_alter(&$definitions) {
+  if (
+    !empty($definitions['oidc.realm.generic.*']) &&
+    empty($definitions['oidc.realm.generic.*']['mapping']['third_party_settings'])
+  ) {
+    $definitions['oidc.realm.generic.*']['mapping']['third_party_settings'] = [
+      // Third party settings are always optional: they're an optional extension
+      // point.
+      'requiredKey' => FALSE,
+      'nullable' => TRUE,
+      'type' => 'sequence',
+      'label' => 'Third party settings',
+      'sequence' => ['type' => 'oidc.realm.generic.third_party.[%key]'],
+    ];
+  }
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ */
+function quanthub_auth_modules_uninstalled($modules) {
+  // Don't import content on config sync.
+  if (\Drupal::isConfigSyncing()) {
+    return;
+  }
+
+  if (in_array('oidc', $modules)) {
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $keys = $entity_type_manager->getStorage('key')->loadMultiple([
+      'oidc_client_id',
+      'oidc_audience',
+      'oidc_scopes',
+      'oidc_config_endpoint',
+      'oidc_token_endpoint',
+      'oidc_refresh_endpoint',
+    ]);
+    foreach ($keys as $key) {
+      $key->delete();
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function quanthub_auth_form_oidc_realms_config_form_alter(array &$form, FormStateInterface $form_state) {
+  foreach (array_keys($form['realms']) as $plugin_id) {
+    if (
+      $plugin_id !== 'quanthub' &&
+      !str_starts_with($plugin_id, 'generic:')
+    ) {
+      continue;
+    }
+
+    $config = \Drupal::configFactory()->getEditable("oidc.realm.$plugin_id");
+    $mapping = '';
+    foreach ($config->get('third_party_settings.quanthub_auth.roles_mapping') ?? [] as $role_id => $claim_value) {
+      $mapping .= "$role_id: $claim_value\n";
+    }
+
+    $section = &$form['realms'][$plugin_id]['settings']['claims'];
+
+    $section['roles_claim'] = [
+      '#type' => 'textfield',
+      '#title' => t('Roles claim'),
+      '#description' => t('Name of the Roles claim.'),
+      '#default_value' => $config->get('third_party_settings.quanthub_auth.roles_claim'),
+      '#attributes' => [
+        'data-roles-mapping-id' => $plugin_id,
+      ],
+      '#element_validate' => ['quanthub_auth_form_element_roles_claim_validate'],
+      '#plugin_id' => $plugin_id,
+    ];
+
+    $selector = ':input[data-roles-mapping-id="' . $plugin_id . '"]';
+    $section['roles_mapping'] = [
+      '#type' => 'textarea',
+      '#title' => t('Roles mapping'),
+      '#description' => t('Roles mapping in format "ROLE_ID: CLAIM_VALUE" per line.'),
+      '#default_value' => $mapping,
+      '#states' => [
+        'visible' => [$selector => ['empty' => FALSE]],
+        'required' => [$selector => ['empty' => FALSE]],
+      ],
+      '#element_validate' => ['quanthub_auth_form_element_roles_mapping_validate'],
+      '#plugin_id' => $plugin_id,
+    ];
+  }
+
+  $form['#submit'][] = 'quanthub_auth_form_oidc_realms_config_form_submit';
+}
+
+/**
+ * Roles claim element validator.
+ */
+function quanthub_auth_form_element_roles_claim_validate(array $element, FormStateInterface $form_state) {
+  $data = $form_state->get('quanthub_auth') ?? [];
+  $data[$element['#plugin_id']]['roles_claim'] = $element['#value'];
+  $form_state->set('quanthub_auth', $data);
+}
+
+/**
+ * Roles mapping element validator.
+ */
+function quanthub_auth_form_element_roles_mapping_validate(array $element, FormStateInterface $form_state) {
+  $roles_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+
+  $mapping = [];
+  foreach (explode("\n", $element['#value']) as $line) {
+    $parts = explode(':', $line, 2);
+    $role_id = trim($parts[0]);
+    if (!$role_id) {
+      continue;
+    }
+    if ($role_id === RoleInterface::ANONYMOUS_ID || !$roles_storage->load($role_id)) {
+      $form_state->setError($element, t('Invalid role ID: %role.', ['%role' => $role_id]));
+      continue;
+    }
+    if (!isset($parts[1]) || !($claim_value = trim($parts[1]))) {
+      $form_state->setError($element, t('Claim value missing for role ID: %role.', ['%role' => $role_id]));
+      continue;
+    }
+    $mapping[$role_id] = $claim_value;
+  }
+
+  $data = $form_state->get('quanthub_auth') ?? [];
+  $data[$element['#plugin_id']]['roles_mapping'] = $mapping;
+  $form_state->set('quanthub_auth', $data);
+}
+
+/**
+ * Submit callback for oidc_realms_config_form form.
+ */
+function quanthub_auth_form_oidc_realms_config_form_submit(array $form, FormStateInterface $form_state) {
+  $data = $form_state->get('quanthub_auth') ?? [];
+
+  foreach ($data as $plugin_id => $values) {
+    $config = \Drupal::configFactory()->getEditable("oidc.realm.$plugin_id");
+
+    if (empty($values['roles_claim'])) {
+      $config->set('third_party_settings.quanthub_auth', [])->save();
+      continue;
+    }
+
+    $config->set('third_party_settings.quanthub_auth', $values)->save();
+  }
+}
