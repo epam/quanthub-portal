@@ -1,3 +1,6 @@
+@use './font-mixins' as *;
+@use './custom' as *;
+
 .region-breadcrumb {
   @apply wrapper py-3;
   @include header-6;
