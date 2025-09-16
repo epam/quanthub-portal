@@ -146,7 +146,9 @@ final class Forwarder extends ControllerBase {
     }
     catch (GuzzleException $exception) {
       // Get the original response.
-      $response = $exception->getResponse();
+      // Connection timeout error has no getResponse method.
+      // @todo . Make another catch expression to handle this type of errors.
+      $response = method_exists($exception, 'getResponse') ? $exception->getResponse() : NULL;
       if (!is_null($response) && !is_null($response->getBody())) {
         // Get the info returned from the remote server.
         $response_info = $response->getBody()->getContents();
