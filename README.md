@@ -1,6 +1,16 @@
 # Introduction
 Quanthub Portal Drupal Profile
 
+## Typical Demo istallation
+```
+drush si quanthub
+drush en default_content
+drush en quanthub_elasticsearch
+drush en quanthub_tvi
+drush en quanthub_auth
+drush en quanthub_sdmx
+```
+
 ## UUIDs
 
 ### Profile UUIDs
@@ -40,3 +50,8 @@ Quanthub Portal Drupal Profile
 - `OIDC_AUDIENCE`: Custom endpoints audience/client ID (oidc module)
 - `OIDC_TOKEN_ENDPOINT_URL`: Custom user token endpoint URL (oidc module)
 - `OIDC_REFRESH_ENDPOINT_URL`: Custom token refresh endpoint URL (oidc module)
+
+### Quanthub SDMX
+
+- `SDMX_API_URL`: Base URL of SDMX API endpoint
+- `SDMX_WORKSPACE_ID`: SDMX Workspace ID

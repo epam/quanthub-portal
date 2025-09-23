@@ -1,0 +1,17 @@
+services:
+  cache_context.user.datasets:
+    class: Drupal\quanthub_sdmx\Cache\AllowedDatasetsCacheContext
+    arguments: [ '@current_user', '@quanthub.dataset_urn' ]
+    tags:
+      - { name: cache.context }
+  logger.channel.quanthub_sdmx:
+    parent: logger.channel_base
+    arguments: ['quanthub_sdmx']
+  quanthub.sdmx_client:
+    class: Drupal\quanthub_sdmx\QuanthubSdmxClient
+    arguments: ['@config.factory', '@logger.channel.quanthub_sdmx', '@http_client', '@?quanthub.auth']
+  Drupal\quanthub_sdmx\QuanthubSdmxClientInterface: '@quanthub.sdmx_client'
+  quanthub.dataset_urn:
+    class: '\Drupal\quanthub_sdmx\DatasetUrnStorage'
+    arguments: ['@quanthub.sdmx_client', '@current_user', '@cache.default', '@language_manager', '@datetime.time', '@entity_type.manager']
+  Drupal\quanthub_sdmx\DatasetUrnStorageInterface: '@quanthub.dataset_urn'

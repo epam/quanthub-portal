@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quanthub_core\Plugin\Field\FieldType;
+namespace Drupal\quanthub_sdmx\Plugin\Field\FieldType;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
@@ -8,12 +8,12 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\TypedData\ComputedItemListTrait;
-use Drupal\quanthub_core\AllowedContentManager;
+use Drupal\quanthub_sdmx\DatasetUrnStorageInterface;
 
 /**
  * Computed field to proxy QuantHub URN from references.
  */
-class QuantHubUrnComputedList extends FieldItemList implements CacheableDependencyInterface {
+class RelatedDatasetUrnComputedList extends FieldItemList implements CacheableDependencyInterface {
 
   use ComputedItemListTrait;
   use RefinableCacheableDependencyTrait;
@@ -38,14 +38,14 @@ class QuantHubUrnComputedList extends FieldItemList implements CacheableDependen
     foreach ($references->referencedEntities() as $referencedEntity) {
       if (
         !$referencedEntity instanceof FieldableEntityInterface ||
-        !$referencedEntity->hasField(AllowedContentManager::URN_FIELD)
+        !$referencedEntity->hasField(DatasetUrnStorageInterface::URN_FIELD)
       ) {
         continue;
       }
 
       $this->addCacheableDependency($referencedEntity);
 
-      $field = $referencedEntity->get(AllowedContentManager::URN_FIELD);
+      $field = $referencedEntity->get(DatasetUrnStorageInterface::URN_FIELD);
       if ($field instanceof CacheableDependencyInterface) {
         $this->addCacheableDependency($field);
       }

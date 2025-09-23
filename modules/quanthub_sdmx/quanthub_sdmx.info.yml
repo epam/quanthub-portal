@@ -1,8 +1,8 @@
-name: 'Quanthub Authentication'
+name: 'Quanthub SDMX'
 type: module
-description: 'Authentication for Quanthub projects.'
+description: 'SDMX API integration for Quanthub projects.'
 package: 'Epam Quanthub'
 core_version_requirement: ^10 || ^11
 dependencies:
-  - core:user
+  - core:system
   - key:key

@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - key.key.sdmx_workspace_id
+    - quanthub.settings
+id: sdmx_workspace_id
+label: 'SDMX Workspace ID'
+config_type: system.simple
+config_prefix: ''
+config_name: quanthub.settings
+config_item: third_party_settings.quanthub_sdmx.workspace
+key_id: sdmx_workspace_id

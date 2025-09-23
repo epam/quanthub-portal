@@ -16,3 +16,11 @@ quanthub.settings:
         urn_versioning:
           type: boolean
           label: 'Allow version in URN fields'
+    third_party_settings:
+      # Third party settings are always optional: they're an optional extension
+      # point.
+      requiredKey: false
+      type: sequence
+      label: 'Third party settings'
+      sequence:
+        type: quanthub.third_party.[%key]

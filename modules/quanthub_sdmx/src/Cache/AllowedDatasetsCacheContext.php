@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\quanthub_core\Cache;
+namespace Drupal\quanthub_sdmx\Cache;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CacheContextInterface;
 use Drupal\Core\Cache\Context\UserCacheContextBase;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\quanthub_core\AllowedContentManager;
+use Drupal\quanthub_sdmx\DatasetUrnStorageInterface;
 
 /**
  * Defines the User Allowed Datasets cache context service.
@@ -16,19 +16,13 @@ use Drupal\quanthub_core\AllowedContentManager;
 class AllowedDatasetsCacheContext extends UserCacheContextBase implements CacheContextInterface {
 
   /**
-   * The Allowed Content Manager service.
-   *
-   * @var \Drupal\quanthub_core\AllowedContentManager
-   */
-  protected $allowedContentManager;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(AccountInterface $user, AllowedContentManager $allowed_content_manager) {
+  public function __construct(
+    AccountInterface $user,
+    protected DatasetUrnStorageInterface $urnStorage,
+  ) {
     parent::__construct($user);
-
-    $this->allowedContentManager = $allowed_content_manager;
   }
 
   /**
@@ -42,21 +36,15 @@ class AllowedDatasetsCacheContext extends UserCacheContextBase implements CacheC
    * {@inheritdoc}
    */
   public function getContext() {
-    $datasets = NULL;
-    if (getenv('WSO_IGNORE') !== 'TRUE' && !$this->user->hasPermission('bypass dataset access')) {
-      $datasets = $this->allowedContentManager->getAllowedDatasetList();
-      sort($datasets);
-    }
     // We don't need to secure this information, crc32 is enough.
-    return hash('crc32', serialize($datasets));
+    return hash('crc32', serialize($this->urnStorage->getAllowedDatasets()));
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCacheableMetadata() {
-    return (new CacheableMetadata())
-      ->setCacheContexts(['user.permissions']);
+    return new CacheableMetadata();
   }
 
 }

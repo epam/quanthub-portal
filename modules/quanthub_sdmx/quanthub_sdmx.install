@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the quanthub_sdmx module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function quanthub_sdmx_install() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  if (\Drupal::moduleHandler()->moduleExists('search_api')) {
+    /** @var \Drupal\search_api\IndexInterface[] $indexes */
+    $indexes = $entity_type_manager->getStorage('search_api_index')->loadMultiple();
+    foreach ($indexes as $index) {
+      if (!$index->isValidDatasource('entity:node')) {
+        continue;
+      }
+      $index->reindex();
+    }
+  }
+
+  /** @var \Drupal\views\ViewEntityInterface[] $views */
+  $views = $entity_type_manager->getStorage('view')->loadMultiple([
+    'dashboard',
+    'dataset',
+    'news',
+    'publication',
+    'release',
+    'search',
+  ]);
+
+  foreach ($views as $view) {
+    $is_content_view = str_starts_with($view->get('base_table'), 'node_');
+    if (!$is_content_view && $view->get('base_table') !== 'search_api_index_content') {
+      // The filter should be added manually to views with relationships.
+      \Drupal::logger('quanthub_sdmx')->warning(
+        'Please ensure that the "@view" (@id) does not have a node relationship. If it does, you may need to add the "sdmx_allowed_content" filter to it.',
+        ['@view' => $view->label(), '@id' => $view->id()]
+      );
+      continue;
+    }
+
+    $displays = $view->get('display');
+    foreach ($displays as &$display) {
+      if (
+        !empty($display['display_options']['defaults']['filters']) ||
+        !isset($display['display_options']['filters']) ||
+        !empty($display['display_options']['filters']['sdmx_allowed_content_filter'])
+      ) {
+        continue;
+      }
+
+      $display['display_options']['filters']['sdmx_allowed_content_filter'] = [
+        'id' => 'sdmx_allowed_content_filter',
+        'table' => $is_content_view ? 'node__field_quanthub_urn' : 'search_api_index_content',
+        'field' => 'sdmx_allowed_content_filter',
+        'relationship' => 'none',
+        'group_type' => 'group',
+        'admin_label' => '',
+        'plugin_id' => $is_content_view ? 'sdmx_allowed_content_filter' : 'sdmx_allowed_content_filter_search_api',
+        'operator' => '=',
+        'value' => '',
+        'group' => 1,
+        'exposed' => FALSE,
+        'expose' => [],
+        'is_grouped' => FALSE,
+        'group_info' => [],
+      ];
+
+    }
+
+    $view->set('display', $displays)->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function quanthub_sdmx_uninstall() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  $keys = $entity_type_manager->getStorage('key')->loadMultiple([
+    'sdmx_api_url',
+    'sdmx_workspace_id',
+  ]);
+  foreach ($keys as $key) {
+    $key->delete();
+  }
+}
