@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\quanthub_core\Plugin\views\filter;
+namespace Drupal\quanthub_sdmx\Plugin\views\filter;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\quanthub_core\AllowedContentManager;
+use Drupal\quanthub_sdmx\DatasetUrnStorageInterface;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Psr\Container\ContainerInterface;
 
@@ -15,30 +15,9 @@ use Psr\Container\ContainerInterface;
  *
  * @ingroup views_filter_handlers
  *
- * @ViewsFilter("allowed_content_filter")
+ * @ViewsFilter("sdmx_allowed_content_filter")
  */
-class AllowedContentFilter extends FilterPluginBase {
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The Allowed Content Manager service.
-   *
-   * @var \Drupal\quanthub_core\AllowedContentManager
-   */
-  protected $allowedContentManager;
+class SdmxAllowedContentFilter extends FilterPluginBase {
 
   /**
    * {@inheritDoc}
@@ -47,14 +26,11 @@ class AllowedContentFilter extends FilterPluginBase {
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager,
-    EntityFieldManagerInterface $entity_field_manager,
-    AllowedContentManager $allowed_content_manager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected DatasetUrnStorageInterface $urnStorage,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->allowedContentManager = $allowed_content_manager;
   }
 
   /**
@@ -67,7 +43,7 @@ class AllowedContentFilter extends FilterPluginBase {
       $plugin_definition,
       $container->get('entity_type.manager'),
       $container->get('entity_field.manager'),
-      $container->get('allowed_content_manager'),
+      $container->get('quanthub.dataset_urn'),
     );
   }
 
@@ -92,15 +68,10 @@ class AllowedContentFilter extends FilterPluginBase {
    * {@inheritdoc}
    */
   public function query() {
-    $account = $this->view->getUser();
-    if (
-      getenv('WSO_IGNORE') === 'TRUE' ||
-      $account->hasPermission('bypass dataset access')
-    ) {
+    $datasets = $this->urnStorage->getAllowedDatasets();
+    if ($datasets === NULL) {
       return;
     }
-
-    $datasets = $this->allowedContentManager->getAllowedDatasetList();
     if (!$datasets) {
       $this->ensureMyTable();
       $this->query->addWhere($this->options['group'], "$this->tableAlias.$this->realField", NULL, 'IS NULL');
@@ -149,7 +120,7 @@ class AllowedContentFilter extends FilterPluginBase {
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    $contexts = ['user.permissions', 'user.datasets'];
+    $contexts = ['user.datasets'];
     return Cache::mergeContexts(
       parent::getCacheContexts(),
       $contexts
@@ -165,7 +136,7 @@ class AllowedContentFilter extends FilterPluginBase {
     /** @var \Drupal\Core\Entity\Sql\TableMappingInterface $table_mapping */
     $table_mapping = $this->entityTypeManager->getStorage('node')->getTableMapping();
     $bundles = $this->entityFieldManager->getFieldMap()['node']['nid']['bundles'];
-    $field_name = $this->definition['field_name'] ?? $this->allowedContentManager::URN_FIELD;
+    $field_name = $this->definition['field_name'] ?? $this->urnStorage::URN_FIELD;
 
     foreach ($bundles as $bundle) {
       $definitions = $this->entityFieldManager->getFieldDefinitions('node', $bundle);

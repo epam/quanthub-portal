@@ -1,15 +1,17 @@
 <?php
 
-namespace Drupal\quanthub_core;
+namespace Drupal\quanthub_sdmx;
 
-use Drupal\Core\Http\ClientFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\quanthub_auth\QuanthubAuthInterface;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
 use Psr\Log\LoggerInterface;
 
 /**
  * SDMX client service.
  */
-class QuanthubSdmxClient {
+class QuanthubSdmxClient implements QuanthubSdmxClientInterface {
 
   /**
    * The dataset structure dimension component id.
@@ -17,72 +19,54 @@ class QuanthubSdmxClient {
   const STRUCTURE_DIMENSION_ID = 'INDICATOR';
 
   /**
-   * All agencies, all ids, latest versions.
+   * SDMX API configuration.
    */
-  const ALL_LATEST_DATAFLOWS = 'all:all(latest)';
-
-  /**
-   * The logger service.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The user info service.
-   *
-   * @var \Drupal\quanthub_core\UserInfo
-   */
-  protected UserInfo $userInfo;
-
-  /**
-   * The HTTP client to fetch the API data from SDMX.
-   *
-   * @var \Drupal\Core\Http\ClientFactory
-   */
-  protected ClientFactory $httpClientFactory;
-
-  /**
-   * The list of headers.
-   *
-   * @var array
-   */
-  private array $headers = [
-    'Accept' => 'application/json',
-    'Accept-Encoding' => 'gzip',
-  ];
+  protected array $config;
 
   /**
    * Construct SDMX client.
-   *
-   * @param \Drupal\Core\Http\ClientFactory $http_client_factory
-   *   A Guzzle client object.
-   * @param \Drupal\quanthub_core\UserInfo $user_info
-   *   The user info service.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   The logger service.
    */
-  public function __construct(ClientFactory $http_client_factory, UserInfo $user_info, LoggerInterface $logger) {
-    $this->httpClientFactory = $http_client_factory;
-    $this->userInfo = $user_info;
-    $this->logger = $logger;
-
-    $this->headers['authorization'] = 'Bearer ' . $this->userInfo->getToken();
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    protected LoggerInterface $logger,
+    protected ClientInterface $httpClient,
+    protected ?QuanthubAuthInterface $auth,
+  ) {
+    $this->config = $config_factory->get('quanthub.settings')->get('third_party_settings.quanthub_sdmx') ?: [];
   }
 
   /**
-   * The get dataflow list request to SDMX api.
-   *
-   * @return array
-   *   The dataset urn's list.
+   * Helper to get headers.
    */
-  public function getDatasetList() {
-    $dataset_structure = $this->getDasetStructure(self::ALL_LATEST_DATAFLOWS, TRUE, FALSE);
+  protected function getHeaders(array $extra_headers = []): array {
+    $headers = [
+      'Accept' => 'application/json',
+      'Accept-Encoding' => 'gzip',
+    ];
+
+    if ($this->auth && ($token = $this->auth->getUserToken())) {
+      $headers['authorization'] = "Bearer $token";
+    }
+
+    return $extra_headers + $headers;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isConfigured(): bool {
+    return isset($this->config['url'], $this->config['workspace']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDatasetList($headers = []): ?array {
+    $dataset_structure = $this->getDatasetStructure('all:all(latest)', TRUE, $headers);
 
     $datasets = [];
     if (!empty($dataset_structure['data']['dataflows'])) {
-      $dataflow_data = $dataset_structure['data']['dataflows'];
-      foreach ($dataflow_data as $value) {
+      foreach ($dataset_structure['data']['dataflows'] as $value) {
         $datasets[] = $value['agencyID'] . ':' . $value['id'] . '(' . $value['version'] . ')';
       }
     }
@@ -91,40 +75,42 @@ class QuanthubSdmxClient {
   }
 
   /**
-   * The get dataflow request to SDMX api.
-   *
-   * @param string $urn
-   *   The dataset urn.
-   * @param bool $full_detail
-   *   The option of getting full detail.
-   * @param bool $references
-   *   The option of getting references.
-   *
-   * @return array
-   *   The response body array decoded json.
+   * {@inheritdoc}
    */
-  public function getDasetStructure(string $urn, $full_detail = FALSE, $references = FALSE) {
-    $baseUri = getenv('SDMX_API_URL') . '/workspaces/' . getenv('SDMX_WORKSPACE_ID') . '/registry/sdmx-plus/structure/dataflow/';
+  public function getDatasetStructure(string $urn, $full = FALSE, $references = FALSE, $headers = []): ?array {
+    if (!$this->isConfigured()) {
+      return NULL;
+    }
 
-    $guzzleClient = $this->httpClientFactory->fromOptions([
-      'base_uri' => $baseUri,
-      'headers' => $this->headers,
+    // @todo normalize API usage to use one version (sdmx-plus here).
+    $url = $this->getBaseUrl() . '/registry/sdmx-plus/structure/dataflow/' . $this->transformUrn($urn);
+    $options = [
+      'headers' => $this->getHeaders($headers),
       'query' => [
-        'detail' => $full_detail ? 'full' : 'allcompletestubs',
+        'detail' => $full ? 'full' : 'allcompletestubs',
         'references' => $references ? 'all' : 'none',
       ],
-    ]);
-
-    $urn_for_url = $this->transformUrn($urn);
+    ];
 
     try {
-      return json_decode($guzzleClient->get($urn_for_url)->getBody(), TRUE);
+      return json_decode($this->httpClient->get($url, $options)->getBody(), TRUE);
     }
     catch (\Exception $e) {
       $this->logger->error('Failed to retrieve dataset structure: @error.', [
         '@error' => $e->getMessage(),
       ]);
+      return NULL;
     }
+  }
+
+  /**
+   * Helper to get base url.
+   */
+  protected function getBaseUrl(): ?string {
+    if (!$this->isConfigured()) {
+      return NULL;
+    }
+    return trim($this->config['url'], '/') . '/workspaces/' . rawurlencode($this->config['workspace']);
   }
 
   /**
@@ -137,6 +123,8 @@ class QuanthubSdmxClient {
    *
    * @return mixed|void
    *   The decoded response from SDMX.
+   * phpcs:ignore
+   * @deprecated
    */
   public function getDatasetFilteredData(string $urn, string $filters) {
     $baseUri = getenv('SDMX_API_URL') . '/workspaces/' . getenv('SDMX_WORKSPACE_ID') . '/registry/sdmx/3.0/data/dataflow/';
@@ -164,19 +152,16 @@ class QuanthubSdmxClient {
   /**
    * Transform dataset urn for using in api request.
    *
-   * @param string $dataset_urn
+   * @param string $urn
    *   The dataset urn string.
    *
    * @return string
    *   Transformed dataset urn string.
    */
-  public function transformUrn(string $dataset_urn): string {
+  protected function transformUrn(string $urn): string {
     // Change divider ':' between agency and dataset id to '/'.
     // Transform versioning of dataset logic for url request.
-    $dataset_urn_url = str_replace([':', '('], '/', $dataset_urn);
-    $dataset_urn_url = str_replace(')', '', $dataset_urn_url);
-
-    return $dataset_urn_url;
+    return str_replace(')', '', str_replace([':', '('], '/', $urn));
   }
 
   /**
@@ -184,9 +169,11 @@ class QuanthubSdmxClient {
    *
    * @param string $urn
    *   The dataset urn string.
+   * phpcs:ignore
+   * @deprecated
    */
   public function getDimensions(string $urn) {
-    $dataset_structure = $this->getDasetStructure($urn, TRUE, TRUE);
+    $dataset_structure = $this->getDatasetStructure($urn, TRUE, TRUE);
 
     $dimensions = [];
     if (!empty($dataset_structure['data']['dataStructures'][0]['dataStructureComponents']['dimensionList']['dimensions'])) {
@@ -201,6 +188,8 @@ class QuanthubSdmxClient {
    *
    * @param string $urn
    *   The dataset urn string.
+   * phpcs:ignore
+   * @deprecated
    */
   public function datasetAvaiability(string $urn) {
     $baseUri = getenv('SDMX_API_URL') . '/workspaces/' . getenv('SDMX_WORKSPACE_ID') . '/registry/sdmx-plus/availability/dataflow/';
@@ -245,6 +234,8 @@ class QuanthubSdmxClient {
    *
    * @return array
    *   The dataset indicators list.
+   * phpcs:ignore
+   * @deprecated
    */
   public function datasetIndicators(string $urn, string $dimension_id = '', array $selected_indicators = []) {
     $dimension_id = $dimension_id ?: self::STRUCTURE_DIMENSION_ID;
@@ -262,7 +253,7 @@ class QuanthubSdmxClient {
       }
     }
 
-    $dataset_structure = $this->getDasetStructure($urn, TRUE, TRUE);
+    $dataset_structure = $this->getDatasetStructure($urn, TRUE, TRUE);
     if ($dataset_structure['data']['glossaries']) {
       $dataset_glossaries = $dataset_structure['data']['glossaries'];
 

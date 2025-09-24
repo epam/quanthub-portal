@@ -11,28 +11,9 @@ services:
     tags:
       - { name: backend_overridable }
 
-  # Managing allowed content in user data. Work sdmx_client.
-  allowed_content_manager:
-    class: '\Drupal\quanthub_core\AllowedContentManager'
-    arguments: ['@current_user', '@cache.default', '@language_manager', '@datetime.time', '@entity_type.manager']
-
   powerbi_embed_configs:
     class: Drupal\quanthub_core\PowerBIEmbedConfigs
     arguments: ['@config.factory', '@key.repository', '@logger.factory', '@http_client']
-
-  cache_context.user.datasets:
-    class: Drupal\quanthub_core\Cache\AllowedDatasetsCacheContext
-    arguments: ['@current_user', '@allowed_content_manager']
-    tags:
-      - { name: cache.context }
-
-  # Client for calls to SDMX API.
-  logger.channel.sdmx_api:
-    parent: logger.channel_base
-    arguments: [ 'sdmx_api' ]
-  sdmx_client:
-    class: Drupal\quanthub_core\QuanthubSdmxClient
-    arguments: [ '@http_client_factory', '@user_info', '@logger.channel.sdmx_api' ]
 
   quanthub_core.kernel_subscriber:
     class: Drupal\quanthub_core\EventSubscriber\KernelEventsSubscriber

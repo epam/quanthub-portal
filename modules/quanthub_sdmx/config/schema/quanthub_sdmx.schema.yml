@@ -1,0 +1,16 @@
+quanthub.third_party.quanthub_sdmx:
+  label: 'Quanthub SDMX settings'
+  type: mapping
+  mapping:
+    url:
+      type: uri
+      label: 'Base URL'
+    workspace:
+      type: string
+      label: 'Workspace ID'
+    content_types:
+      type: sequence
+      label: 'Content types with unrestricted access'
+      sequence:
+        type: string
+        label: 'Content type'

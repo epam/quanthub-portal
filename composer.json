@@ -25,6 +25,7 @@
         "twig/cssinliner-extra": "^3.21"
     },
     "require-dev": {
+        "drupal/config_inspector": "^2.1",
         "drupal/default_content": "^2.0.0-alpha3"
     },
     "license": "GPL-3.0-or-later",

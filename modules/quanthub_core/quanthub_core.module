@@ -5,91 +5,11 @@
  * Quanthub Core module.
  */
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\node\NodeInterface;
-use Drupal\quanthub_core\AllowedContentManager;
 use Drupal\quanthub_core\Form\PowerBiMediaDirectoriesForm;
 use Drupal\quanthub_core\Form\PowerBIMediaForm;
-
-/**
- * Implements hook_ENTITY_TYPE_access().
- */
-function quanthub_core_node_access(NodeInterface $node, $operation, AccountInterface $account) {
-  if (
-    $operation !== 'view' ||
-    \Drupal::currentUser()->id() !== $account->id()  ||
-    !$node->hasField(AllowedContentManager::URN_FIELD) ||
-    getenv('WSO_IGNORE') === 'TRUE'
-  ) {
-    return AccessResult::neutral();
-  }
-  if ($account->hasPermission('bypass dataset access')) {
-    return AccessResult::neutral()->cachePerPermissions();
-  }
-
-  $cacheable_metadata = (new CacheableMetadata())
-    ->addCacheContexts(['user.datasets', 'user.permissions']);
-  $allowed_datasets = \Drupal::service('allowed_content_manager')
-    ->getAllowedDatasetList();
-  $node_datasets = [];
-  $field = $node->get(AllowedContentManager::URN_FIELD);
-  if ($field instanceof CacheableDependencyInterface) {
-    $cacheable_metadata->addCacheableDependency($field);
-  }
-  foreach ($field as $item) {
-    if ($item instanceof CacheableDependencyInterface) {
-      $cacheable_metadata->addCacheableDependency($item);
-    }
-    $node_datasets[] = $item->value;
-  }
-
-  // Check if content has more datasets that allowed.
-  if ($node_datasets && array_diff($node_datasets, $allowed_datasets)) {
-    return AccessResult::forbidden('The dataset access is not allowed for the user.')
-      ->addCacheableDependency($cacheable_metadata);
-  }
-
-  return AccessResult::neutral()->addCacheableDependency($cacheable_metadata);
-}
-
-/**
- * Implements hook_views_data_alter().
- */
-function quanthub_core_views_data_alter(array &$data) {
-  $field_name = AllowedContentManager::URN_FIELD;
-  $base = [
-    'title' => t('Allowed Content Filter'),
-    'help' => t('Content Filter By Dataset Urn'),
-    'group' => t('Quanthub'),
-    'filter' => [
-      'title' => t('Allowed Content Filter'),
-      'allow empty' => FALSE,
-    ],
-  ];
-
-  if (!empty($data["node__$field_name"]["{$field_name}_value"])) {
-    $table = "node__$field_name";
-    $data[$table]['allowed_content_filter'] = $base;
-    $data[$table]['allowed_content_filter']['filter']['id'] = 'allowed_content_filter';
-    $data[$table]['allowed_content_filter']['filter'] += $data[$table]["{$field_name}_value"]['filter'];
-  }
-
-  foreach (array_keys($data) as $table) {
-    if (!str_starts_with($table, 'search_api_index') || empty($data[$table][$field_name])) {
-      continue;
-    }
-    $data[$table]['allowed_content_filter'] = $base;
-    $data[$table]['allowed_content_filter']['real field'] = $field_name;
-    $data[$table]['allowed_content_filter']['filter']['id'] = 'allowed_content_filter_search_api';
-    $data[$table]['allowed_content_filter']['filter'] += $data[$table][$field_name]['filter'];
-  }
-}
 
 /**
  * Implements hook_preprocess_page().

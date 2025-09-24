@@ -1,0 +1,235 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for quanthub_sdmx module.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
+use Drupal\quanthub_sdmx\DatasetUrnStorageInterface;
+use Drupal\quanthub_sdmx\Plugin\Field\FieldType\RelatedDatasetUrnComputedList;
+
+/**
+ * Implements hook_modules_installed().
+ */
+function quanthub_sdmx_modules_installed($modules) {
+  // Don't import content on config sync.
+  if (\Drupal::isConfigSyncing() || !\Drupal::config('quanthub.settings')->get('content.import')) {
+    return;
+  }
+  if (in_array('quanthub_elasticsearch', $modules)) {
+    \Drupal::moduleHandler()->loadInclude('quanthub_sdmx', 'install');
+    quanthub_sdmx_install();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function quanthub_sdmx_node_access(NodeInterface $node, $operation, AccountInterface $account) {
+  if (
+    $operation !== 'view' ||
+    \Drupal::currentUser()->id() !== $account->id() ||
+    !$node->hasField(DatasetUrnStorageInterface::URN_FIELD)
+  ) {
+    return AccessResult::neutral();
+  }
+
+  if ($account->hasPermission('bypass dataset access')) {
+    return AccessResult::neutral()->cachePerPermissions();
+  }
+
+  $cacheable_metadata = (new CacheableMetadata())
+    ->addCacheContexts(['user.datasets']);
+  $allowed_datasets = \Drupal::service('quanthub.dataset_urn')
+    ->getAllowedDatasets();
+
+  if ($allowed_datasets !== NULL) {
+    $node_datasets = [];
+    $field = $node->get(DatasetUrnStorageInterface::URN_FIELD);
+    if ($field instanceof CacheableDependencyInterface) {
+      $cacheable_metadata->addCacheableDependency($field);
+    }
+    foreach ($field as $item) {
+      if ($item instanceof CacheableDependencyInterface) {
+        $cacheable_metadata->addCacheableDependency($item);
+      }
+      $node_datasets[] = $item->value;
+    }
+
+    // Check if content has more datasets that allowed.
+    if ($node_datasets && array_diff($node_datasets, $allowed_datasets)) {
+      return AccessResult::forbidden('The dataset access is not allowed for the user.')
+        ->addCacheableDependency($cacheable_metadata);
+    }
+  }
+
+  return AccessResult::neutral()->addCacheableDependency($cacheable_metadata);
+}
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function quanthub_sdmx_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
+  $exclude = \Drupal::config('quanthub.settings')->get('third_party_settings.quanthub_sdmx.content_types') ?? [];
+
+  if ($entity_type->id() === 'node') {
+    $definition = quanthub_sdmx_get_dataset_reference_field('node', $bundle, $fields);
+    if ($definition && !in_array($bundle, $exclude)) {
+      $fields[DatasetUrnStorageInterface::URN_FIELD] = BaseFieldDefinition::create('string')
+        ->setLabel('Quanthub URN')
+        ->setComputed(TRUE)
+        ->setClass(RelatedDatasetUrnComputedList::class)
+        ->setDisplayConfigurable('view', TRUE)
+        ->setSetting('field_reference_name', $definition->getName());
+    }
+  }
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function quanthub_sdmx_views_data_alter(array &$data) {
+  $field_name = DatasetUrnStorageInterface::URN_FIELD;
+  $base = [
+    'title' => t('SDMX Allowed Content Filter'),
+    'help' => t('Content Filter By Dataset Urn'),
+    'group' => t('Quanthub'),
+    'filter' => [
+      'title' => t('SDMX Allowed Content Filter'),
+      'allow empty' => FALSE,
+    ],
+  ];
+
+  if (!empty($data["node__$field_name"]["{$field_name}_value"])) {
+    $table = "node__$field_name";
+    $data[$table]['sdmx_allowed_content_filter'] = $base;
+    $data[$table]['sdmx_allowed_content_filter']['filter']['id'] = 'sdmx_allowed_content_filter';
+    $data[$table]['sdmx_allowed_content_filter']['filter'] += $data[$table]["{$field_name}_value"]['filter'];
+  }
+
+  foreach (array_keys($data) as $table) {
+    if (!str_starts_with($table, 'search_api_index') || empty($data[$table][$field_name])) {
+      continue;
+    }
+    $data[$table]['sdmx_allowed_content_filter'] = $base;
+    $data[$table]['sdmx_allowed_content_filter']['real field'] = $field_name;
+    $data[$table]['sdmx_allowed_content_filter']['filter']['id'] = 'sdmx_allowed_content_filter_search_api';
+    $data[$table]['sdmx_allowed_content_filter']['filter'] += $data[$table][$field_name]['filter'];
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function quanthub_sdmx_form_quanthub_settings_alter(&$form, FormStateInterface $form_state) {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  $settings = $form_state->get('third_party_settings') ?? [];
+  $config = $settings['quanthub_sdmx'] ?? [];
+
+  $form['third_party_settings']['quanthub_sdmx'] = [
+    '#type' => 'details',
+    '#title' => t('SDMX API configuration'),
+    '#open' => TRUE,
+  ];
+
+  $form['third_party_settings']['quanthub_sdmx']['url'] = [
+    '#type' => 'url',
+    '#title' => t('API Base URL'),
+    '#default_value' => $config['url'] ?? NULL,
+  ];
+
+  $form['third_party_settings']['quanthub_sdmx']['workspace'] = [
+    '#type' => 'textfield',
+    '#title' => t('Workspace ID'),
+    '#default_value' => $config['workspace'] ?? NULL,
+  ];
+
+  $form['third_party_settings']['quanthub_sdmx_access'] = [
+    '#type' => 'details',
+    '#title' => t('Content types access control'),
+    '#open' => TRUE,
+    '#parents' => array_merge($form['#parents'], ['third_party_settings', 'quanthub_sdmx']),
+  ];
+
+  $options = [];
+  $disabled = [];
+  $types = $entity_type_manager->getStorage('node_type')->loadMultiple();
+
+  if (empty($types['dataset'])) {
+    $form['third_party_settings']['quanthub_sdmx_access']['message'] = [
+      '#markup' => t('Error: dataset content type is missing.'),
+    ];
+  }
+  else {
+    foreach ($types as $type) {
+      if ($type->id() === 'dataset') {
+        continue;
+      }
+
+      $options[$type->id()] = $type->label();
+
+      if (!quanthub_sdmx_get_dataset_reference_field('node', $type->id())) {
+        $disabled[$type->id()] = [
+          '#disabled' => TRUE,
+          '#attributes' => ['checked' => 'checked'],
+        ];
+      }
+    }
+  }
+
+  $form['third_party_settings']['quanthub_sdmx_access']['content_types'] = [
+    '#type' => 'checkboxes',
+    '#title' => t('Content types with unrestricted access'),
+    '#description' => t('Access is not restricted by related dataset availability.'),
+    '#options' => $options,
+    '#default_value' => $config['content_types'] ?? [],
+    '#element_validate' => ['_quanthub_sdmx_element_validate_filter', '_quanthub_sdmx_search_api_check'],
+  ] + $disabled;
+}
+
+/**
+ * Helper function to extract dataset reference field.
+ */
+function quanthub_sdmx_get_dataset_reference_field($entity_type_id, $bundle, $fields = []): ?FieldDefinitionInterface {
+  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+  $entity_field_manager = \Drupal::service('entity_field.manager');
+
+  if (!$fields) {
+    $fields = $entity_field_manager->getFieldDefinitions($entity_type_id, $bundle);
+  }
+  return current(array_filter($fields, function (FieldDefinitionInterface $definition) {
+    return $definition->getType() === 'entity_reference'
+      && $definition->getSetting('target_type') === 'node'
+      && in_array($definition->getName(), ['field_dataset', 'field_datasets']);
+  })) ?: NULL;
+}
+
+/**
+ * Form element validation helper: Filters the #value property of an element.
+ */
+function _quanthub_sdmx_element_validate_filter(&$element, FormStateInterface $form_state) {
+  $element['#value'] = array_filter($element['#value']);
+  $form_state->setValueForElement($element, $element['#value']);
+}
+
+/**
+ * Form element validation helper: Filters the #value property of an element.
+ */
+function _quanthub_sdmx_search_api_check(&$element, FormStateInterface $form_state) {
+  if (
+    \Drupal::moduleHandler()->moduleExists('search_api') &&
+    array_intersect($element['#value'], $element['#default_value']) !== $element['#value']
+  ) {
+    \Drupal::messenger()->addWarning(t('Please re-index your Search API content indexes to ensure the changes are applied.'));
+  }
+}

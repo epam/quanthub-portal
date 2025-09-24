@@ -30,6 +30,8 @@ final class SettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $config = $this->config('quanthub.settings');
 
+    $form_state->set('third_party_settings', $config->get('third_party_settings') ?? []);
+
     $form['content'] = [
       '#type' => 'details',
       '#title' => $this->t('Content settings'),
@@ -58,6 +60,11 @@ final class SettingsForm extends ConfigFormBase {
       '#description' => $this->t('If unchecked the latest version ("~") is allowed only in URN string "AGENCY:ID(~)".'),
     ];
 
+    $form['third_party_settings'] = [
+      '#type' => 'container',
+      '#tree' => TRUE,
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -67,6 +74,7 @@ final class SettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->config('quanthub.settings')
       ->set('content', $form_state->getValue('content', []))
+      ->set('third_party_settings', $form_state->getValue('third_party_settings', []))
       ->save();
 
     self::clearCaches();
