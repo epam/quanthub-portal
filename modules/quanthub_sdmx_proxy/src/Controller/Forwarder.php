@@ -142,7 +142,10 @@ final class Forwarder extends ControllerBase {
     try {
       $uri = $request->query->get('uri');
       $psr7_response = $this->client->request($request->getMethod(), $api_url . $uri, $options);
-      return $this->foundationFactory->createResponse($psr7_response);
+      $response = $this->foundationFactory->createResponse($psr7_response);
+      // Force change the 'X-Frame-Options' to allow file downloads via iframe.
+      $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
+      return $response;
     }
     catch (GuzzleException $exception) {
       // Get the original response.
