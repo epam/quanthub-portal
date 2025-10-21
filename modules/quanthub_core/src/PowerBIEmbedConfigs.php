@@ -98,9 +98,8 @@ class PowerBIEmbedConfigs {
    */
   public function getPassword() {
     $config_password = $this->getConfig()->get('password');
-    return $this->repository
-      ->getKey($config_password)
-      ->getKeyValue();
+    $key = $this->repository->getKey($config_password);
+    return $key?->getKeyValue();
   }
 
   /**
@@ -116,6 +115,10 @@ class PowerBIEmbedConfigs {
     $oidc->providerConfigParam(['token_endpoint' => 'https://login.microsoftonline.com/' . $this->getClientID() . '/oauth2/v2.0/token']);
     $oidc->addScope('https://analysis.windows.net/powerbi/api/.default');
     $oidc_response = $oidc->requestClientCredentialsToken();
+    if (empty($oidc_response->access_token)) {
+      $this->loggerFactory->get('powerbi_embed')->warning('Could not get access token');
+      return NULL;
+    }
     return $oidc_response->access_token;
   }
 
