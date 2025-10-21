@@ -103,6 +103,10 @@ class QuantHubPowerBIEmbedFormatter extends FormatterBase {
     foreach ($items as $delta => $item) {
       if (!empty($item->report_id)) {
         $embed_config = $this->powerBIEmbedConfigs->getPowerEmbedConfig($item->report_id, $item->report_extra_datasets);
+        if (empty($embed_config['embed_token']) || empty($embed_config['embed_url'])) {
+          $elements[$delta] = [];
+          continue;
+        }
 
         $embed_token = $embed_config['embed_token'];
         $embed_url = $embed_config['embed_url'];
