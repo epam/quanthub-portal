@@ -35,4 +35,5 @@ jobs:
       - name: Run PHP_CodeSniffer
         run: |
           export PATH="$PATH:~/.composer/vendor/bin"
+          phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer
           phpcs -v --colors --standard="Drupal,DrupalPractice" --extensions="php,module,inc,install,test,profile,theme" themes modules
