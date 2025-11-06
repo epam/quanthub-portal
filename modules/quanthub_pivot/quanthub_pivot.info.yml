@@ -1,5 +1,0 @@
-name: 'Quanthub Pivot'
-type: module
-description: 'Quanthub custom component Pivot.'
-core_version_requirement: ^9 || ^10
-package: 'Epam Quanthub'
