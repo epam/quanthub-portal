@@ -298,3 +298,40 @@ function quanthub_core_update_10101() {
 
   quanthub_core_install();
 }
+
+/**
+ * Sync OIDC provider references to the new realm identifier.
+ */
+function quanthub_core_update_10102() {
+  $database = \Drupal::database();
+
+  $new_provider = 'oidc:quanthub_b2c_realm';
+
+  // Update authmap.provider.
+  $authmap_updated = $database->update('authmap')
+    ->fields(['provider' => $new_provider])
+    ->condition('provider', $database->escapeLike($new_provider) . ':%', 'LIKE')
+    ->execute();
+
+  // Update users_field_data.init.
+  $users_updated = $database->update('users_field_data')
+    ->expression('init', "regexp_replace(init, :pattern, :replacement, 'g')", [
+      ':pattern' => preg_quote($new_provider) . ':[a-f0-9_]+[a-f0-9]',
+      ':replacement' => $new_provider,
+    ])
+    ->condition('init', $database->escapeLike($new_provider) . ':%', 'LIKE')
+    ->execute();
+
+  if ($authmap_updated || $users_updated) {
+    \Drupal::logger('quanthub_common')->notice(
+      'OIDC realm cleanup complete. Updated @auth authmap rows and cleaned init for @users users.',
+      [
+        '@auth' => $authmap_updated,
+        '@users' => $users_updated,
+      ]
+    );
+  }
+  else {
+    \Drupal::logger('quanthub_common')->notice('OIDC realm cleanup found nothing to change.');
+  }
+}
