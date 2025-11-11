@@ -323,15 +323,12 @@ function quanthub_core_update_10102() {
     ->execute();
 
   if ($authmap_updated || $users_updated) {
-    \Drupal::logger('quanthub_common')->notice(
+    \Drupal::logger('quanthub_core')->notice(
       'OIDC realm cleanup complete. Updated @auth authmap rows and cleaned init for @users users.',
       [
         '@auth' => $authmap_updated,
         '@users' => $users_updated,
       ]
     );
-  }
-  else {
-    \Drupal::logger('quanthub_common')->notice('OIDC realm cleanup found nothing to change.');
   }
 }
