@@ -4,12 +4,11 @@ quanthub_datasetexplorer.explorer:
     _controller: '\Drupal\quanthub_datasetexplorer\Controller\DatasetExplorer::explorer'
     _title_callback: '\Drupal\quanthub_datasetexplorer\Controller\DatasetExplorer::getTitle'
   requirements:
-    _permission: 'access content'
+    _custom_access: '\Drupal\quanthub_datasetexplorer\Controller\DatasetExplorer::access'
 
 quanthub_datasetexplorer.slices:
   path: '/slices'
   defaults:
     _controller: '\Drupal\quanthub_datasetexplorer\Controller\DatasetExplorer::slices'
   requirements:
-    _permission: 'access content'
-
+    _custom_access: '\Drupal\quanthub_datasetexplorer\Controller\DatasetExplorer::access'

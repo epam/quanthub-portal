@@ -2,9 +2,10 @@
 
 namespace Drupal\quanthub_datasetexplorer\Controller;
 
-use Drupal\Core\Block\BlockManager;
+use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Session\AccountProxy;
+use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -16,23 +17,15 @@ final class DatasetExplorer extends ControllerBase {
   /**
    * The block manager service definition.
    *
-   * @var \Drupal\Core\Block\BlockManager
+   * @var \Drupal\Core\Block\BlockManagerInterface
    */
-  protected $pluginManagerBlock;
-
-  /**
-   * The current user service definition.
-   *
-   * @var \Drupal\Core\Session\AccountProxy
-   */
-  protected $currentUser;
+  protected $blockManager;
 
   /**
    * {@inheritDoc}
    */
-  public function __construct(BlockManager $plugin_manager_block, AccountProxy $current_user) {
-    $this->pluginManagerBlock = $plugin_manager_block;
-    $this->currentUser = $current_user;
+  public function __construct(BlockManagerInterface $block_manager) {
+    $this->blockManager = $block_manager;
   }
 
   /**
@@ -40,45 +33,16 @@ final class DatasetExplorer extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.block'),
-      $container->get('current_user')
+      $container->get('plugin.manager.block')
     );
   }
 
   /**
-   * Build Slices block.
+   * Build slices block.
    */
   public function slices(Request $request) {
-    $block_manager = $this->pluginManagerBlock;
-
-    // You can hard code configuration or you load from settings.
-    $config = [];
-    $plugin_block = $block_manager->createInstance('quanthub_datasetexplorer_block', $config);
-
-    // Some blocks might implement access check.
-    $access_result = $plugin_block->access($this->currentUser);
-
-    // Return empty render array if user doesn't have access.
-    // $access_result can be boolean or an AccessResult class.
-    if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
-      // You might need to add some cache tags/contexts.
-      return [];
-    }
-
-    $build = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => ['datasetexplorer'],
-      ],
-      'element-content' => $plugin_block->build(),
-      '#weight' => 0,
-      '#cache' => [
-        'max-age' => 0,
-      ],
-    ];
-
+    $build = $this->explorer($request);
     $build['element-content']['#attached']['drupalSettings']['mode'] = 'slices';
-    $build['element-content']['#attached']['drupalSettings']['query'] = $request->query->all();
     return $build;
   }
 
@@ -86,38 +50,21 @@ final class DatasetExplorer extends ControllerBase {
    * Build explorer block.
    */
   public function explorer(Request $request) {
-    $block_manager = $this->pluginManagerBlock;
-
-    // You can hard code configuration or you load from settings.
-    $config = [];
-    $plugin_block = $block_manager->createInstance('quanthub_datasetexplorer_block', $config);
-
-    // Some blocks might implement access check.
-    $access_result = $plugin_block->access($this->currentUser);
-
-    // Return empty render array if user doesn't have access.
-    // $access_result can be boolean or an AccessResult class.
-    if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
-      // You might need to add some cache tags/contexts.
-      return [];
-    }
-
-    $build = [
+    $block = $this->blockManager
+      ->createInstance('quanthub_datasetexplorer_block')
+      ->build();
+    $block['#attached']['drupalSettings']['mode'] = 'explorer';
+    $block['#attached']['drupalSettings']['query'] = $request->query->all();
+    return [
       '#type' => 'container',
+      'element-content' => $block,
       '#attributes' => [
         'class' => ['datasetexplorer'],
       ],
-      'element-content' => $plugin_block->build(),
-      '#weight' => 0,
       '#cache' => [
-        'max-age' => 0,
+        'contexts' => ['url.query_args'],
       ],
     ];
-
-    $build['element-content']['#attached']['drupalSettings']['mode'] = 'explorer';
-    $build['element-content']['#attached']['drupalSettings']['query'] = $request->query->all();
-
-    return $build;
   }
 
   /**
@@ -125,6 +72,16 @@ final class DatasetExplorer extends ControllerBase {
    */
   public function getTitle(): string {
     return $this->t('Data Bank');
+  }
+
+  /**
+   * Check access.
+   */
+  public function access(AccountProxyInterface $account): AccessResultInterface {
+    /** @var \Drupal\Core\Block\BlockPluginInterface $block */
+    $block = $this->blockManager
+      ->createInstance('quanthub_datasetexplorer_block');
+    return $block->access($account, TRUE);
   }
 
 }
