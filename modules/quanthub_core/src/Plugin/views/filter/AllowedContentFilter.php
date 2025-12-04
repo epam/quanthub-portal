@@ -97,6 +97,8 @@ class AllowedContentFilter extends FilterPluginBase {
       getenv('WSO_IGNORE') === 'TRUE' ||
       $account->hasPermission('bypass dataset access')
     ) {
+      // Set TRUE condition to properly use OR groups.
+      $this->query->addWhereExpression($this->options['group'], 'TRUE');
       return;
     }
 
