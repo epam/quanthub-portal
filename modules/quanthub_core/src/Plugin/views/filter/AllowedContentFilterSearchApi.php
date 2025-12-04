@@ -24,6 +24,9 @@ class AllowedContentFilterSearchApi extends AllowedContentFilter {
       getenv('WSO_IGNORE') === 'TRUE' ||
       $account->hasPermission('bypass dataset access')
     ) {
+      // Set TRUE condition to properly use OR groups.
+      // Drupal doesn't save empty fields to DB.
+      $this->query->addWhere($this->options['group'], $this->realField, '', '<>');
       return;
     }
 
