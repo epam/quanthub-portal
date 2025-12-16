@@ -1,0 +1,7 @@
+name: 'Quanthub StatGPT'
+type: module
+description: 'Quanthub custom component StatGPT'
+package: 'Epam Quanthub'
+core_version_requirement: ^9 || ^10
+lifecycle: deprecated
+lifecycle_link: https://github.com/epam/quanthub-portal/pull/296
