@@ -18,7 +18,7 @@
         "drupal/publication_date": "^3.0",
         "drupal/search_api": "^1.38",
         "drupal/search_api_block": "^1.2",
-        "drupal/taxonomy_menu_ui": "^3.0",
+        "drupal/taxonomy_menu_ui": "^3.0.6",
         "drupal/tvi": "^2.0",
         "drupal/twig_tweak": "^3.4",
         "drush/drush": "^13.6",
@@ -85,9 +85,6 @@
                 "Searchbox widget: special chars issue": "https://www.drupal.org/files/issues/2025-03-18/facets_searchbox-spec-chars_3513698_2.patch",
                 "Elastic Facets date format in seconds instead of milliseconds": "https://www.drupal.org/files/issues/2024-09-04/facets-3203474-searchapidate.patch",
                 "Cannot customize facets-item-list--searchbox-checkbox.html.twig in theme": "https://www.drupal.org/files/issues/2024-11-27/facets-searchbox_templates_not_working-3365166-16.patch"
-            },
-            "drupal/taxonomy_menu_ui": {
-                "Changing menu bundle to current menu name is breaking menu structure": "https://www.drupal.org/files/issues/2025-04-07/taxonomy_menu_ui-menu_bundle_name-3501383-8.patch"
             },
             "drupal/tvi": {
                 "Support config and content sync between environments": "https://www.drupal.org/files/issues/2024-11-25/tvi-content_sync-3489559-2.diff"
