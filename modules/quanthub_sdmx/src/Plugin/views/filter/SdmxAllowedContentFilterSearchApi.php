@@ -21,6 +21,9 @@ class SdmxAllowedContentFilterSearchApi extends SdmxAllowedContentFilter {
   public function query() {
     $datasets = $this->urnStorage->getAllowedDatasets();
     if ($datasets === NULL) {
+      // Set TRUE condition to properly use OR groups.
+      // Drupal doesn't save empty fields to DB.
+      $this->query->addWhere($this->options['group'], $this->realField, '', '<>');
       return;
     }
 

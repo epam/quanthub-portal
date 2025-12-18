@@ -70,50 +70,48 @@ class SdmxAllowedContentFilter extends FilterPluginBase {
   public function query() {
     $datasets = $this->urnStorage->getAllowedDatasets();
     if ($datasets === NULL) {
+      // Set TRUE condition to properly use OR groups.
+      $this->query->addWhereExpression($this->options['group'], 'TRUE');
       return;
     }
-    if (!$datasets) {
-      $this->ensureMyTable();
-      $this->query->addWhere($this->options['group'], "$this->tableAlias.$this->realField", NULL, 'IS NULL');
-    }
-    else {
-      /** @var \Drupal\Core\Database\Query\ConditionInterface $conditions */
-      $conditions = $this->query->getConnection()->condition('AND');
-      $base_table = $this->relationship ?: $this->view->storage->get('base_table');
 
-      foreach ($this->getNodeTypesMapping() as $field => $info) {
-        $alias = "subquery_$field";
+    /** @var \Drupal\Core\Database\Query\ConditionInterface $conditions */
+    $conditions = $this->query->getConnection()->condition('AND');
+    $base_table = $this->relationship ?: $this->view->storage->get('base_table');
 
-        /** @var \Drupal\Core\Database\Query\ConditionInterface $condition */
-        $condition = $this->query->getConnection()->condition('OR');
-        $condition->condition("$base_table.type", $info['bundles'], 'NOT IN');
-        $conditions->condition($condition);
+    foreach ($this->getNodeTypesMapping() as $field => $info) {
+      $alias = "subquery_$field";
+      $operator = $datasets ? 'NOT IN' : 'IS NOT NULL';
 
-        if ($field === '_root') {
-          /** @var \Drupal\Core\Database\Query\SelectInterface $subquery */
-          $subquery = $this->query->getConnection()
-            ->select($this->table, $alias)
-            ->fields($alias, [$this->realField])
-            ->condition("$alias.$this->realField", $datasets, 'NOT IN')
-            ->where("$alias.entity_id = $base_table.nid AND $alias.deleted = 0");
-          $condition->notExists($subquery);
-          continue;
-        }
+      /** @var \Drupal\Core\Database\Query\ConditionInterface $condition */
+      $condition = $this->query->getConnection()->condition('OR');
+      $condition->condition("$base_table.type", $info['bundles'], 'NOT IN');
+      $conditions->condition($condition);
 
-        $data_alias = $alias . '_data';
-        $ref_alias = $alias . '_reference';
+      if ($field === '_root') {
         /** @var \Drupal\Core\Database\Query\SelectInterface $subquery */
         $subquery = $this->query->getConnection()
-          ->select($info['table'], $ref_alias)
+          ->select($this->table, $alias)
           ->fields($alias, [$this->realField])
-          ->condition("$alias.$this->realField", $datasets, 'NOT IN')
-          ->where("$base_table.nid = $ref_alias.entity_id");
-        $subquery->innerJoin($info['data_table'], $data_alias, "$data_alias.nid = $ref_alias.{$info['column']} AND $data_alias.status = 1");
-        $subquery->leftJoin($this->table, $alias, "$alias.entity_id = $data_alias.nid AND $alias.deleted = 0");
+          ->condition("$alias.$this->realField", $datasets, $operator)
+          ->where("$alias.entity_id = $base_table.nid AND $alias.deleted = 0");
         $condition->notExists($subquery);
+        continue;
       }
-      $this->query->addWhere($this->options['group'], $conditions);
+
+      $data_alias = $alias . '_data';
+      $ref_alias = $alias . '_reference';
+      /** @var \Drupal\Core\Database\Query\SelectInterface $subquery */
+      $subquery = $this->query->getConnection()
+        ->select($info['table'], $ref_alias)
+        ->fields($alias, [$this->realField])
+        ->condition("$alias.$this->realField", $datasets, $operator)
+        ->where("$base_table.nid = $ref_alias.entity_id");
+      $subquery->innerJoin($info['data_table'], $data_alias, "$data_alias.nid = $ref_alias.{$info['column']} AND $data_alias.status = 1");
+      $subquery->leftJoin($this->table, $alias, "$alias.entity_id = $data_alias.nid AND $alias.deleted = 0");
+      $condition->notExists($subquery);
     }
+    $this->query->addWhere($this->options['group'], $conditions);
   }
 
   /**
