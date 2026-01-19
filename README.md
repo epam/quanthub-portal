@@ -9,6 +9,7 @@ drush en quanthub_elasticsearch
 drush en quanthub_tvi
 drush en quanthub_auth
 drush en quanthub_sdmx
+drush en quanthub_sdmx_proxy #(optional)
 ```
 
 ## UUIDs
