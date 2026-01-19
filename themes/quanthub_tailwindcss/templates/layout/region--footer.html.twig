@@ -38,5 +38,5 @@
   </div>
 </div>
 <div class="text-center footer--copyright">
-  {{ '&copy;EPAM, 2024. All rights reserved'|t }}
+  {{ '&copy;EPAM, @year. All rights reserved'|t({'@year': "now"|date('Y')}) }}
 </div>
