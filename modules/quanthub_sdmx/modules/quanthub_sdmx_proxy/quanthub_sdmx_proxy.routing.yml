@@ -1,11 +1,3 @@
-sdmx_proxy.settings:
-  path: '/admin/config/sdmx_proxy/settings'
-  defaults:
-    _form: '\Drupal\quanthub_sdmx_proxy\Form\SettingsForm'
-    _title: 'SDMX API Proxy Settings'
-  requirements:
-    _permission: 'administer site configuration'
-
 sdmx_proxy.forwarder:
   path: '/sdmx'
   methods: [GET, PUT, POST, PATCH, DELETE, OPTIONS]
@@ -13,6 +5,10 @@ sdmx_proxy.forwarder:
     _controller: Drupal\quanthub_sdmx_proxy\Controller\Forwarder::forward
     _title: 'SDMX API Proxy request forwarder'
   requirements:
+    # JSON format is specified to show JSON response on "Accept: */*" header.
+    # It should affect Drupal errors only, but shouldn't affect proxied responses
+    # if e.g. "Accept: application/xml" is specified.
+    _format: 'json'
     _permission: 'access content'
 
 sdmx_proxy.forwarder-download:
@@ -22,4 +18,5 @@ sdmx_proxy.forwarder-download:
     _controller: Drupal\quanthub_sdmx_proxy\Controller\Forwarder::forwardDownload
     _title: 'SDMX API Proxy request forwarder'
   requirements:
+    _format: 'json'
     _permission: 'access content'

@@ -1,0 +1,7 @@
+name: 'Quanthub SDMX Proxy'
+type: module
+description: 'SDMX API proxy for Quanthub Front-end applications.'
+package: 'Epam Quanthub'
+core_version_requirement: ^10 || ^11
+dependencies:
+  - quanthub:quanthub_sdmx

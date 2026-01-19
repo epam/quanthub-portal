@@ -135,6 +135,7 @@ function quanthub_sdmx_form_quanthub_settings_alter(&$form, FormStateInterface $
 
   $settings = $form_state->get('third_party_settings') ?? [];
   $config = $settings['quanthub_sdmx'] ?? [];
+  $overridden = \Drupal::config('quanthub.settings')->get('third_party_settings.quanthub_sdmx') ?? [];
 
   $form['third_party_settings']['quanthub_sdmx'] = [
     '#type' => 'details',
@@ -153,6 +154,14 @@ function quanthub_sdmx_form_quanthub_settings_alter(&$form, FormStateInterface $
     '#title' => t('Workspace ID'),
     '#default_value' => $config['workspace'] ?? NULL,
   ];
+
+  foreach (['url', 'workspace'] as $key) {
+    if (isset($overridden[$key]) && $overridden[$key] !== ($config[$key] ?? NULL)) {
+      $form['third_party_settings']['quanthub_sdmx'][$key]['#description'] = t('Overridden with: <strong>@value</strong>', [
+        '@value' => $overridden[$key],
+      ]);
+    }
+  }
 
   $form['third_party_settings']['quanthub_sdmx_access'] = [
     '#type' => 'details',

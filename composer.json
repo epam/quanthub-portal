@@ -2,21 +2,25 @@
     "name": "epam/quanthub-portal",
     "description": "Quanthub Portal Drupal Profile",
     "type": "drupal-profile",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
     "require": {
-        "php": ">=8.2",
-        "composer/installers": "^2.3",
+        "php": ">=8.3",
         "cweagans/composer-patches": "^1.7",
         "drupal/admin_toolbar": "^3.5",
         "drupal/classy": "^2.0",
         "drupal/core": "^11.0",
-        "drupal/elasticsearch_connector": "^8.0.0-alpha2",
+        "drupal/elasticsearch_connector": "^8.0.0-alpha5",
         "drupal/facets": "^3.0",
         "drupal/flat_taxonomy": "^2.0",
-        "drupal/key": "^1.20",
+        "drupal/key": "^1.21",
         "drupal/media_directories": "^2.1.0-beta4",
         "drupal/pathauto": "^1.13",
         "drupal/publication_date": "^3.0",
-        "drupal/search_api": "^1.38",
         "drupal/search_api_block": "^1.2",
         "drupal/taxonomy_menu_ui": "^3.0.6",
         "drupal/tvi": "^2.0",
@@ -51,7 +55,9 @@
     },
     "config": {
         "allow-plugins": {
-          "cweagans/composer-patches": true
+            "cweagans/composer-patches": true,
+            "drupal/core-composer-scaffold": false,
+            "php-http/discovery": true
         }
     },
     "extra": {
@@ -62,15 +68,13 @@
             },
             "drupal/elasticsearch_connector": {
                 "#3501703 Warning: Invalid condition field = NULL": "https://www.drupal.org/files/issues/2025-01-23/elasticsearch_connector-invalid_null_condition_warning-3501703-2.patch",
-                "#3444888 LIKE and EXACT filter for searching fulltext": "https://www.drupal.org/files/issues/2024-05-02/elasticsearch_connector-3444888-2-like_and_exact_filter.patch",
-                "#3465988 facetted search error when two facets values selected": "https://git.drupalcode.org/project/elasticsearch_connector/-/merge_requests/59.diff",
-                "#3497968 Merging Multiple Facet Conditions in facets_post_filters with OR": "https://www.drupal.org/files/issues/2025-01-08/elasticsearch_connector-or_facet_agg-3497968-10.patch"
+                "#3444888 LIKE and EXACT filter for searching fulltext": "https://www.drupal.org/files/issues/2024-05-02/elasticsearch_connector-3444888-2-like_and_exact_filter.patch"
             },
             "drupal/entity_browser": {
                 "Throbber is permanently seen in a modal window": "https://git.drupalcode.org/project/entity_browser/-/merge_requests/63.diff"
             },
             "drupal/key": {
-                "Support multivalue key type (arrays) in key overrides": "https://www.drupal.org/files/issues/2025-08-29/key-multivalue_override-3543829-2.patch"
+                "Support multivalue key type (arrays) in key overrides": "https://www.drupal.org/files/issues/2026-01-20/key-multivalue_override-3543829-6.patch"
             },
             "drupal/linked_field": {
                 "Add support for delta (multi value fields)": "https://www.drupal.org/files/issues/2024-12-23/linked_field_add-support-for-delta-2937439-9.patch"
@@ -81,7 +85,7 @@
             },
             "drupal/facets": {
                 "Consider including a processor which always includes active filters in the list of facet results": "https://www.drupal.org/files/issues/2023-11-16/2978248_12.patch",
-                "Facet checkboxes are disabled after pressing the browser back button": "https://www.drupal.org/files/issues/2025-03-19/facets_checkboxes-disabled-on-back_3416333_18.patch",
+                "Facet checkboxes are disabled after pressing the browser back button": "https://www.drupal.org/files/issues/2025-08-07/facets_2.0.9_checkboxes-disabled-on-back_3416333_19.patch",
                 "Searchbox widget: special chars issue": "https://www.drupal.org/files/issues/2025-03-18/facets_searchbox-spec-chars_3513698_2.patch",
                 "Elastic Facets date format in seconds instead of milliseconds": "https://www.drupal.org/files/issues/2024-09-04/facets-3203474-searchapidate.patch",
                 "Cannot customize facets-item-list--searchbox-checkbox.html.twig in theme": "https://www.drupal.org/files/issues/2024-11-27/facets-searchbox_templates_not_working-3365166-16.patch"

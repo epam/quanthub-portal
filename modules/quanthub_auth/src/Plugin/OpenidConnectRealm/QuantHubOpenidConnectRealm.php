@@ -169,7 +169,7 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
         '@error' => $e->getMessage(),
       ]);
 
-      throw new \RuntimeException('Failed to retrieve the user info', 0, $e);
+      throw new \RuntimeException('Failed to retrieve tokens for login', 0, $e);
     }
 
     return $this->getJsonWebTokensUserInfo($user_info_data);
@@ -196,12 +196,12 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
       $user_info_data = json_decode($response->getBody(), TRUE);
     }
     catch (\Exception $e) {
-      $this->logger->error('Failed to retrieve tokens for login from %endpoint: @error.', [
+      $this->logger->error('Failed to retrieve tokens for refresh from %endpoint: @error.', [
         '%endpoint' => $this->configuration['refresh_endpoint'],
         '@error' => $e->getMessage(),
       ]);
 
-      throw new \RuntimeException('Failed to refresh the user info', 0, $e);
+      throw new \RuntimeException('Failed to retrieve tokens for refresh', 0, $e);
     }
 
     $tokens = $this->getJsonWebTokensUserInfo($user_info_data, FALSE);

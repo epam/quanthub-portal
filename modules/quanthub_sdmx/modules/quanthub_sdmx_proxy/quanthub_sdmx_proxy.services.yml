@@ -1,4 +1,7 @@
 services:
+  logger.channel.quanthub_sdmx_proxy:
+    parent: logger.channel_base
+    arguments: ['quanthub_sdmx_proxy']
   path_processor.path:
     class: Drupal\quanthub_sdmx_proxy\PathProcessor\PathProcessor
     arguments: ['@request_stack']
