@@ -25,16 +25,14 @@ class StandardWithStyles extends Standard {
     /** @var array $attributes_array */
     $attributes_array = parent::attributes($attributes);
 
-    if (preg_match('/^([-a-zA-Z][-a-zA-Z0-9]*)/', $attributes, $match)) {
-      $attribute_name = strtolower($match[1]);
-      if ($attribute_name == 'style') {
-        $html_dom = Html::load("<span " . $attributes . "></span>");
-        $span_tags = $html_dom->getElementsByTagName('span');
-        /** @var \DOMElement $span_tag */
-        foreach ($span_tags as $span_tag) {
-          if ($span_tag->hasAttribute('style')) {
-            $attributes_array[] = 'style="' . $span_tag->getAttribute('style') . '"';
-          }
+    if (preg_match('/\bstyle\s*=\s*(".*?"|\'.*?\'|[^\s>]+)/', $attributes, $match)) {
+      $style_value = $match[1];
+      $html_dom = Html::load("<span style=$style_value></span>");
+      $span_tags = $html_dom->getElementsByTagName('span');
+      /** @var \DOMElement $span_tag */
+      foreach ($span_tags as $span_tag) {
+        if ($span_tag->hasAttribute('style')) {
+          $attributes_array[] = 'style="' . $span_tag->getAttribute('style') . '"';
         }
       }
     }
