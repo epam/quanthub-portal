@@ -48,7 +48,7 @@ class QuanthubSdmxClient {
    *
    * @var array
    */
-  private array $headers = [
+  protected array $headers = [
     'Accept' => 'application/json',
     'Accept-Encoding' => 'gzip',
   ];
