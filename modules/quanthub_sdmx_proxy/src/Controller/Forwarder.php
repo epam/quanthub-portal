@@ -109,7 +109,36 @@ final class Forwarder extends ControllerBase {
    *   The response object.
    */
   public function forwardDownload(Request $request): Response {
-    return $this->forwardInternal($request, getenv('SDMX_DOWNLOAD_API_URL'));
+    $response = $this->forwardInternal(
+      $request,
+      getenv('SDMX_DOWNLOAD_API_URL')
+    );
+
+    $requestContent = json_decode($request->getContent(), FALSE);
+
+    // Fallback if empty request or unsupported format.
+    if (
+      !$requestContent ||
+      empty($requestContent->outputFormat) ||
+      !in_array($requestContent->outputFormat, ['CSV', 'EXCEL'], TRUE)
+    ) {
+      return $response;
+    }
+
+    $content = $response->getContent();
+
+    if (!is_string($content) || $content === '') {
+      return $response;
+    }
+
+    // Add UTF-8 BOM if not present (Excel compatibility).
+    if (strncmp($content, "\xEF\xBB\xBF", 3) !== 0) {
+      $content = "\xEF\xBB\xBF" . $content;
+    }
+
+    $response->setContent($content);
+    $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
+    return $response;
   }
 
   /**
