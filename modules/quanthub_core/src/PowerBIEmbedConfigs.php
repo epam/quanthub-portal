@@ -4,7 +4,6 @@ namespace Drupal\quanthub_core;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\key\KeyRepositoryInterface;
 use GuzzleHttp\ClientInterface;
 use Jumbojett\OpenIDConnectClient;
 
@@ -19,13 +18,6 @@ class PowerBIEmbedConfigs {
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
-
-  /**
-   * Key repository object.
-   *
-   * @var \Drupal\key\KeyRepositoryInterface
-   */
-  protected $repository;
 
   /**
    * Logger Factory.
@@ -45,8 +37,6 @@ class PowerBIEmbedConfigs {
    * Constructor of PowerBIEmbedConfigs.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The configuration factory service.
-   * @param \Drupal\key\KeyRepositoryInterface $repository
    *   The key repository object.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
    *   The logger channel factory.
@@ -55,12 +45,10 @@ class PowerBIEmbedConfigs {
    */
   public function __construct(
     ConfigFactoryInterface $configFactory,
-    KeyRepositoryInterface $repository,
     LoggerChannelFactoryInterface $loggerFactory,
     ClientInterface $httpClient,
   ) {
     $this->configFactory = $configFactory;
-    $this->repository = $repository;
     $this->loggerFactory = $loggerFactory->get('powerbi_embed');
     $this->httpClient = $httpClient;
   }
@@ -97,9 +85,7 @@ class PowerBIEmbedConfigs {
    * Return PowerBI configured password.
    */
   public function getPassword() {
-    $config_password = $this->getConfig()->get('password');
-    $key = $this->repository->getKey($config_password);
-    return $key?->getKeyValue();
+    return $this->getConfig()->get('password');
   }
 
   /**
@@ -116,7 +102,12 @@ class PowerBIEmbedConfigs {
     $oidc->addScope('https://analysis.windows.net/powerbi/api/.default');
     $oidc_response = $oidc->requestClientCredentialsToken();
     if (empty($oidc_response->access_token)) {
-      $this->loggerFactory->get('powerbi_embed')->warning('Could not get access token');
+      $this->loggerFactory->warning(
+        'Could not get access token @context_error',
+        [
+          '@context_error' => print_r($oidc_response, TRUE),
+        ]
+      );
       return NULL;
     }
     return $oidc_response->access_token;
