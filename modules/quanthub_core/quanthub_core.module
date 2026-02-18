@@ -279,3 +279,38 @@ function quanthub_core_language_switch_links_alter(array &$links, $type, Url $ur
     }
   }
 }
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function quanthub_core_entity_extra_field_info() {
+  $extra = [];
+
+  $extra['node']['dataset']['display']['dataset_buttons'] = [
+    'label' => t('Dataset Buttons'),
+    'description' => t('Download, Explore, and Metadata buttons'),
+    'weight' => 100,
+    'visible' => TRUE,
+  ];
+
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function quanthub_core_node_view(array &$build, $entity, $display, $view_mode) {
+  if ($entity->bundle() === 'dataset' && $display->getComponent('dataset_buttons')) {
+    $build['dataset_buttons'] = [
+      '#theme' => 'dataset_buttons',
+      '#urn' => $entity->get('field_quanthub_urn')->value ?? '',
+      '#langcode' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
+      '#attached' => [
+        'library' => [
+          'quanthub_download_button/download-button',
+          'quanthub_metadata_button/metadata-button',
+        ],
+      ],
+    ];
+  }
+}
