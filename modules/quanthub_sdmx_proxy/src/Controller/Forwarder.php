@@ -115,7 +115,7 @@ final class Forwarder extends ControllerBase {
     );
     // Force set BOM.
     $uri = $request->query->get('uri') ?? '';
-    if (str_starts_with($uri, '/engine/data/sync/ott/')) {
+    if (str_contains($uri, '/engine/data/sync/ott/')) {
       $content = $response->getContent();
       // Add UTF-8 BOM if not present (Excel compatibility).
       if (strncmp($content, "\xEF\xBB\xBF", 3) !== 0) {
