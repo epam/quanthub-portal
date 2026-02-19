@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Minimal template for Dataset buttons.
+ *
+ * This template provides basic structure. Theme should override for styling.
+ *
+ */
+#}
+
+<div class="dataset-buttons">
+  <div class="dataset-buttons__download" data-urn="{{ quanthub_urn }}"></div>
+  <div class="dataset-buttons__explore">
+    <a href="/{{ langcode }}/explorer?urn={{ quanthub_urn }}">{{ 'Explore'|t }}</a>
+  </div>
+  <div class="dataset-buttons__metadata" data-urn="{{ quanthub_urn }}"></div>
+</div>
