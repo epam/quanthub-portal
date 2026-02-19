@@ -8,6 +8,8 @@ use Drupal\Core\Field\FormatterBase;
 /**
  * Quanthub Visualization formatter.
  *
+ * @todo refactor into string type.
+ *
  * @FieldFormatter(
  *   id = "quanthub_visualization",
  *   label = @Translation("Quanthub Visualization Formatter"),

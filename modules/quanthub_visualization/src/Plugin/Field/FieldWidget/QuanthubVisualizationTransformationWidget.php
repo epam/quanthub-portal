@@ -10,6 +10,8 @@ use Drupal\multivalue_form_element\Element\MultiValue;
 /**
  * Implementation of the 'quanthub_visualization_transformation_json' widget.
  *
+ * @todo refactor and remove.
+ *
  * @FieldWidget(
  *   id = "quanthub_visualization_transformation_json",
  *   label = @Translation("Quanthub Visualization Data Transformation Widget"),
