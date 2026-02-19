@@ -124,6 +124,13 @@ function quanthub_core_theme() {
       ],
       'template' => 'powerbi-embed-formatter',
     ],
+    'dataset_buttons' => [
+      'variables' => [
+        'quanthub_urn' => NULL,
+        'langcode' => NULL,
+      ],
+      'template' => 'dataset-buttons',
+    ]
   ];
 }
 
@@ -303,14 +310,8 @@ function quanthub_core_node_view(array &$build, $entity, $display, $view_mode) {
   if ($entity->bundle() === 'dataset' && $display->getComponent('dataset_buttons')) {
     $build['dataset_buttons'] = [
       '#theme' => 'dataset_buttons',
-      '#urn' => $entity->get('field_quanthub_urn')->value ?? '',
+      '#quanthub_urn' => $entity->get('field_quanthub_urn')->value ?? '',
       '#langcode' => \Drupal::languageManager()->getCurrentLanguage()->getId(),
-      '#attached' => [
-        'library' => [
-          'quanthub_download_button/download-button',
-          'quanthub_metadata_button/metadata-button',
-        ],
-      ],
     ];
   }
 }
