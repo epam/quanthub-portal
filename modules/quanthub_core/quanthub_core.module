@@ -130,7 +130,7 @@ function quanthub_core_theme() {
         'langcode' => NULL,
       ],
       'template' => 'dataset-buttons',
-    ]
+    ],
   ];
 }
 
