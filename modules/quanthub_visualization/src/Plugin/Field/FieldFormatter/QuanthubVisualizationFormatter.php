@@ -36,7 +36,7 @@ class QuanthubVisualizationFormatter extends FormatterBase {
     $dataFilters = $entity->field_visualization_filters->value;
 
     $referencedDataset = $entity
-      ->get('field_qh_visualization_dataset')
+      ->get('field_dataset')
       ->first()
       ->get('entity')
       ->getTarget()
