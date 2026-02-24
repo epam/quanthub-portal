@@ -30,7 +30,7 @@ class PreviewHelper {
    */
   public function provideDrupalSettingsData(FormStateInterface $form_state) {
     $nodeStorage = $this->entityTypeManager->getStorage('node');
-    $datasetUrn = $nodeStorage->load($form_state->getValue('field_qh_visualization_dataset')[0]['target_id'])->get('field_quanthub_urn')->getString();
+    $datasetUrn = $nodeStorage->load($form_state->getValue('field_dataset')[0]['target_id'])->get('field_quanthub_urn')->getString();
 
     $filters = $form_state->getValue('field_qh_visualization_filters')[0]['value'];
 
