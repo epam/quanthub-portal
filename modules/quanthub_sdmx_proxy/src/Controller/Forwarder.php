@@ -113,8 +113,8 @@ final class Forwarder extends ControllerBase {
       $request,
       getenv('SDMX_DOWNLOAD_API_URL')
     );
-    // Force set BOM.
-    $uri = $request->query->get('uri') ?? '';
+    // Force set BOM due to absense of BOM management on Sigma API since v2.
+    $uri = $request->getRequestUri() ?? '';
     if (str_contains($uri, '/engine/data/sync/ott/')) {
       $content = $response->getContent();
       // Add UTF-8 BOM if not present (Excel compatibility).
