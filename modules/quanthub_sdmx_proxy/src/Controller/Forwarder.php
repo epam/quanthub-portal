@@ -115,7 +115,10 @@ final class Forwarder extends ControllerBase {
     );
     // Force set BOM due to absense of BOM management on Sigma API since v2.
     $uri = $request->getRequestUri() ?? '';
-    if (str_contains($uri, '/engine/data/sync/ott/')) {
+    if (
+      str_contains($uri, '/engine/data/sync/ott/')
+      && str_contains($response->headers->get('content-disposition'), 'csv')
+    ) {
       $content = $response->getContent();
       // Add UTF-8 BOM if not present (Excel compatibility).
       if (strncmp($content, "\xEF\xBB\xBF", 3) !== 0) {
