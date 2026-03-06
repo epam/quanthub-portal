@@ -35,15 +35,20 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
    * {@inheritdoc}
    */
   public function getLoginUrl($state, Url $redirect_url) {
+    $request = static::getRequest();
+    $query = [
+      'response_type' => 'code',
+      'scope' => $this->getScopeParameter(),
+      'client_id' => $this->getClientId(),
+      'state' => $state,
+      'redirect_uri' => $this->getRedirectUrl($redirect_url),
+      'ui_locales' => $this->languageManager->getCurrentLanguage()->getId(),
+    ];
+    if ($request->query->has('idp_hint')) {
+      $query['kc_idp_hint'] = $request->query->get('idp_hint');
+    }
     return Url::fromUri($this->getAuthorizationEndpoint(), [
-      'query' => [
-        'response_type' => 'code',
-        'scope' => $this->getScopeParameter(),
-        'client_id' => $this->getClientId(),
-        'state' => $state,
-        'redirect_uri' => $this->getRedirectUrl($redirect_url),
-        'ui_locales' => $this->languageManager->getCurrentLanguage()->getId(),
-      ],
+      'query' => $query,
     ]);
   }
 
@@ -272,6 +277,16 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
   protected function getRedirectUrl(?Url $url = NULL) {
     $url = $url ?? Url::fromRoute('oidc.openid_connect.login_redirect');
     return $url->setAbsolute()->toString();
+  }
+
+  /**
+   * Retrieves the currently active request object.
+   *
+   * @return \Symfony\Component\HttpFoundation\Request
+   *   The currently active request object.
+   */
+  protected static function getRequest() {
+    return \Drupal::request();
   }
 
 }
