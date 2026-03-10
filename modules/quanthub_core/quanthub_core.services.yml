@@ -40,7 +40,7 @@ services:
 
   powerbi_embed_configs:
     class: Drupal\quanthub_core\PowerBIEmbedConfigs
-    arguments: ['@config.factory', '@key.repository', '@logger.factory', '@http_client']
+    arguments: ['@config.factory', '@key.repository', '@logger.factory', '@http_client', '@cache.default']
 
   cache_context.user.datasets:
     class: Drupal\quanthub_core\Cache\AllowedDatasetsCacheContext
