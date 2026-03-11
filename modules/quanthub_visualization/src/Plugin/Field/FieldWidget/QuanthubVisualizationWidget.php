@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Plugin implementation of the 'quanthub_visualization_json' widget.
  *
+ * @todo refactor and remove.
+ *
  * @FieldWidget(
  *   id = "quanthub_visualization_json",
  *   label = @Translation("Quanthub Visualization Widget"),

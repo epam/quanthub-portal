@@ -13,7 +13,7 @@ services:
 
   powerbi_embed_configs:
     class: Drupal\quanthub_core\PowerBIEmbedConfigs
-    arguments: ['@config.factory', '@key.repository', '@logger.factory', '@http_client']
+    arguments: ['@config.factory', '@key.repository', '@logger.factory', '@http_client', '@cache.default']
 
   quanthub_core.kernel_subscriber:
     class: Drupal\quanthub_core\EventSubscriber\KernelEventsSubscriber

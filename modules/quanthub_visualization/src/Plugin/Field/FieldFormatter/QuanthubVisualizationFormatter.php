@@ -8,6 +8,8 @@ use Drupal\Core\Field\FormatterBase;
 /**
  * Quanthub Visualization formatter.
  *
+ * @todo refactor into string type.
+ *
  * @FieldFormatter(
  *   id = "quanthub_visualization",
  *   label = @Translation("Quanthub Visualization Formatter"),
@@ -33,8 +35,11 @@ class QuanthubVisualizationFormatter extends FormatterBase {
     $dafnaType = $entity->field_qh_visualization_type->value;
     $dataFilters = $entity->field_visualization_filters->value;
 
-    $referencedDataset = $entity
-      ->get('field_qh_visualization_dataset')
+    // Support "field_qh_visualization_dataset" for backward compatibility.
+    $field = $entity->hasField('field_dataset')
+      ? $entity->get('field_dataset')
+      : $entity->get('field_qh_visualization_dataset');
+    $referencedDataset = $field
       ->first()
       ->get('entity')
       ->getTarget()

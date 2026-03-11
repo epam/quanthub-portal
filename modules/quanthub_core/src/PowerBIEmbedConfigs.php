@@ -2,6 +2,7 @@
 
 namespace Drupal\quanthub_core;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\key\KeyRepositoryInterface;
@@ -42,6 +43,13 @@ class PowerBIEmbedConfigs {
   protected $httpClient;
 
   /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
    * Constructor of PowerBIEmbedConfigs.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
@@ -52,17 +60,21 @@ class PowerBIEmbedConfigs {
    *   The logger channel factory.
    * @param \GuzzleHttp\ClientInterface $httpClient
    *   The http client.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
    */
   public function __construct(
     ConfigFactoryInterface $configFactory,
     KeyRepositoryInterface $repository,
     LoggerChannelFactoryInterface $loggerFactory,
     ClientInterface $httpClient,
+    CacheBackendInterface $cache,
   ) {
     $this->configFactory = $configFactory;
     $this->repository = $repository;
     $this->loggerFactory = $loggerFactory->get('powerbi_embed');
     $this->httpClient = $httpClient;
+    $this->cache = $cache;
   }
 
   /**
@@ -107,6 +119,9 @@ class PowerBIEmbedConfigs {
    * Get PowerBI Access Token.
    */
   public function getPowerBiAccessToken() {
+    if ($cached = $this->cache->get('powerbi_access_token')) {
+      return $cached->data;
+    }
     $oidc = new OpenIDConnectClient(
       'https://login.microsoftonline.com/' . $this->getClientID(),
       $this->getUsername(),
@@ -116,6 +131,13 @@ class PowerBIEmbedConfigs {
     $oidc->providerConfigParam(['token_endpoint' => 'https://login.microsoftonline.com/' . $this->getClientID() . '/oauth2/v2.0/token']);
     $oidc->addScope(['https://analysis.windows.net/powerbi/api/.default']);
     $oidc_response = $oidc->requestClientCredentialsToken();
+
+    $this->cache->set(
+      'powerbi_access_token',
+      $oidc_response->access_token,
+      time() + intval($oidc_response->expires_in * .8),
+    );
+
     return $oidc_response->access_token;
   }
 
