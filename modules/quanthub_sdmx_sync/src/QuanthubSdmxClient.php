@@ -228,7 +228,7 @@ class QuanthubSdmxClient {
       )->getBody(), TRUE);
     }
     catch (\Exception $e) {
-      $this->logger->error('Failed to retrieve dataset structure: @error.', [
+      $this->logger->notice('Failed to retrieve dataset availability: @error.', [
         '@error' => $e->getMessage(),
       ]);
     }
