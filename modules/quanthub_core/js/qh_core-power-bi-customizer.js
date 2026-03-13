@@ -49,6 +49,20 @@ function updateToken($, context) {
 function powerbi_embed_customizeReport($, context, title = '', name = '') {
   const iframes = $(`#${context.selector} iframe`);
   for (let i = 0; i < iframes.length; i++) {
+    if ($(iframes[i]).parents().hasClass('ckeditor-accordion-container')){
+      const togglers = $(iframes[i]).parents().find('.ckeditor-accordion-toggler');
+      togglers.each((i)=>{
+        $(togglers[i]).off('click');
+        $(togglers[i]).on('click', function(e){
+          let $title = this.parentNode;
+          if ($title.classList.contains('active')) {
+            //probably will need timeout for animation
+            console.log('powerBi is inside ckeditor-accordion-container!');
+          }
+        });
+      })
+
+    }
     iframes[i].frameBorder = 0;
     iframes[i].title = title.length > 0 ? title : 'PowerBI Embed';
     iframes[i].name = name.length > 0 ? name : title.length > 0 ? title : 'PowerBI Embed';
