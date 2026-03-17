@@ -1,0 +1,9 @@
+# @todo publish the library as package and include in composer list.
+dataset-explorer:
+  js:
+    /libraries/quanthub-drupal-react/quanthub_datasetexplorer/dist/index.js: { preprocess: false }
+  css:
+    component:
+      /libraries/quanthub-drupal-react/quanthub_datasetexplorer/dist/styles.css: { preprocess: false }
+  dependencies:
+    - core/drupal

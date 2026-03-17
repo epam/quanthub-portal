@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the module.
+ */
+
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
+
+/**
+ * Implements hook_install().
+ */
+function quanthub_datasetexplorer_install() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  // Create "Data" pseudo-link.
+  $entity_type_manager->getStorage('menu_link_content')->create([
+    'uuid' => 'ce2d18f6-536e-46bd-b374-9f26455039d4',
+    'link' => ['uri' => 'route:quanthub_datasetexplorer.explorer'],
+    'title' => 'Explore data',
+    'enabled' => 1,
+    'menu_name' => 'main',
+    'parent' => 'menu_link_content:867e796f-d11c-4a8d-bfb2-141893f10c82',
+    'weight' => -100,
+  ])->save();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function quanthub_datasetexplorer_uninstall() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $config = \Drupal::configFactory()->getEditable('quanthub.settings');
+  $third_party_settings = $config->get('third_party_settings');
+  unset($third_party_settings['quanthub_datasetexplorer']);
+  $config->set('third_party_settings', $third_party_settings)->save();
+
+  $keys = $entity_type_manager->getStorage('key')->loadMultiple([
+    'sdmx_factor_attribute_id',
+    'sdmx_uom_attribute_id',
+  ]);
+  foreach ($keys as $key) {
+    $key->delete();
+  }
+
+  $menu_link = current($entity_type_manager->getStorage('menu_link_content')->loadByProperties([
+    'uuid' => 'ce2d18f6-536e-46bd-b374-9f26455039d4',
+  ]));
+  if ($menu_link) {
+    $menu_link->delete();
+  }
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function quanthub_datasetexplorer_requirements($phase) {
+  if ($phase !== 'runtime') {
+    return [];
+  }
+
+  $requirements = [];
+
+  if (!quanthub_datasetexplorer_has_library()) {
+    $requirements['quanthub_datasetexplorer_library'] = [
+      'title' => t('Quanthub Dataset Explorer'),
+      'value' => t('Dataset Explorer legacy library not found. Please download and place it in the "libraries" folder.'),
+      'severity' => RequirementSeverity::Error,
+    ];
+  }
+  else {
+    $requirements['quanthub_datasetexplorer_library'] = [
+      'title' => t('Quanthub Dataset Explorer'),
+      'value' => t('Dataset Explorer legacy library is installed.'),
+      'severity' => RequirementSeverity::OK,
+    ];
+  }
+
+  return $requirements;
+}

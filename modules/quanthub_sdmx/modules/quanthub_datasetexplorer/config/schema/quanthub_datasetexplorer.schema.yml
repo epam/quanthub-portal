@@ -1,0 +1,13 @@
+quanthub.third_party.quanthub_datasetexplorer:
+  label: 'Quanthub Dataset Explorer settings'
+  type: mapping
+  mapping:
+    factor_attribute_id:
+      type: string
+      label: 'Factor attribute ID'
+    uom_attribute_id:
+      type: string
+      label: 'Units of Measure attribute ID'
+    hierarchy:
+      type: boolean
+      label: 'Use hierarchy in Dataset Explorer facets'

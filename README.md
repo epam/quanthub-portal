@@ -10,7 +10,23 @@ drush en quanthub_tvi
 drush en quanthub_auth
 drush en quanthub_sdmx
 drush en quanthub_sdmx_proxy #(optional)
+drush en quanthub_datasetexplorer #(optional, needs library)
 ```
+
+## Routes
+
+### Profile rotes
+
+- `/admin/config/system/settings` - Settings (admin)
+
+### Quanthub SDMX Proxy
+
+- `/sdmx/*` - V1 SDMX API forwarder
+- `/sdmx-download/*` - V2 SDMX API forwarder
+
+### Quanthub Dataset Explorer
+
+- `/explorer` - Dataset Explorer page
 
 ## UUIDs
 
@@ -31,6 +47,11 @@ drush en quanthub_sdmx_proxy #(optional)
   - `73d98cb9-5a59-43ac-b01f-a7024c2b28e6`: News listing
   - `02553986-d605-42ab-acd6-85bea2cd1780`: Publications listing
   - `41688334-b51c-4cc0-a171-63fc9c38bb1b`: Releases listing
+
+### Quathub Dataset Explorer UUIDs
+
+- Menus
+  - `ce2d18f6-536e-46bd-b374-9f26455039d4`: "Explore data" item of the Main menu
 
 ## Environment overrides
 
@@ -56,3 +77,8 @@ drush en quanthub_sdmx_proxy #(optional)
 
 - `SDMX_API_URL`: Base URL of SDMX API endpoint
 - `SDMX_WORKSPACE_ID`: SDMX Workspace ID
+
+### Quanthub Dataset Explorer
+
+- `SDMX_FACTOR_ATTRIBUTE_ID`: SDMX Factor attribute ID (extra column in grid)
+- `SDMX_UOM_ATTRIBUTE_ID`: SDMX Units of Measure attribute ID (extra column in grid)

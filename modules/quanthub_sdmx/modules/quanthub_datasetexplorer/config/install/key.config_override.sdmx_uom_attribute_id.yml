@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - key.key.sdmx_uom_attribute_id
+    - quanthub.settings
+id: sdmx_uom_attribute_id
+label: 'SDMX Units of Measure attribute ID (Dataset Explorer)'
+config_type: system.simple
+config_prefix: ''
+config_name: quanthub.settings
+config_item: third_party_settings.quanthub_datasetexplorer.uom_attribute_id
+key_id: sdmx_uom_attribute_id
