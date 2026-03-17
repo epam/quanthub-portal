@@ -1,0 +1,7 @@
+quanthub_datasetexplorer.explorer:
+  path: '/explorer'
+  defaults:
+    _controller: '\Drupal\quanthub_datasetexplorer\Controller\DatasetExplorer'
+    _title: 'Dataset Explorer'
+  requirements:
+    _permission: 'access content'

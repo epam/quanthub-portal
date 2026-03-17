@@ -81,6 +81,10 @@ function quanthub_sdmx_install() {
  */
 function quanthub_sdmx_uninstall() {
   $entity_type_manager = \Drupal::entityTypeManager();
+  $config = \Drupal::configFactory()->getEditable('quanthub.settings');
+  $third_party_settings = $config->get('third_party_settings');
+  unset($third_party_settings['quanthub_sdmx']);
+  $config->set('third_party_settings', $third_party_settings)->save();
 
   $keys = $entity_type_manager->getStorage('key')->loadMultiple([
     'sdmx_api_url',

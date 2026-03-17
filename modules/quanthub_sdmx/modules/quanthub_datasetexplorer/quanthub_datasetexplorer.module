@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * Quanthub Dataset Explorer module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Checks that library is installed.
+ *
+ * @todo remove on moving to composer package.
+ */
+function quanthub_datasetexplorer_has_library() {
+  return file_exists('libraries/quanthub-drupal-react/quanthub_datasetexplorer/dist/index.js');
+}
+
+/**
+ * Implements hook_theme().
+ */
+function quanthub_datasetexplorer_theme() {
+  return [
+    'dataset_explorer' => [
+      'variables' => [
+        'installed' => FALSE,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements template_preprocess_HOOK()
+ */
+function template_preprocess_dataset_explorer(&$variables) {
+  $variables['installed'] = quanthub_datasetexplorer_has_library();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function quanthub_datasetexplorer_form_quanthub_settings_alter(&$form, FormStateInterface $form_state) {
+  $settings = $form_state->get('third_party_settings') ?? [];
+  $config = $settings['quanthub_datasetexplorer'] ?? [];
+  $overridden = \Drupal::config('quanthub.settings')->get('third_party_settings.quanthub_datasetexplorer') ?? [];
+
+  $form['third_party_settings']['quanthub_datasetexplorer'] = [
+    '#type' => 'details',
+    '#title' => t('SDMX Dataset Explorer configuration'),
+    '#open' => TRUE,
+    '#weight' => 10,
+  ];
+
+  $form['third_party_settings']['quanthub_datasetexplorer']['factor_attribute_id'] = [
+    '#type' => 'textfield',
+    '#title' => t('Factor Attribute ID'),
+    '#description' => [['#markup' => t('Provides extra column in the Explorer.')]],
+    '#default_value' => $config['factor_attribute_id'] ?? NULL,
+  ];
+
+  $form['third_party_settings']['quanthub_datasetexplorer']['uom_attribute_id'] = [
+    '#type' => 'textfield',
+    '#title' => t('Units of Measure Attribute ID'),
+    '#description' => [['#markup' => t('Provides extra column in the Explorer.')]],
+    '#default_value' => $config['uom_attribute_id'] ?? NULL,
+  ];
+
+  $form['third_party_settings']['quanthub_datasetexplorer']['hierarchy'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Use hierarchy in Dataset Explorer facets'),
+    '#default_value' => $config['hierarchy'] ?? NULL,
+  ];
+
+  foreach (['factor_attribute_id', 'uom_attribute_id'] as $key) {
+    if (isset($overridden[$key]) && $overridden[$key] !== ($config[$key] ?? NULL)) {
+      $form['third_party_settings']['quanthub_datasetexplorer'][$key]['#description'][] = [
+        '#markup' => '<br/>',
+      ];
+      $form['third_party_settings']['quanthub_datasetexplorer'][$key]['#description'][] = [
+        '#markup' => t('Overridden with: <strong>@value</strong>', [
+          '@value' => $overridden[$key],
+        ]),
+      ];
+    }
+  }
+
+  if (!quanthub_datasetexplorer_has_library()) {
+    \Drupal::messenger()->addWarning(t('Dataset Explorer legacy library not found. Please download and place it in the "libraries" folder.'));
+  }
+}

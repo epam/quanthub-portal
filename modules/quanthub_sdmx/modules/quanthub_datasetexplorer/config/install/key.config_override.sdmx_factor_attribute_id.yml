@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - key.key.sdmx_factor_attribute_id
+    - quanthub.settings
+id: sdmx_factor_attribute_id
+label: 'SDMX Factor attribute ID (Dataset explorer)'
+config_type: system.simple
+config_prefix: ''
+config_name: quanthub.settings
+config_item: third_party_settings.quanthub_datasetexplorer.factor_attribute_id
+key_id: sdmx_factor_attribute_id
