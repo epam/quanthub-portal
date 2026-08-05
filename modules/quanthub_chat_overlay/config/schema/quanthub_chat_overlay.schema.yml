@@ -1,0 +1,19 @@
+quanthub_chat_overlay.settings:
+  type: config_object
+  label: 'Quanthub Chat Overlay settings'
+  mapping:
+    api:
+      type: string
+      label: 'DIAL Chat Overlay library version'
+    chat_url:
+      type: uri
+      label: 'DIAL Chat URL'
+    model:
+      type: string
+      label: 'DIAL Default Model'
+    auth_provider:
+      type: string
+      label: 'DIAL Sing-in Provider'
+    features:
+      type: string
+      label: 'Enabled Features'

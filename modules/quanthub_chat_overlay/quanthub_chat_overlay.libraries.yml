@@ -3,3 +3,24 @@ chat-overlay:
     /libraries/quanthub-drupal-react/quanthub-libs/dist/chat-overlay/index.iife.js: {}
   dependencies:
     - core/drupal
+
+ai-dial-chat-overlay:
+  version: 1.1.0-dev.87
+  license:
+    name: Apache-2.0
+    url: https://github.com/epam/ai-dial-chat/blob/development/LICENSE
+    gpl-compatible: true
+  js:
+    js/ai-dial-chat-overlay.js: { minified: true }
+
+overlay:
+  css:
+    theme:
+      css/overlay.css: {}
+  js:
+    js/overlay.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+    - quanthub_chat_overlay/ai-dial-chat-overlay

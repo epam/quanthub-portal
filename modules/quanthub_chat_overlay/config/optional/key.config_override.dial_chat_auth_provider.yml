@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - key.key.dial_chat_auth_provider
+    - quanthub_chat_overlay.settings
+id: dial_chat_auth_provider
+label: 'DIAL Chat Sign-in provider'
+config_type: system.simple
+config_prefix: ''
+config_name: quanthub_chat_overlay.settings
+config_item: auth_provider
+key_id: dial_chat_auth_provider

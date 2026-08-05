@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function quanthub_chat_overlay_uninstall() {
+  $keys = \Drupal::entityTypeManager()->getStorage('key')->loadMultiple([
+    'dial_chat_url',
+    'dial_chat_model',
+    'dial_chat_auth_provider',
+    'dial_chat_features',
+  ]);
+  foreach ($keys as $key) {
+    $key->delete();
+  }
+}

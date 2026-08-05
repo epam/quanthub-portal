@@ -1,0 +1,7 @@
+quanthub_chat_overlay.settings:
+  path: '/admin/config/services/chat-overlay'
+  defaults:
+    _form: '\Drupal\quanthub_chat_overlay\Form\SettingsForm'
+    _title: 'Quanthub Chat Overlay Settings'
+  requirements:
+    _permission: 'administer site configuration'

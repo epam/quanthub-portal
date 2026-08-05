@@ -1,0 +1,24 @@
+{#
+/**
+ * @file
+ * Default theme implementation to chat overlay.
+ *
+ * Available variables:
+ * - decorate: Render control elements.
+ */
+#}
+{{ attach_library('quanthub_chat_overlay/overlay') }}
+
+<div {{ attributes.addClass('ai-dial-chat-overlay-container').addClass(decorate ? 'decorated') }}>
+  {% if decorate %}
+    <div class="ai-dial-chat-overlay-trigger">{{ 'Ask AI'|t }}</div>
+  {% endif %}
+  <div class="ai-dial-chat-overlay">
+    {% if decorate %}
+      <div class="ai-dial-chat-overlay-toolbar">
+        <div class="ai-dial-chat-overlay-fullscreen-btn">□</div>
+        <div class="ai-dial-chat-overlay-close-btn">❌</div>
+      </div>
+    {% endif %}
+  </div>
+</div>

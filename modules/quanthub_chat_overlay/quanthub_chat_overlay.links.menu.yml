@@ -1,0 +1,5 @@
+quanthub_chat_overlay.settings:
+  title: 'Quanthub Chat Overlay Settings'
+  description: 'Configure AI chat overlay.'
+  route_name: quanthub_chat_overlay.settings
+  parent: system.admin_config_services

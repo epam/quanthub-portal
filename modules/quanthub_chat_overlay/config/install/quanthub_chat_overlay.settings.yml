@@ -1,0 +1,5 @@
+api: 'v1'
+chat_url: ''
+model: ''
+auth_provider: 'azure-ad'
+features: 'hide-empty-chat-change-agent,conversations-section,disallow-change-agent,hide-user-settings'
