@@ -5,12 +5,46 @@
  * Quanthub Chat Overlay module.
  */
 
+use Drupal\Core\Cache\CacheableMetadata;
+
 /**
  * Implements hook_page_attachments().
+ *
+ * @todo move to block when v1 API would be removed.
  */
 function quanthub_chat_overlay_page_attachments(array &$attachments) {
-  if (\Drupal::currentUser()->hasPermission('access ai')) {
-    $attachments['#attached']['library'][] = 'quanthub_chat_overlay/chat-overlay';
+  $config = \Drupal::config('quanthub_chat_overlay.settings');
+
+  if (
+    $config->get('chat_url') &&
+    \Drupal::currentUser()->hasPermission('access ai') &&
+    !\Drupal::service('router.admin_context')->isAdminRoute()
+  ) {
+    $attachments['#attached']['drupalSettings']['dialChatUrl'] = $config->get('chat_url');
+    $attachments['#attached']['drupalSettings']['dialDefaultModel'] = $config->get('model');
+    $attachments['#attached']['drupalSettings']['dialSignInProvider'] = $config->get('auth_provider');
+    $attachments['#attached']['drupalSettings']['dialEnabledFeatures'] = $config->get('features');
+
+    if ($config->get('api') !== 'v2') {
+      $attachments['#attached']['library'][] = 'quanthub_chat_overlay/chat-overlay';
+    }
   }
-  $attachments['#cache']['contexts'][] = 'user.permissions';
+
+  $cacheable_metadata = CacheableMetadata::createFromRenderArray($attachments);
+  $cacheable_metadata->addCacheableDependency($config);
+  $cacheable_metadata->addCacheContexts(['user.permissions']);
+  $cacheable_metadata->applyTo($attachments);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function quanthub_chat_overlay_theme() {
+  return [
+    'quanthub_chat_overlay' => [
+      'variables' => [
+        'decorate' => TRUE,
+      ],
+    ],
+  ];
 }

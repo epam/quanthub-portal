@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - key.key.dial_chat_model
+    - quanthub_chat_overlay.settings
+id: dial_chat_model
+label: 'DIAL Chat Default Model'
+config_type: system.simple
+config_prefix: ''
+config_name: quanthub_chat_overlay.settings
+config_item: model
+key_id: dial_chat_model
