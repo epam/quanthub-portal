@@ -17,7 +17,7 @@
   transition: height .3s, width .3s, max-height .3s, max-width .3s, opacity .3s;
   padding-top: 26px;
   color: #000;
-  background: #fff;
+  background: #eee;
   overflow: hidden;
   opacity: 0;
   z-index: 60;
