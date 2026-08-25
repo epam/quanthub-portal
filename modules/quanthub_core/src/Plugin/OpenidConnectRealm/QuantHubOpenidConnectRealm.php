@@ -154,8 +154,10 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
 
   /**
    * Handle User Info data to claims.
+   *
+   * @note: $claim_data param was removed to always collect claims.
    */
-  protected function getJsonWebTokensUserInfo($response, $claim_data = TRUE) {
+  protected function getJsonWebTokensUserInfo($response) {
     // Ensure we have all the data we need to continue.
     if (!isset($response['token'], $response['expiresOn'], $response['tokenId'])) {
       throw new \RuntimeException('Some data is missing in the token response');
@@ -170,32 +172,30 @@ class QuantHubOpenidConnectRealm extends GenericOpenidConnectRealm implements Op
     $tokens = new JsonWebTokens('user_info_token', $id_token, $access_token);
     $tokens->setRefreshToken($refresh_token);
 
-    if ($claim_data) {
-      // Parse the ID token.
-      $jwt = new JWT($response['token']);
+    // Parse the ID token.
+    $jwt = new JWT($response['token']);
 
-      // Get the key.
-      $kid = $jwt->header()->keyID()->value();
-      $key = JWK::fromArray($this->getJwk($kid));
+    // Get the key.
+    $kid = $jwt->header()->keyID()->value();
+    $key = JWK::fromArray($this->getJwk($kid));
 
-      // Create the validation context.
-      $context = ValidationContext::fromJWK($key)
-        ->withIssuer($this->getIssuer())
-        ->withAudience($this->configuration[self::AUDIENCE_TOKEN_KEY]);
+    // Create the validation context.
+    $context = ValidationContext::fromJWK($key)
+      ->withIssuer($this->getIssuer())
+      ->withAudience($this->configuration[self::AUDIENCE_TOKEN_KEY]);
 
-      // Validate and get the claims.
-      $claims = $jwt->claims($context);
+    // Validate and get the claims.
+    $claims = $jwt->claims($context);
 
-      foreach ($claims->all() as $claim) {
-        $tokens->setClaim($claim->name(), $claim->value());
-      }
-
-      $tokens->setIdClaim($this->configuration['id_claim'])
-        ->setUsernameClaim($this->configuration['username_claim'])
-        ->setEmailClaim($this->configuration['email_claim'])
-        ->setGivenNameClaim($this->configuration['given_name_claim'])
-        ->setFamilyNameClaim($this->configuration['family_name_claim']);
+    foreach ($claims->all() as $claim) {
+      $tokens->setClaim($claim->name(), $claim->value());
     }
+
+    $tokens->setIdClaim($this->configuration['id_claim'])
+      ->setUsernameClaim($this->configuration['username_claim'])
+      ->setEmailClaim($this->configuration['email_claim'])
+      ->setGivenNameClaim($this->configuration['given_name_claim'])
+      ->setFamilyNameClaim($this->configuration['family_name_claim']);
 
     return $tokens;
   }
