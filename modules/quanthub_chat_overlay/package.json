@@ -10,6 +10,6 @@
     "webpack-cli": "^7.2.2"
   },
   "dependencies": {
-    "@epam/ai-dial-chat-overlay": "1.1.0-dev.87"
+    "@epam/ai-dial-chat-overlay": "1.0.0"
   }
 }
