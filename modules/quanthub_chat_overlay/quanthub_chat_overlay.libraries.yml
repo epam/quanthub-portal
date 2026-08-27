@@ -11,7 +11,7 @@ ai-dial-chat-overlay:
     url: https://github.com/epam/ai-dial-chat/blob/development/LICENSE
     gpl-compatible: true
   js:
-    js/ai-dial-chat-overlay.js: { minified: true }
+    js/ai-dial-chat-overlay.min.js: { minified: true }
 
 overlay:
   css:

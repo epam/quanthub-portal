@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    'ai-dial-chat-overlay': {
+    'ai-dial-chat-overlay.min': {
       import: '@epam/ai-dial-chat-overlay',
       library: {
         name: 'AIDialChatOverlay',
