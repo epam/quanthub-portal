@@ -2,6 +2,9 @@
  * @file
  * Quanthub Chat Overlay styles.
  */
+.ai-dial-chat-overlay-container *, .ai-dial-chat-overlay-container ::before, .ai-dial-chat-overlay-container ::after {
+  box-sizing: border-box;
+}
 .ai-dial-chat-overlay-container .ai-dial-chat-overlay {
   height: 700px;
 }
@@ -22,9 +25,6 @@
   opacity: 0;
   z-index: 60;
 }
-.ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay iframe {
-  display: none;
-}
 .ai-dial-chat-overlay-open .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay {
   height: 700px;
   width: 400px;
@@ -32,15 +32,12 @@
   max-width: 100%;
   opacity: 1;
 }
-.ai-dial-chat-overlay-open .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay iframe {
-  display: block;
-}
 .ai-dial-chat-overlay-open.ai-dial-chat-overlay-fullscreen {
   overflow: hidden;
 }
 .ai-dial-chat-overlay-open.ai-dial-chat-overlay-fullscreen .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay {
-  height: 100%;
-  width: 100%;
+  height: 100% !important;
+  width: 100% !important;
   opacity: 1;
   z-index: 999;
 }
@@ -82,4 +79,24 @@
   text-align: center;
   border: 1px solid #000;
   cursor: pointer;
+}
+.ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay-toolbar .ai-dial-chat-overlay-resize-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border: 0;
+  cursor: nwse-resize;
+}
+.ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay-toolbar .ai-dial-chat-overlay-resize-handle::before {
+  content: '';
+  position: absolute;
+  display: block;
+  border: 0 solid #000;
+  border-width: 2px 0 0 2px;
+  top: 4px;
+  left: 4px;
+  width: 12px;
+  height: 12px;
 }
