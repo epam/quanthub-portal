@@ -35,13 +35,16 @@
 .ai-dial-chat-overlay-open .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay iframe {
   display: block;
 }
-.ai-dial-chat-overlay-fullscreen .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay {
+.ai-dial-chat-overlay-open.ai-dial-chat-overlay-fullscreen {
+  overflow: hidden;
+}
+.ai-dial-chat-overlay-open.ai-dial-chat-overlay-fullscreen .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay {
   height: 100%;
   width: 100%;
   opacity: 1;
   z-index: 999;
 }
-.ai-dial-chat-overlay-fullscreen .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay iframe {
+.ai-dial-chat-overlay-open.ai-dial-chat-overlay-fullscreen .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay iframe {
   display: block;
 }
 .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay-trigger {
@@ -65,6 +68,7 @@
   position: absolute;
   top: 0px;
   display: flex;
+  align-items: center;
   justify-content: end;
   padding: 3px;
   gap: 5px;
