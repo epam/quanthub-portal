@@ -59,7 +59,7 @@
   border-radius: 30px;
   box-shadow: 0 0 10px #000;
   cursor: pointer;
-  z-index: 50;
+  z-index: 600;
 }
 .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay-toolbar {
   position: absolute;
