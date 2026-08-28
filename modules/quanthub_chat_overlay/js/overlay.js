@@ -5,34 +5,25 @@
 
 (function (Drupal, drupalSettings, once) {
   Drupal.behaviors.quanthubChatOverlay = {
-    overlays: [],
+    overlays: {},
     attach(context) {
       const self = this;
       if (!drupalSettings.dialChatUrl) {
         return;
       }
       once('dial-ai-chat-overlay', '.ai-dial-chat-overlay-container', context).forEach((container) => {
-        const options = {
-          domain: drupalSettings.dialChatUrl,
-          theme: 'light',
-        };
-        if (drupalSettings.dialDefaultModel) {
-          options.modelId = drupalSettings.dialDefaultModel;
-        }
-        if (drupalSettings.dialEnabledFeatures) {
-          options.enabledFeatures = drupalSettings.dialEnabledFeatures.split(',');
-        }
-
         const panel = container.querySelector('.ai-dial-chat-overlay');
         if (!panel) {
           return;
         }
 
-        const overlay = new window.AIDialChatOverlay.ChatOverlay(panel, options);
-        self.overlays.push(overlay);
+        const overlayId = 'overlay-' + Object.keys(self.overlays).length;
+        panel.dataset.overlayId = id;
+        self.overlays[overlayId] = null;
 
         container.querySelector('.ai-dial-chat-overlay-trigger')?.addEventListener('click', (e) => {
           e.preventDefault();
+          self.initOverlay(panel, overlayId);
           document.body.classList.toggle('ai-dial-chat-overlay-open');
         });
 
@@ -58,14 +49,41 @@
             panel.style.height = Math.max(start.y - e.clientY + size.y, 400) + 'px';
           };
 
+          const stopResize = (e) => {
+            document.removeEventListener('pointermove', onResize);
+            document.removeEventListener('pointerup', stopResize);
+            document.removeEventListener('pointercancel', stopResize);
+            panel.style.removeProperty('transition');
+            document.body.releasePointerCapture(e.pointerId);
+          }
+
+          document.body.setPointerCapture(e.pointerId);
           panel.style.setProperty('transition', 'none', 'important');
           document.addEventListener('pointermove', onResize);
-          document.addEventListener('pointerup', (e) => {
-            document.removeEventListener('pointermove', onResize);
-            panel.style.removeProperty('transition');
-          }, { once: true });
+          document.addEventListener('pointerup', stopResize);
+          document.addEventListener('pointercancel', stopResize);
         });
       });
+    },
+    initOverlay(root, id) {
+      if (this.overlays[id]) {
+        return;
+      }
+
+      const options = {
+        domain: drupalSettings.dialChatUrl,
+        theme: 'light',
+      };
+      if (drupalSettings.dialDefaultModel) {
+        options.modelId = drupalSettings.dialDefaultModel;
+      }
+      if (drupalSettings.dialEnabledFeatures) {
+        options.enabledFeatures = drupalSettings.dialEnabledFeatures.split(',');
+      }
+
+      const overlay = new window.AIDialChatOverlay.ChatOverlay(root, options);
+      root.dataset.overlayId = id;
+      this.overlays[id] = overlay;
     },
   };
 
