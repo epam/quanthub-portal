@@ -18,7 +18,7 @@
         }
 
         const overlayId = 'overlay-' + Object.keys(self.overlays).length;
-        panel.dataset.overlayId = id;
+        panel.dataset.overlayId = overlayId;
         self.overlays[overlayId] = null;
 
         container.querySelector('.ai-dial-chat-overlay-trigger')?.addEventListener('click', (e) => {
