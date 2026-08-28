@@ -49,6 +49,7 @@
         container.querySelector('.ai-dial-chat-overlay-resize-handle')?.addEventListener('pointerdown', (e) => {
           e.preventDefault();
 
+          const handle = e.currentTarget;
           const rect = panel.getBoundingClientRect();
           const start = {x: e.clientX, y: e.clientY};
           const size = {x: rect.width, y: rect.height};
@@ -58,12 +59,35 @@
             panel.style.height = Math.max(start.y - e.clientY + size.y, 400) + 'px';
           };
 
+          const glassPane = document.createElement('div');
+          glassPane.setAttribute('aria-hidden', 'true');
+          Object.assign(glassPane.style, {
+            position: 'fixed',
+            inset: '0',
+            zIndex: '1000',
+            cursor: 'nwse-resize',
+          });
+
+          handle.setPointerCapture(e.pointerId);
+          document.body.appendChild(glassPane);
           panel.style.setProperty('transition', 'none', 'important');
-          document.addEventListener('pointermove', onResize);
-          document.addEventListener('pointerup', (e) => {
-            document.removeEventListener('pointermove', onResize);
+
+          const stopResize = () => {
+            if (handle.hasPointerCapture(e.pointerId)) {
+              handle.releasePointerCapture(e.pointerId);
+            }
+            handle.removeEventListener('pointermove', onResize);
+            handle.removeEventListener('pointerup', stopResize);
+            handle.removeEventListener('pointercancel', stopResize);
+            window.removeEventListener('blur', stopResize);
+            glassPane.remove();
             panel.style.removeProperty('transition');
-          }, { once: true });
+          };
+
+          handle.addEventListener('pointermove', onResize);
+          handle.addEventListener('pointerup', stopResize);
+          handle.addEventListener('pointercancel', stopResize);
+          window.addEventListener('blur', stopResize);
         });
       });
     },
