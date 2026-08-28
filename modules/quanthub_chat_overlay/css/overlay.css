@@ -23,7 +23,7 @@
   background: #eee;
   overflow: hidden;
   opacity: 0;
-  z-index: 60;
+  z-index: 600;
 }
 .ai-dial-chat-overlay-open .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay {
   height: 700px;
