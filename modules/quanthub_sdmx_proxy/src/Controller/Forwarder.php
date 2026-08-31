@@ -5,7 +5,9 @@ namespace Drupal\quanthub_sdmx_proxy\Controller;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\quanthub_core\UserInfo;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
@@ -56,6 +58,8 @@ final class Forwarder extends ControllerBase {
    */
   private $foundationFactory;
 
+  private const DOWNLOAD_SUBMIT_PATH = '/submit';
+
   /**
    * {@inheritdoc}
    */
@@ -65,7 +69,9 @@ final class Forwarder extends ControllerBase {
       $container->get('psr7.http_foundation_factory'),
       $container->get('logger.factory'),
       $container->get('config.factory'),
-      $container->get('user_info')
+      $container->get('user_info'),
+      $container->get('current_user'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -78,12 +84,16 @@ final class Forwarder extends ControllerBase {
     LoggerChannelFactoryInterface $logger_factory,
     ConfigFactory $config_factory,
     UserInfo $user_info,
+    AccountProxyInterface $currentUser,
+    EntityTypeManagerInterface $entityTypeManager,
   ) {
     $this->client = $client;
     $this->foundationFactory = $foundation_factory;
     $this->loggerFactory = $logger_factory;
     $this->configFactory = $config_factory;
     $this->userInfo = $user_info;
+    $this->currentUser = $currentUser;
+    $this->userStorage = $entityTypeManager->getStorage('user');
   }
 
   /**
@@ -109,7 +119,34 @@ final class Forwarder extends ControllerBase {
    *   The response object.
    */
   public function forwardDownload(Request $request): Response {
+    $this->logForwardDownloadSubmit($request);
     return $this->forwardInternal($request, getenv('SDMX_DOWNLOAD_API_URL'));
+  }
+
+  /**
+   * Log info about submit of downloads.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The incoming request.
+   */
+  private function logForwardDownloadSubmit(Request $request) {
+    $uri = $request->query->get('uri');
+    if (!is_string($uri) || !str_ends_with($uri, self::DOWNLOAD_SUBMIT_PATH)) {
+      return;
+    }
+
+    $context = [];
+    $context['uri'] = $uri;
+    if ($body = $request->getContent()) {
+      $context['body'] = $body;
+    }
+    if (!$this->currentUser->isAnonymous()) {
+      $uid = $this->currentUser->id();
+      $user = $this->userStorage->load($uid);
+      $context['user'] = $user->getDisplayName();
+      $context['email'] = $user->getEmail();
+    }
+    $this->loggerFactory->get('quanthub_sdmx_proxy')->info('forwardDownload', $context);
   }
 
   /**
