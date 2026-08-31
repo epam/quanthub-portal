@@ -17,3 +17,9 @@
     }
   }
 }
+.breadcrumb {
+  overflow: auto;
+  li {
+    white-space: nowrap;
+  }
+}
