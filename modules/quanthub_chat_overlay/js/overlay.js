@@ -45,8 +45,8 @@
           const size = {x: rect.width, y: rect.height};
 
           const onResize = (e) => {
-            panel.style.width = Math.max(start.x - e.clientX + size.x, 400) + 'px';
-            panel.style.height = Math.max(start.y - e.clientY + size.y, 400) + 'px';
+            panel.style.width = (start.x - e.clientX + size.x) + 'px';
+            panel.style.height = (start.y - e.clientY + size.y) + 'px';
           };
 
           const stopResize = (e) => {

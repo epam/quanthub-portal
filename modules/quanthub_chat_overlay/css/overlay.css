@@ -15,9 +15,18 @@
   bottom: 0;
   height: 1px;
   width: 1px;
-  max-height: 1%;
-  max-width: 1%;
-  transition: height .3s, width .3s, max-height .3s, max-width .3s, opacity .3s;
+  min-height: 1px;
+  min-width: 1px;
+  max-height: 1px;
+  max-width: 1px;
+  transition:
+    height .3s ease-in-out .1s,
+    width .3s ease-in-out .1s,
+    max-height .4s ease-in-out,
+    max-width .4s ease-in-out,
+    min-height .3s ease-in-out .1s,
+    min-width .3s ease-in-out .1s,
+    opacity .3s ease-in-out .1s;
   padding-top: 26px;
   color: #000;
   background: #eee;
@@ -28,10 +37,22 @@
 .ai-dial-chat-overlay-open .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay {
   height: 700px;
   width: 400px;
+  min-height: 400px;
+  min-width: 400px;
   max-height: 100%;
   max-width: 100%;
   opacity: 1;
 }
+@media screen and (max-width: 400px) {
+  .ai-dial-chat-overlay-open .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay {
+    min-height: 100%;
+    min-width: 100%;
+  }
+  .ai-dial-chat-overlay-container.decorated .ai-dial-chat-overlay-toolbar .ai-dial-chat-overlay-resize-handle {
+    display: none;
+  }
+}
+
 .ai-dial-chat-overlay-open.ai-dial-chat-overlay-fullscreen {
   overflow: hidden;
 }
