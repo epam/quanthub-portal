@@ -2,7 +2,7 @@
     right: 12px;
     bottom: 12px;
     @apply absolute;
-    z-index: 51;
+    z-index: 999;
   }
   .alert {
     @apply flex  flex-row rounded;
@@ -11,8 +11,8 @@
     width: 353px;
     padding-right: 8px;
     box-shadow: 0px 0px 10px 0px $shadow10;
-    z-index: 51;
-  
+    z-index: 999;
+
     &__content {
       padding: 16px 0;
       gap: 4px;
@@ -66,4 +66,3 @@
       }
     }
   }
-  
