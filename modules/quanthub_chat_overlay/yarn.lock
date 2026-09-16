@@ -12,10 +12,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@epam/ai-dial-chat-overlay@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@epam/ai-dial-chat-overlay@npm:1.0.0"
-  checksum: 10c0/a7f6913f3d4c2356d84e71849356eb24512645141843c480fbaced69de8b5b1263f75ea7449cbfe2c4dc440fe119d7666ce817fef99d22c1490ebdcab7753a62
+"@epam/ai-dial-chat-overlay@npm:1.1.0-rc.0":
+  version: 1.1.0-rc.0
+  resolution: "@epam/ai-dial-chat-overlay@npm:1.1.0-rc.0"
+  checksum: 10c0/e9c51b0af1ab1cc3cbbf9b23ab78cf967968a723864de1bdc80bde71dcfb25b8f46940edf3b284e1b290ccef5bf69c41ca13a955904a5f5e3de8cc5e51457458
   languageName: node
   linkType: hard
 
@@ -746,7 +746,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "quanthub_chat_overlay@workspace:."
   dependencies:
-    "@epam/ai-dial-chat-overlay": "npm:1.0.0"
+    "@epam/ai-dial-chat-overlay": "npm:1.1.0-rc.0"
     webpack: "npm:^5.109.2"
     webpack-cli: "npm:^7.2.2"
   languageName: unknown
