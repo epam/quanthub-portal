@@ -80,6 +80,12 @@
       if (drupalSettings.dialEnabledFeatures) {
         options.enabledFeatures = drupalSettings.dialEnabledFeatures.split(',');
       }
+      if (drupalSettings.dialSignInProvider) {
+        options.signInOptions = {
+          autoSignIn: true,
+          signInProvider: drupalSettings.dialSignInProvider,
+        };
+      }
 
       const overlay = new window.AIDialChatOverlay.ChatOverlay(root, options);
       root.dataset.overlayId = id;
