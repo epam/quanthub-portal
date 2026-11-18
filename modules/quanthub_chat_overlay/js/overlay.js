@@ -67,7 +67,7 @@
     },
     initOverlay(root, id) {
       if (this.overlays[id]) {
-        return;
+        return this.overlays[id];
       }
 
       const options = {
@@ -90,6 +90,7 @@
       const overlay = new window.AIDialChatOverlay.ChatOverlay(root, options);
       root.dataset.overlayId = id;
       this.overlays[id] = overlay;
+      return this.overlays[id];
     },
   };
 
